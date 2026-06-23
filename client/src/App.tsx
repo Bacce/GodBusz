@@ -72,7 +72,15 @@ export const App = () => {
         zoom={13}
         className="h-[500px] w-[500px]"
       >
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        {/*<TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />*/}
+        <TileLayer
+          url="http://localhost:3000/Tiles/{z}/{x}/{y}.png"
+          keepBuffer={20}
+          minZoom={13}
+          maxZoom={16}
+          updateWhenIdle={false}
+          updateInterval={0}
+        />
         {stops
           .filter((s) => s.visible)
           .map((stop, i) => (
@@ -87,9 +95,7 @@ export const App = () => {
         ))}
         {stops.length > 0 && (
           <RoutingMachine
-            waypoints={stops
-              .filter((s) => s.visible)
-              .map((s) => [s.lat, s.lon])}
+            waypoints={stops.map((s) => [s.lat, s.lon])}
             options={{
               router: L.Routing.osrmv1({
                 serviceUrl: "https://osrm.hqnet.hu:8083/route/v1",

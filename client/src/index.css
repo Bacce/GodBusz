@@ -3,3 +3,11 @@
 .leaflet-control-container .leaflet-routing-container-hide {
     display: none;
 }
+
+.leaflet-fade-anim .leaflet-popup {
+    opacity: 1;
+    transition: opacity 0s linear !important;
+}
+.leaflet-fade-anim .leaflet-map-pane .leaflet-popup {
+    opacity: 1;
+}

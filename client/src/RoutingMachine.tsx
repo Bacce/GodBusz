@@ -10,6 +10,8 @@ interface RoutingMachineProps {
 const createRoutingMachineLayer = (props: RoutingMachineProps) => {
   return L.Routing.control({
     waypoints: props.waypoints,
+    routeWhileDragging: true,
+    routeDragInterval: 10,
     ...props.options,
   });
 };
