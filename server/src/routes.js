@@ -23,4 +23,12 @@ router.get(
   }),
 );
 
+router.get(
+  "/position/:id",
+  asyncHandler(async (req, res) => {
+    const data = await apiService.getLocation(req.params.id);
+    res.json(data);
+  }),
+);
+
 export default router;
