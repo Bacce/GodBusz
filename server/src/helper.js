@@ -63,6 +63,9 @@ export const formatData = (json) => {
         delete newStop.lan;
         delete newStop.lot;
 
+        // Clean the license plate value
+        newStop.rendszam = newStop.rendszam?.split(",")[0];
+
         newStop.trips = trips;
         return newStop;
       }),
