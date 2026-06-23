@@ -13,7 +13,7 @@ export const App = () => {
   const busIcon = L.icon({
     iconUrl: "./marker-icon-bus.png",
     iconSize: [25, 41],
-    popupAnchor: [0, 0],
+    iconAnchor: [12, 41],
   });
 
   const fetchData = async () => {
@@ -38,6 +38,8 @@ export const App = () => {
     try {
       const res = await fetch(`/api/v1/position/${busIds.join(",")}`);
       const positions = await res.json();
+      if (!positions.gps || positions.gps.some((b) => !b.lat || !b.lon))
+        console.error("Bus positions missing lat/lon");
       setBuses(positions.gps);
     } catch (e) {
       console.error("Error fetching bus positions:", e);
