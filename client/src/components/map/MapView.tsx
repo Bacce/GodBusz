@@ -62,14 +62,14 @@ export const MapView = ({
       />
 
       {/* Draw stops */}
-      {visibleStops.map((stop, i) => (
-        <StopMarker key={i} stop={stop} onClick={onRouteSelect} />
+      {visibleStops.map((stop) => (
+        <StopMarker key={stop.mid} stop={stop} onClick={onRouteSelect} />
       ))}
 
       {/* Draw buses */}
       {polling &&
-        buses.map((bus, i) => (
-          <BusMarker key={i} bus={bus} onClick={onRouteSelect} />
+        buses.map((bus) => (
+          <BusMarker key={bus.rendszam} bus={bus} onClick={onRouteSelect} />
         ))}
 
       {/* Draw route line */}
