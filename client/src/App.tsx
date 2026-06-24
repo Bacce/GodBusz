@@ -205,6 +205,7 @@ export const App = () => {
                 position={[bus.lat, bus.lon]}
                 icon={bus.route === "G3" ? busIconG3 : busIconG4}
                 eventHandlers={{ click: () => setSelectedRoute(bus.route) }}
+                zIndexOffset={1000}
               >
                 <Popup>
                   <Pill variant={bus.route}>{bus.route}</Pill>{" "}
