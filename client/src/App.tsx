@@ -198,6 +198,21 @@ export const App = () => {
                 </Popup>
               </Marker>
             ))}
+          {polling &&
+            buses.map((bus, i) => (
+              <Marker
+                key={i}
+                position={[bus.lat, bus.lon]}
+                icon={bus.route === "G3" ? busIconG3 : busIconG4}
+                eventHandlers={{ click: () => setSelectedRoute(bus.route) }}
+              >
+                <Popup>
+                  <Pill variant={bus.route}>{bus.route}</Pill>{" "}
+                  <Plate>{bus.rendszam}</Plate>
+                  <div>{Math.round(bus.speed)} km/h</div>
+                </Popup>
+              </Marker>
+            ))}
           {stops.length > 0 && selectedRoute && (
             <RoutingMachine
               key={selectedRoute}
@@ -226,22 +241,6 @@ export const App = () => {
               }}
             />
           )}
-
-          {polling &&
-            buses.map((bus, i) => (
-              <Marker
-                key={i}
-                position={[bus.lat, bus.lon]}
-                icon={bus.route === "G3" ? busIconG3 : busIconG4}
-                eventHandlers={{ click: () => setSelectedRoute(bus.route) }}
-              >
-                <Popup>
-                  <Pill variant={bus.route}>{bus.route}</Pill>{" "}
-                  <Plate>{bus.rendszam}</Plate>
-                  <div>{Math.round(bus.speed)} km/h</div>
-                </Popup>
-              </Marker>
-            ))}
         </MapContainer>
       </div>
     </div>

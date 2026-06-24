@@ -4,6 +4,7 @@ import {
   getCurrentDate,
   getAllStops,
   getAllBus,
+  isTooOld,
 } from "./helper.js";
 import { apiService } from "./services/apiService.js";
 import { asyncHandler } from "./middleware/asyncHandler.js";
@@ -63,14 +64,16 @@ router.get(
         })
         .join(","),
     );
-    const richLocation = locations.gps.map((loc) => {
-      return {
-        ...loc,
-        route: buses.find((bus) => {
-          return bus.plate === loc.rendszam;
-        }).route,
-      };
-    });
+    const richLocation = locations.gps
+      .filter((loc) => !isTooOld(loc.lastUpdate))
+      .map((loc) => {
+        return {
+          ...loc,
+          route: buses.find((bus) => {
+            return bus.plate === loc.rendszam;
+          })?.route,
+        };
+      });
 
     res.json(richLocation);
   }),
@@ -79,6 +82,9 @@ router.get(
   "/position/:id",
   asyncHandler(async (req, res) => {
     const data = await apiService.getLocation(req.params.id);
+    if (data.gps) {
+      data.gps = data.gps.filter((loc) => !isTooOld(loc.lastUpdate));
+    }
     res.json(data);
   }),
 );

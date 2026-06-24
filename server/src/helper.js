@@ -1,6 +1,18 @@
 /**
+ * Checks if a given date string is more than one hour old.
+ * @param {string} dateString - The ISO date string to check.
+ * @returns {boolean} True if the date is more than one hour ago, false otherwise.
+ */
+export const isTooOld = (dateString) => {
+  if (!dateString) return true;
+  const lastUpdate = new Date(dateString);
+  const now = new Date();
+  const diff = now - lastUpdate;
+  return diff > 60 * 60 * 1000;
+};
+
+/**
  * Returns the current date as a string in YYYY-MM-DD format.
- * @returns {string} The formatted date string.
  */
 export const getCurrentDate = () => {
   const now = new Date();
