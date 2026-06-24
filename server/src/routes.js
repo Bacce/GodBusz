@@ -15,8 +15,9 @@ router.use(
   "/route-proxy",
   asyncHandler(async (req, res) => {
     const targetUrl = "https://osrm.hqnet.hu:8083/route/v1" + req.url;
-    if (routeCache.has(targetUrl)) {
-      return res.json(routeCache.get(targetUrl));
+    const cached = routeCache.get(targetUrl);
+    if (cached && !isTooOld(cached.timestamp)) {
+      return res.json(cached.data);
     }
     try {
       const response = await fetch(targetUrl);
@@ -24,7 +25,7 @@ router.use(
         throw new Error(`OSRM responded with ${response.status}`);
       }
       const data = await response.json();
-      routeCache.set(targetUrl, data);
+      routeCache.set(targetUrl, { data, timestamp: new Date().toISOString() });
       res.json(data);
     } catch (e) {
       console.error(`Proxy error for ${targetUrl}:`, e);

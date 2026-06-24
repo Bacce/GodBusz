@@ -1,3 +1,5 @@
+import { isTooOld } from "../helper.js";
+
 const BASE_URL = "https://god.molteam.hu/ajax.php";
 const routeCache = new Map();
 
@@ -18,10 +20,13 @@ async function request(params) {
 
 export const apiService = {
   loadRoute: (date) => {
-    if (!routeCache.has(date)) {
-      routeCache.set(date, request({ op: "loadRoute", d: date }));
+    const cached = routeCache.get(date);
+    if (cached && !isTooOld(cached.timestamp)) {
+      return cached.promise;
     }
-    return routeCache.get(date);
+    const promise = request({ op: "loadRoute", d: date });
+    routeCache.set(date, { promise, timestamp: new Date().toISOString() });
+    return promise;
   },
   getLocation: (id) => request({ op: "getGps", id }),
   getPopups: () => request({ op: "getPopup", a: "1" }),
