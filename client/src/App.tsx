@@ -45,17 +45,17 @@ export const App = () => {
     iconAnchor: [12, 12],
   });
 
-  const stopIconG3 = L.divIcon({
-    className: "stop-iconG3",
-    iconSize: [20, 20],
-    iconAnchor: [10, 10],
-  });
+  const STOP_ROTATIONS: Record<string, number> = {
+    "972": 0,
+  };
 
-  const stopIconG4 = L.divIcon({
-    className: "stop-iconG4",
-    iconSize: [20, 20],
-    iconAnchor: [10, 10],
-  });
+  const getStopIcon = (route: string, rotation?: number) =>
+    L.divIcon({
+      className: "",
+      iconSize: [20, 20],
+      iconAnchor: [10, 10],
+      html: `<div class="${route === "G3" ? "stop-iconG3" : "stop-iconG4"} ${rotation === undefined ? "no-arrow" : ""}" style="${rotation !== undefined ? `--rotate: ${rotation}deg` : ""}"></div>`,
+    });
 
   const fetchStops = async () => {
     setLoading(true);
@@ -141,12 +141,12 @@ export const App = () => {
               <Marker
                 key={i}
                 position={[stop.lat, stop.lon]}
-                icon={stop.route == "G3" ? stopIconG3 : stopIconG4}
+                icon={getStopIcon(stop.route, STOP_ROTATIONS[stop.mid])}
                 eventHandlers={{ click: () => setSelectedRoute(stop.route) }}
               >
                 <Popup>
                   <div className="text-sm font-bold flex pb-1 min-w-40">
-                    {stop.name}
+                    {stop.name} - {stop.mid}
                   </div>
                   <Pill variant={stop.route}>{stop.route}</Pill>
                   <div className="pb-6"></div>

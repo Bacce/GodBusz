@@ -19,7 +19,7 @@
     background: white;
     border-radius: 20px;
     transform-origin: center center;
-    transform: rotate(0deg);
+    transform: rotate(calc(var(--rotate) - 90deg));
 }
 
 .stop-iconG4 {
@@ -29,11 +29,11 @@
     background: white;
     border-radius: 20px;
     transform-origin: center center;
-    transform: rotate(0deg);
+    transform: rotate(var(--rotate));
 }
 
-/*
-.stop-icon:after {
+.stop-iconG3:after,
+.stop-iconG4:after {
     content: "";
     position: absolute;
     width: 0;
@@ -43,7 +43,10 @@
     border-bottom: 8px solid transparent;
     top: 50%;
     left: 50%;
-    transform: rotate(var(--rotate, 0deg)) translateX(11px) translateY(-8px);
+    transform: translateX(11px) translateY(-8px);
     transform-origin: center;
 }
-*/
+
+.no-arrow:after {
+    display: none;
+}
