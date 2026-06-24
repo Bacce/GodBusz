@@ -181,7 +181,7 @@ export const App = () => {
 
           {/*<TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />*/}
           <TileLayer
-            url="http://localhost:3000/Tiles/{z}/{x}/{y}.png"
+            url={import.meta.env.VITE_TILES_URL ?? "/Tiles/{z}/{x}/{y}.png"}
             keepBuffer={20}
             minZoom={14}
             maxZoom={17}
@@ -238,7 +238,7 @@ export const App = () => {
                 .map((s) => [s.lat, s.lon])}
               options={{
                 router: L.Routing.osrmv1({
-                  serviceUrl: "http://localhost:3000/api/v1/route-proxy",
+                  serviceUrl: "/api/v1/route-proxy",
                 }),
                 show: false,
                 routeWhileDragging: false,
