@@ -9,6 +9,7 @@ import {
 } from "react-leaflet";
 import L from "leaflet";
 import { Pill } from "./Pill";
+import { Plate } from "./Plate";
 import { Timetable } from "./Timetable";
 import RoutingMachine from "./RoutingMachine";
 
@@ -184,7 +185,8 @@ export const App = () => {
               eventHandlers={{ click: () => setSelectedRoute(bus.route) }}
             >
               <Tooltip>
-                <Pill variant={bus.route}>{bus.route}</Pill> {bus.rendszam}
+                <Pill variant={bus.route}>{bus.route}</Pill>{" "}
+                <Plate>{bus.rendszam}</Plate>
               </Tooltip>
             </Marker>
           ))}
