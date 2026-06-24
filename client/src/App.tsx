@@ -17,6 +17,7 @@ export const App = () => {
   const [buses, setBuses] = useState<any[]>([]);
   const [polling, setPolling] = useState(false);
   const [selectedRoute, setSelectedRoute] = useState<string | null>(null);
+  const [popup, setPopup] = useState<any | null>(null);
 
   const lastBusesRef = useRef<any[]>([]);
   const noChangeCountRef = useRef(0);
@@ -94,6 +95,18 @@ export const App = () => {
     }
   };
 
+  const fetchPopups = async () => {
+    try {
+      const res = await fetch("/api/v1/popups");
+      const json = await res.json();
+      if (json.data && json.data.length > 0) {
+        setPopup(json.data[0]);
+      }
+    } catch (e) {
+      console.error("Error fetching popups:", e);
+    }
+  };
+
   const fetchBuses = async () => {
     try {
       const res = await fetch(`/api/v1/buses`);
@@ -124,6 +137,7 @@ export const App = () => {
 
   useEffect(() => {
     fetchStops();
+    fetchPopups();
   }, []);
 
   useEffect(() => {
@@ -244,6 +258,29 @@ export const App = () => {
           )}
         </MapContainer>
       </div>
+      {popup && (
+        <div
+          className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/50 p-4"
+          onClick={() => setPopup(null)}
+        >
+          <div
+            className="bg-white rounded-lg max-w-lg w-full max-h-[80vh] overflow-y-auto relative p-6 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+              onClick={() => setPopup(null)}
+            >
+              ✕
+            </button>
+            <h2 className="text-xl font-bold mb-4">{popup.title}</h2>
+            <div
+              className="text-gray-700"
+              dangerouslySetInnerHTML={{ __html: popup.txt }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

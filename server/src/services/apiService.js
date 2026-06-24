@@ -24,4 +24,5 @@ export const apiService = {
     return routeCache.get(date);
   },
   getLocation: (id) => request({ op: "getGps", id }),
+  getPopups: () => request({ op: "getPopup", a: "1" }),
 };

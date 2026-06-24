@@ -89,4 +89,11 @@ router.get(
   }),
 );
 
+router.get(
+  "/popups",
+  asyncHandler(async (req, res) => {
+    res.json(await apiService.getPopups());
+  }),
+);
+
 export default router;
