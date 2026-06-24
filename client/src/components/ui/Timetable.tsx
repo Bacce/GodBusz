@@ -9,7 +9,7 @@ export const Timetable = ({ trips }: TimetableProps) => {
   let nextFound = false;
 
   return (
-    <div style={{ maxWidth: "200px", margin: "0 auto", fontFamily: "sans-serif" }}>
+    <div className="max-w-[200px] mx-auto font-sans">
       {trips
         .filter((t) => !t.time.startsWith("00:00"))
         .map((trip) => {
@@ -20,20 +20,16 @@ export const Timetable = ({ trips }: TimetableProps) => {
           return (
             <div
               key={trip.time}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                padding: "4px 0",
-                borderBottom: "1px solid #eee",
-                color: isPast ? "lightgrey" : isNext ? "black" : "inherit",
-                fontWeight: isNext ? "bold" : "normal",
-                backgroundColor: isNext ? "#f9f9f9" : "transparent",
-              }}
+              className={`flex justify-between py-1 border-b border-gray-100 ${
+                isPast
+                  ? "text-gray-400"
+                  : isNext
+                    ? "text-black font-bold bg-gray-50"
+                    : ""
+              }`}
             >
-              <span style={{ fontFamily: "monospace" }}>
-                {trip.time.slice(0, -3)}
-              </span>
-              {isNext && <span style={{ fontSize: "0.8em" }}>következő</span>}
+              <span className="font-mono">{trip.time.slice(0, -3)}</span>
+              {isNext && <span className="text-xs">következő</span>}
             </div>
           );
         })}
