@@ -12,10 +12,20 @@
     opacity: 1;
 }
 
-.stop-icon {
+.stop-iconG3 {
     width: 20px;
     height: 20px;
     border: 3px solid rgb(0, 158, 227);
+    background: white;
+    border-radius: 20px;
+    transform-origin: center center;
+    transform: rotate(0deg);
+}
+
+.stop-iconG4 {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgb(228, 31, 24);
     background: white;
     border-radius: 20px;
     transform-origin: center center;

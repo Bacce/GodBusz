@@ -1,5 +1,10 @@
 import express from "express";
-import { formatData, getCurrentDate, getAllStops } from "./helper.js";
+import {
+  formatData,
+  getCurrentDate,
+  getAllStops,
+  getAllBus,
+} from "./helper.js";
 import { apiService } from "./services/apiService.js";
 import { asyncHandler } from "./middleware/asyncHandler.js";
 const router = express.Router();
@@ -22,6 +27,31 @@ router.get(
   }),
 );
 
+router.get(
+  "/buses",
+  asyncHandler(async (req, res) => {
+    const dateStr = getCurrentDate();
+    const data = await apiService.loadRoute(dateStr);
+    const buses = getAllBus(data);
+    const locations = await apiService.getLocation(
+      buses
+        .map((bus) => {
+          return bus.plate;
+        })
+        .join(","),
+    );
+    const richLocation = locations.gps.map((loc) => {
+      return {
+        ...loc,
+        route: buses.find((bus) => {
+          return bus.plate === loc.rendszam;
+        }).route,
+      };
+    });
+
+    res.json(richLocation);
+  }),
+);
 router.get(
   "/position/:id",
   asyncHandler(async (req, res) => {

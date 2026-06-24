@@ -1,13 +1,7 @@
 import { useState } from "react";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Tooltip,
-  useMapEvents,
-} from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Tooltip, Popup } from "react-leaflet";
 import L from "leaflet";
-import RoutingMachine from "./RoutingMachine";
+import { Pill } from "./Pill";
 
 // function ClickHandler() {
 //   useMapEvents({
@@ -31,15 +25,28 @@ export const App = () => {
     [47.66642780836732, 19.1792106628418],
   ];
 
-  const busIcon = L.icon({
+  const busIconG3 = L.icon({
     iconUrl:
       "https://go.bkk.hu/api/ui-service/v1/icon?name=bus&color=009EE3&secondaryColor=FFFFFF&scale=1",
     iconSize: [25, 25],
     iconAnchor: [12, 12],
   });
 
-  const stopIcon = L.divIcon({
-    className: "stop-icon",
+  const busIconG4 = L.icon({
+    iconUrl:
+      "https://go.bkk.hu/api/ui-service/v1/icon?name=bus&color=e41f18&secondaryColor=FFFFFF&scale=1",
+    iconSize: [25, 25],
+    iconAnchor: [12, 12],
+  });
+
+  const stopIconG3 = L.divIcon({
+    className: "stop-iconG3",
+    iconSize: [20, 20],
+    iconAnchor: [10, 10],
+  });
+
+  const stopIconG4 = L.divIcon({
+    className: "stop-iconG4",
     iconSize: [20, 20],
     iconAnchor: [10, 10],
   });
@@ -60,15 +67,32 @@ export const App = () => {
     }
   };
 
+  const fetchStops = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/v1/stops");
+      const json = await res.json();
+      setStops(json.stops || json);
+    } catch (e) {
+      console.error("Error fetching stops:", e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const fetchBuses = async () => {
-    if (busIds.length === 0) return;
     setBusLoading(true);
     try {
-      const res = await fetch(`/api/v1/position/${busIds.join(",")}`);
+      const res = await fetch(`/api/v1/buses`);
       const positions = await res.json();
-      if (!positions.gps || positions.gps.some((b) => !b.lat || !b.lon))
+      if (positions.error !== undefined) {
+        throw new Error("Something failed");
+      }
+      if (!positions || positions.some((b) => !b.lat || !b.lon)) {
         console.error("Bus positions missing lat/lon");
-      setBuses(positions.gps);
+        throw new Error("Bus position missing lat/lon");
+      }
+      setBuses(positions);
     } catch (e) {
       console.error("Error fetching bus positions:", e);
     } finally {
@@ -81,19 +105,26 @@ export const App = () => {
       <header className="flex items-center justify-between h-[54px] bg-white border-b-[3px] border-[#c6c6c6] px-4">
         <img src="/logo_godgo.png" alt="Logo" className="max-h-full" />
         <div className="flex gap-2">
-          <button
+          {/*<button
             onClick={fetchData}
             className="px-4 py-2 bg-blue-600 text-white rounded w-fit"
             disabled={loading}
           >
             {loading ? "Fetching..." : "Fetch Route"}
-          </button>
+          </button>*/}
           <button
             onClick={fetchBuses}
             className="px-4 py-2 bg-green-600 text-white rounded w-fit"
             disabled={busLoading}
           >
             {busLoading ? "Fetching..." : "Get Bus Positions"}
+          </button>
+          <button
+            onClick={fetchStops}
+            className="px-4 py-2 bg-purple-600 text-white rounded w-fit"
+            disabled={loading}
+          >
+            {loading ? "Fetching..." : "Get Stops"}
           </button>
         </div>
       </header>
@@ -116,19 +147,29 @@ export const App = () => {
             updateWhenIdle={false}
             updateInterval={0}
           />
-          {stops
-            .filter((s) => s.visible)
-            .map((stop, i) => (
-              <Marker key={i} position={[stop.lat, stop.lon]} icon={stopIcon}>
-                <Tooltip>{stop.megallo}</Tooltip>
-              </Marker>
-            ))}
+          {stops.map((stop, i) => (
+            <Marker
+              key={i}
+              position={[stop.lat, stop.lon]}
+              icon={stop.route == "G3" ? stopIconG3 : stopIconG4}
+            >
+              <Popup>
+                {stop.name}
+                <br />
+                <Pill variant={stop.route}>{stop.route}</Pill>
+              </Popup>
+            </Marker>
+          ))}
           {buses.map((bus, i) => (
-            <Marker key={i} position={[bus.lat, bus.lon]} icon={busIcon}>
+            <Marker
+              key={i}
+              position={[bus.lat, bus.lon]}
+              icon={bus.route === "G3" ? busIconG3 : busIconG4}
+            >
               <Tooltip>{bus.rendszam}</Tooltip>
             </Marker>
           ))}
-          {stops.length > 0 && (
+          {/*{stops.length > 0 && (
             <RoutingMachine
               waypoints={stops.map((s) => [s.lat, s.lon])}
               options={{
@@ -146,7 +187,7 @@ export const App = () => {
                 },
               }}
             />
-          )}
+          )}*/}
         </MapContainer>
       </div>
     </div>
