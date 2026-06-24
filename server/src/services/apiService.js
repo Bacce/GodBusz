@@ -25,6 +25,7 @@ export const apiService = {
       return cached.data;
     }
     const data = await request({ op: "loadRoute", d: date });
+    if (routeCache.size > 1000) routeCache.clear(); // ponytail: prevent unbounded growth
     routeCache.set(date, { data, timestamp: new Date().toISOString() });
     return data;
   },

@@ -25,6 +25,7 @@ router.use(
         throw new Error(`OSRM responded with ${response.status}`);
       }
       const data = await response.json();
+      if (routeCache.size > 1000) routeCache.clear(); // ponytail: prevent unbounded growth
       routeCache.set(targetUrl, { data, timestamp: new Date().toISOString() });
       res.json(data);
     } catch (e) {
