@@ -1,11 +1,15 @@
-export const Timetable = ({ trips }) => {
-  const now = new Date().toLocaleTimeString("en-GB"); // ponytail: "HH:mm:ss" format
+import type { Trip } from "../../lib/types";
+
+interface TimetableProps {
+  trips: Trip[];
+}
+
+export const Timetable = ({ trips }: TimetableProps) => {
+  const now = new Date().toLocaleTimeString("en-GB"); // "HH:mm:ss" format
   let nextFound = false;
 
   return (
-    <div
-      style={{ maxWidth: "200px", margin: "0 auto", fontFamily: "sans-serif" }}
-    >
+    <div style={{ maxWidth: "200px", margin: "0 auto", fontFamily: "sans-serif" }}>
       {trips
         .filter((t) => !t.time.startsWith("00:00"))
         .map((trip) => {
