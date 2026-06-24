@@ -20,7 +20,9 @@ router.use(
       return res.json(cached.data);
     }
     try {
-      const response = await fetch(targetUrl);
+      const response = await fetch(targetUrl, {
+        signal: AbortSignal.timeout(10000),
+      });
       if (!response.ok) {
         throw new Error(`OSRM responded with ${response.status}`);
       }
