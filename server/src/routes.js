@@ -1,19 +1,24 @@
 import express from "express";
-import { formatData, getCurrentDate } from "./helper.js";
+import { formatData, getCurrentDate, getAllStops } from "./helper.js";
 import { apiService } from "./services/apiService.js";
 import { asyncHandler } from "./middleware/asyncHandler.js";
-import { cache } from "./middleware/cache.js";
-
 const router = express.Router();
 
 router.get(
   "/route",
-  cache(10 * 60 * 1000),
   asyncHandler(async (req, res) => {
     const dateStr = getCurrentDate();
-
-    const data = await apiService.loadRoute("14", dateStr);
+    const data = await apiService.loadRoute(dateStr);
     res.send(formatData(data));
+  }),
+);
+
+router.get(
+  "/stops",
+  asyncHandler(async (req, res) => {
+    const dateStr = getCurrentDate();
+    const data = await apiService.loadRoute(dateStr);
+    res.send(getAllStops(data));
   }),
 );
 

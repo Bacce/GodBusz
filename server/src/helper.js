@@ -74,3 +74,17 @@ export const formatData = (json) => {
 
   return json;
 };
+
+/** Get all the stop data from the raw json response of the original API */
+export const getAllStops = (json) => ({
+  stops: (json.data || [])
+    .flat()
+    .filter((s) => s.visible === "1")
+    .map((s) => ({
+      mid: s.mid,
+      lat: s.lan,
+      lon: s.lot,
+      jarat: s.jarat,
+      megallo: s.megallo,
+    })),
+});
