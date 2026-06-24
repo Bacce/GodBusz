@@ -19,14 +19,14 @@ async function request(params) {
 }
 
 export const apiService = {
-  loadRoute: (date) => {
+  loadRoute: async (date) => {
     const cached = routeCache.get(date);
     if (cached && !isTooOld(cached.timestamp)) {
-      return cached.promise;
+      return cached.data;
     }
-    const promise = request({ op: "loadRoute", d: date });
-    routeCache.set(date, { promise, timestamp: new Date().toISOString() });
-    return promise;
+    const data = await request({ op: "loadRoute", d: date });
+    routeCache.set(date, { data, timestamp: new Date().toISOString() });
+    return data;
   },
   getLocation: (id) => request({ op: "getGps", id }),
   getPopups: () => request({ op: "getPopup", a: "1" }),
