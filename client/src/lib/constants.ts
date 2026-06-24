@@ -2,8 +2,7 @@ import type { LatLngBoundsLiteral } from "leaflet";
 
 // ── Map ──────────────────────────────────────────────────────────────────────
 export const MAP_DEFAULT_CENTER: [number, number] = [
-  47.69008467960837,
-  19.13739702507176,
+  47.69008467960837, 19.13739702507176,
 ];
 export const MAP_DEFAULT_ZOOM = 13;
 
@@ -42,6 +41,10 @@ export const STOP_ROTATIONS: Record<string, number> = {
 };
 
 // ── API endpoints ─────────────────────────────────────────────────────────────
+export const BACKEND_URL = (import.meta.env.VITE_BACKEND_URL || "").replace(
+  /\/$/,
+  "",
+);
 export const API_STOPS = "/api/v1/stops";
 export const API_BUSES = "/api/v1/buses";
 export const API_POPUPS = "/api/v1/popups";

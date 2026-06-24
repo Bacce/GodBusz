@@ -1,9 +1,15 @@
-import { API_STOPS, API_BUSES, API_POPUPS } from "../lib/constants";
+import {
+  API_STOPS,
+  API_BUSES,
+  API_POPUPS,
+  BACKEND_URL,
+} from "../lib/constants";
 import type { Stop, Bus, PopupData } from "../lib/types";
 
 async function get<T>(url: string): Promise<T> {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`HTTP ${res.status} fetching ${url}`);
+  const fullUrl = `${BACKEND_URL}${url}`;
+  const res = await fetch(fullUrl);
+  if (!res.ok) throw new Error(`HTTP ${res.status} fetching ${fullUrl}`);
   return res.json() as Promise<T>;
 }
 

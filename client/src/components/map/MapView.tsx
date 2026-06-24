@@ -4,7 +4,13 @@ import { MapClickHandler } from "./MapClickHandler";
 import { StopMarker } from "./StopMarker";
 import { BusMarker } from "./BusMarker";
 import RoutingMachine from "../../RoutingMachine";
-import { MAP_BOUNDS, COLOR_G3, COLOR_G4, API_ROUTE_PROXY } from "../../lib/constants";
+import {
+  MAP_BOUNDS,
+  COLOR_G3,
+  COLOR_G4,
+  API_ROUTE_PROXY,
+  BACKEND_URL,
+} from "../../lib/constants";
 import type { Stop, Bus } from "../../lib/types";
 
 interface MapViewProps {
@@ -53,7 +59,7 @@ export const MapView = ({
 
       {/* <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" /> */}
       <TileLayer
-        url={import.meta.env.VITE_TILES_URL ?? "/Tiles/{z}/{x}/{y}.png"}
+        url={import.meta.env.VITE_BACKEND_URL + "/Tiles/{z}/{x}/{y}.png"}
         keepBuffer={20}
         minZoom={14}
         maxZoom={17}
@@ -80,7 +86,9 @@ export const MapView = ({
             .filter((s) => s.route === selectedRoute)
             .map((s) => [s.lat, s.lon])}
           options={{
-            router: L.Routing.osrmv1({ serviceUrl: API_ROUTE_PROXY }),
+            router: L.Routing.osrmv1({
+              serviceUrl: BACKEND_URL + API_ROUTE_PROXY,
+            }),
             show: false,
             routeWhileDragging: false,
             createMarker: () => false,
