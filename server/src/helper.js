@@ -77,18 +77,43 @@ export const formatData = (json) => {
 };
 
 /** Get all the stop data from the raw json response of the original API */
-export const getAllStops = (json) => ({
-  stops: (json.data || [])
-    .flat()
-    .filter((s) => s.visible === "1")
-    .map((s) => ({
-      mid: s.mid,
-      lat: s.lan,
-      lon: s.lot,
-      route: s.jarat,
-      name: s.megallo,
-    })),
-});
+export const getAllStops = (json) => {
+  const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
+
+  return {
+    stops: (json.data || [])
+      .flat()
+      .filter((s) => s.visible === "1")
+      .map((s) => {
+        const trips = [];
+        alphabet.forEach((letter) => {
+          const time = s[`${letter}time`];
+          const nev = s[`${letter}nev`];
+          const sd = s[`${letter}sd`];
+          const ed = s[`${letter}ed`];
+
+          if (
+            time !== null &&
+            (time !== undefined ||
+              nev !== undefined ||
+              sd !== undefined ||
+              ed !== undefined)
+          ) {
+            trips.push({ time, nev, sd, ed });
+          }
+        });
+
+        return {
+          mid: s.mid,
+          lat: s.lan,
+          lon: s.lot,
+          route: s.jarat,
+          name: s.megallo,
+          trips,
+        };
+      }),
+  };
+};
 
 export const getAllBus = (json) => {
   return json.data

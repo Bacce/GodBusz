@@ -2,6 +2,7 @@ import { useState } from "react";
 import { MapContainer, TileLayer, Marker, Tooltip, Popup } from "react-leaflet";
 import L from "leaflet";
 import { Pill } from "./Pill";
+import { Timetable } from "./Timetable";
 
 // function ClickHandler() {
 //   useMapEvents({
@@ -157,6 +158,8 @@ export const App = () => {
                 {stop.name}
                 <br />
                 <Pill variant={stop.route}>{stop.route}</Pill>
+
+                <Timetable trips={stop.trips} />
               </Popup>
             </Marker>
           ))}
@@ -166,7 +169,9 @@ export const App = () => {
               position={[bus.lat, bus.lon]}
               icon={bus.route === "G3" ? busIconG3 : busIconG4}
             >
-              <Tooltip>{bus.rendszam}</Tooltip>
+              <Tooltip>
+                <Pill variant={bus.route}>{bus.route}</Pill> {bus.rendszam}
+              </Tooltip>
             </Marker>
           ))}
           {/*{stops.length > 0 && (
