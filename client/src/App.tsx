@@ -27,8 +27,8 @@ export const App = () => {
   };
 
   const bounds = [
-    [47.72073370652853, 19.119644165039066],
-    [47.66642780836732, 19.1792106628418],
+    // [47.72073370652853, 19.119644165039066],
+    // [47.66642780836732, 19.1792106628418],
   ];
 
   const busIconG3 = L.icon({
@@ -46,7 +46,19 @@ export const App = () => {
   });
 
   const STOP_ROTATIONS: Record<string, number> = {
-    "972": 0,
+    // G3 - Blue line
+    "970": 125,
+    "971": 210,
+    "972": 180,
+    "973": 0,
+    "974": 90,
+
+    // G4 - Red line
+    "1001": -90,
+    "1002": -90,
+    "1003": 0,
+    "1004": 30,
+    "1005": -55,
   };
 
   const getStopIcon = (route: string, rotation?: number) =>
@@ -176,7 +188,7 @@ export const App = () => {
                 .map((s) => [s.lat, s.lon])}
               options={{
                 router: L.Routing.osrmv1({
-                  serviceUrl: "https://osrm.hqnet.hu:8083/route/v1",
+                  serviceUrl: "http://localhost:3000/api/v1/route-proxy",
                 }),
                 show: false,
                 routeWhileDragging: false,
