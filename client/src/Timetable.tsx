@@ -3,7 +3,9 @@ export const Timetable = ({ trips }) => {
   let nextFound = false;
 
   return (
-    <div>
+    <div
+      style={{ maxWidth: "200px", margin: "0 auto", fontFamily: "sans-serif" }}
+    >
       {trips.map((trip) => {
         const isPast = trip.time < now;
         const isNext = !isPast && !nextFound;
@@ -13,11 +15,19 @@ export const Timetable = ({ trips }) => {
           <div
             key={trip.time}
             style={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: "4px 0",
+              borderBottom: "1px solid #eee",
               color: isPast ? "lightgrey" : isNext ? "black" : "inherit",
               fontWeight: isNext ? "bold" : "normal",
+              backgroundColor: isNext ? "#f9f9f9" : "transparent",
             }}
           >
-            {trip.time.slice(0, -3)}
+            <span style={{ fontFamily: "monospace" }}>
+              {trip.time.slice(0, -3)}
+            </span>
+            {isNext && <span style={{ fontSize: "0.8em" }}>következő</span>}
           </div>
         );
       })}
