@@ -1,5 +1,6 @@
 import L from "leaflet";
 import { createControlComponent } from "@react-leaflet/core";
+import React from "react";
 import "leaflet-routing-machine";
 
 interface RoutingMachineProps {
@@ -16,6 +17,8 @@ const createRoutingMachineLayer = (props: RoutingMachineProps) => {
   });
 };
 
-const RoutingMachine = createControlComponent(createRoutingMachineLayer);
+const RoutingMachine = createControlComponent(
+  createRoutingMachineLayer as any,
+) as React.ComponentType<RoutingMachineProps>;
 
 export default RoutingMachine;
