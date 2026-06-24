@@ -95,13 +95,6 @@ export const App = () => {
       <header className="flex items-center justify-between h-[54px] bg-white border-b-[3px] border-[#c6c6c6] px-4">
         <img src="/logo_godgo.png" alt="Logo" className="max-h-full" />
         <div className="flex gap-2">
-          {/*<button
-            onClick={fetchData}
-            className="px-4 py-2 bg-blue-600 text-white rounded w-fit"
-            disabled={loading}
-          >
-            {loading ? "Fetching..." : "Fetch Route"}
-          </button>*/}
           <button
             onClick={fetchBuses}
             className="px-4 py-2 bg-green-600 text-white rounded w-fit"
