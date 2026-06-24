@@ -19,9 +19,22 @@ export const App = () => {
   const [busLoading, setBusLoading] = useState(false);
   const [selectedRoute, setSelectedRoute] = useState<string | null>(null);
 
+  const center = JSON.parse(
+    localStorage.getItem("mapCenter") ||
+      "[47.69008467960837, 19.13739702507176]",
+  );
+  const zoom = parseInt(localStorage.getItem("mapZoom") || "13", 10);
+
   const MapClickHandler = () => {
     useMapEvents({
       click: () => setSelectedRoute(null),
+      moveend: (e) =>
+        localStorage.setItem(
+          "mapCenter",
+          JSON.stringify([e.target.getCenter().lat, e.target.getCenter().lng]),
+        ),
+      zoomend: (e) =>
+        localStorage.setItem("mapZoom", e.target.getZoom().toString()),
     });
     return null;
   };
@@ -125,10 +138,10 @@ export const App = () => {
       </header>
       <div className="flex-1">
         <MapContainer
-          center={[47.69008467960837, 19.13739702507176]}
+          center={center}
           maxBounds={bounds}
           maxBoundsViscosity={1.0}
-          zoom={13}
+          zoom={zoom}
           className="h-full w-full"
         >
           <MapClickHandler />
