@@ -20,7 +20,7 @@ app.use(express.static("public"));
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   limit: 1000, // Increased to accommodate 2s polling on /buses (~450 req/15min)
-  standardHeaders: "CORS",
+  standardHeaders: true,
   legacyHeaders: false,
   message: "Too many requests, please try again later.",
 });
