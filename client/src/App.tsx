@@ -137,23 +137,30 @@ export const App = () => {
             updateWhenIdle={false}
             updateInterval={0}
           />
-          {stops.map((stop, i) => (
-            <Marker
-              key={i}
-              position={[stop.lat, stop.lon]}
-              icon={stop.route == "G3" ? stopIconG3 : stopIconG4}
-              eventHandlers={{ click: () => setSelectedRoute(stop.route) }}
-            >
-              <Popup>
-                <div className="text-sm font-bold flex pb-1 min-w-40">
-                  {stop.name}
-                </div>
-                <Pill variant={stop.route}>{stop.route}</Pill>
-                <div className="pb-6"></div>
-                <Timetable trips={stop.trips} />
-              </Popup>
-            </Marker>
-          ))}
+          {stops
+            .filter((stop) => {
+              if (selectedRoute !== null) {
+                return stop.route === selectedRoute;
+              }
+              return stop;
+            })
+            .map((stop, i) => (
+              <Marker
+                key={i}
+                position={[stop.lat, stop.lon]}
+                icon={stop.route == "G3" ? stopIconG3 : stopIconG4}
+                eventHandlers={{ click: () => setSelectedRoute(stop.route) }}
+              >
+                <Popup>
+                  <div className="text-sm font-bold flex pb-1 min-w-40">
+                    {stop.name}
+                  </div>
+                  <Pill variant={stop.route}>{stop.route}</Pill>
+                  <div className="pb-6"></div>
+                  <Timetable trips={stop.trips} />
+                </Popup>
+              </Marker>
+            ))}
           {buses.map((bus, i) => (
             <Marker
               key={i}
