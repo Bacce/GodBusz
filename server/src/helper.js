@@ -131,7 +131,7 @@ export const getAllBus = (json) => {
   return json.data
     .map((child) => {
       return {
-        plate: child[0]?.rendszam.split(",")[0],
+        plate: child[0]?.rendszam?.split(",")[0],
         route: child[0]?.jarat,
       };
     })
