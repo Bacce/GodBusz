@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   MapContainer,
   TileLayer,
   Marker,
-  Tooltip,
   Popup,
   useMapEvents,
 } from "react-leaflet";
@@ -16,13 +15,11 @@ import RoutingMachine from "./RoutingMachine";
 export const App = () => {
   const [stops, setStops] = useState<any[]>([]);
   const [buses, setBuses] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [busLoading, setBusLoading] = useState(false);
+  const [polling, setPolling] = useState(false);
   const [selectedRoute, setSelectedRoute] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchStops();
-  }, []);
+  const lastBusesRef = useRef<any[]>([]);
+  const noChangeCountRef = useRef(0);
 
   const center = JSON.parse(
     localStorage.getItem("mapCenter") ||
@@ -88,20 +85,16 @@ export const App = () => {
     });
 
   const fetchStops = async () => {
-    setLoading(true);
     try {
       const res = await fetch("/api/v1/stops");
       const json = await res.json();
       setStops(json.stops || json);
     } catch (e) {
       console.error("Error fetching stops:", e);
-    } finally {
-      setLoading(false);
     }
   };
 
   const fetchBuses = async () => {
-    setBusLoading(true);
     try {
       const res = await fetch(`/api/v1/buses`);
       const positions = await res.json();
@@ -112,25 +105,53 @@ export const App = () => {
         console.error("Bus positions missing lat/lon");
         throw new Error("Bus position missing lat/lon");
       }
+
+      if (JSON.stringify(positions) === JSON.stringify(lastBusesRef.current)) {
+        noChangeCountRef.current++;
+        if (noChangeCountRef.current >= 20) {
+          setPolling(false);
+        }
+      } else {
+        noChangeCountRef.current = 0;
+      }
+      lastBusesRef.current = positions;
+
       setBuses(positions);
     } catch (e) {
       console.error("Error fetching bus positions:", e);
-    } finally {
-      setBusLoading(false);
     }
   };
 
+  useEffect(() => {
+    fetchStops();
+  }, []);
+
+  useEffect(() => {
+    if (!polling) {
+      noChangeCountRef.current = 0;
+      lastBusesRef.current = [];
+      return;
+    }
+    fetchBuses();
+    const id = setInterval(fetchBuses, 2000);
+    return () => clearInterval(id);
+  }, [polling]);
+
   return (
     <div className="flex flex-col h-screen">
-      <header className="flex items-center justify-between h-[54px] bg-white border-b-[3px] border-[#c6c6c6] px-4">
+      <header className="flex items-center justify-between h-13.5 bg-white border-b-[3px] border-[#c6c6c6] px-4">
         <img src="/logo_godgo.png" alt="Logo" className="max-h-full" />
         <div className="flex gap-2">
           <button
-            onClick={fetchBuses}
-            className="px-4 py-2 bg-green-600 text-white rounded w-fit"
-            disabled={busLoading}
+            onClick={() => setPolling(!polling)}
+            className={`pl-2 pr-4 py-1 rounded w-fit flex items-center gap-2 transition-colors ${
+              polling
+                ? "bg-[#009EE3] text-white"
+                : "bg-transparent text-gray-600 border border-gray-300 hover:bg-gray-100"
+            }`}
           >
-            {busLoading ? "Fetching..." : "Get Bus Positions"}
+            <img src="https://go.bkk.hu/api/ui-service/v1/icon?name=bus&color=009EE3&secondaryColor=FFFFFF&scale=0.3" />
+            Járművek követése
           </button>
         </div>
       </header>
@@ -177,19 +198,6 @@ export const App = () => {
                 </Popup>
               </Marker>
             ))}
-          {buses.map((bus, i) => (
-            <Marker
-              key={i}
-              position={[bus.lat, bus.lon]}
-              icon={bus.route === "G3" ? busIconG3 : busIconG4}
-              eventHandlers={{ click: () => setSelectedRoute(bus.route) }}
-            >
-              <Tooltip>
-                <Pill variant={bus.route}>{bus.route}</Pill>{" "}
-                <Plate>{bus.rendszam}</Plate>
-              </Tooltip>
-            </Marker>
-          ))}
           {stops.length > 0 && selectedRoute && (
             <RoutingMachine
               key={selectedRoute}
@@ -218,6 +226,22 @@ export const App = () => {
               }}
             />
           )}
+
+          {polling &&
+            buses.map((bus, i) => (
+              <Marker
+                key={i}
+                position={[bus.lat, bus.lon]}
+                icon={bus.route === "G3" ? busIconG3 : busIconG4}
+                eventHandlers={{ click: () => setSelectedRoute(bus.route) }}
+              >
+                <Popup>
+                  <Pill variant={bus.route}>{bus.route}</Pill>{" "}
+                  <Plate>{bus.rendszam}</Plate>
+                  <div>{Math.round(bus.speed)} km/h</div>
+                </Popup>
+              </Marker>
+            ))}
         </MapContainer>
       </div>
     </div>
