@@ -3,6 +3,8 @@ import {
   BUS_ICON_URL_G3,
   BUS_ICON_URL_G4,
   STOP_ROTATIONS,
+  COLOR_G3,
+  COLOR_G4,
 } from "./constants";
 
 export const busIconG3 = L.icon({
@@ -22,9 +24,9 @@ export const getStopIcon = (route: string, rotation?: number) =>
     className: "",
     iconSize: [20, 20],
     iconAnchor: [10, 10],
-    html: `<div class="${route === "G3" ? "stop-iconG3" : "stop-iconG4"} ${
+    html: `<div class="stop-icon ${
       rotation === undefined ? "no-arrow" : ""
-    }" style="${rotation !== undefined ? `--rotate: ${rotation}deg` : ""}"></div>`,
+    }" style="${rotation !== undefined ? `--rotate: ${rotation}deg;` : ""} --stop-color: ${route === "G3" ? COLOR_G3 : COLOR_G4}"></div>`,
   });
 
 export { STOP_ROTATIONS };

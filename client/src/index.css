@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+@theme {
+    --color-g3: #009ee3;
+    --color-g4: #e41f18;
+}
+
 .leaflet-control-container .leaflet-routing-container-hide {
     display: none;
 }
@@ -8,37 +13,27 @@
     opacity: 1;
     transition: opacity 0s linear !important;
 }
+
 .leaflet-fade-anim .leaflet-map-pane .leaflet-popup {
     opacity: 1;
 }
 
-.stop-iconG3 {
+.stop-icon {
     width: 20px;
     height: 20px;
-    border: 3px solid rgb(0, 158, 227);
+    border: 3px solid var(--stop-color);
     background: white;
     border-radius: 20px;
     transform-origin: center center;
     transform: rotate(calc(var(--rotate) - 90deg));
 }
 
-.stop-iconG4 {
-    width: 20px;
-    height: 20px;
-    border: 3px solid rgb(228, 31, 24);
-    background: white;
-    border-radius: 20px;
-    transform-origin: center center;
-    transform: rotate(calc(var(--rotate) - 90deg));
-}
-
-.stop-iconG3:after,
-.stop-iconG4:after {
+.stop-icon:after {
     content: "";
     position: absolute;
     width: 0;
     height: 0;
-    border-left: 6px solid black;
+    border-left: 6px solid var(--stop-color);
     border-top: 6px solid transparent;
     border-bottom: 6px solid transparent;
     top: 50%;
