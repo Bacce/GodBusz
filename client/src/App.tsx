@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import DOMPurify from "dompurify";
 import {
   MapContainer,
   TileLayer,
@@ -276,7 +277,9 @@ export const App = () => {
             <h2 className="text-xl font-bold mb-4">{popup.title}</h2>
             <div
               className="text-gray-700"
-              dangerouslySetInnerHTML={{ __html: popup.txt }}
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(popup.txt ?? ""),
+              }}
             />
           </div>
         </div>

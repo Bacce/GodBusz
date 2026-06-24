@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.1",
+    "@types/dompurify": "^3.0.5",
+    "dompurify": "^3.4.11",
     "leaflet": "^1.9.4",
     "leaflet-routing-machine": "^3.2.12",
     "react": "^19.0.0-rc.1",
