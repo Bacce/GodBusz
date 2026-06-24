@@ -1,25 +1,30 @@
 import { useState } from "react";
-import { MapContainer, TileLayer, Marker, Tooltip, Popup } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Tooltip,
+  Popup,
+  useMapEvents,
+} from "react-leaflet";
 import L from "leaflet";
 import { Pill } from "./Pill";
 import { Timetable } from "./Timetable";
-
-// function ClickHandler() {
-//   useMapEvents({
-//     click(e) {
-//       console.log("Clicked coordinates:", e.latlng);
-//     },
-//   });
-
-//   return null;
-// }
+import RoutingMachine from "./RoutingMachine";
 
 export const App = () => {
   const [stops, setStops] = useState<any[]>([]);
   const [buses, setBuses] = useState<any[]>([]);
-  const [busIds, setBusIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [busLoading, setBusLoading] = useState(false);
+  const [selectedRoute, setSelectedRoute] = useState<string | null>(null);
+
+  const MapClickHandler = () => {
+    useMapEvents({
+      click: () => setSelectedRoute(null),
+    });
+    return null;
+  };
 
   const bounds = [
     [47.72073370652853, 19.119644165039066],
@@ -51,22 +56,6 @@ export const App = () => {
     iconSize: [20, 20],
     iconAnchor: [10, 10],
   });
-
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch("/api/v1/route");
-      const json = await res.json();
-      setStops(json.data[0]);
-      setBusIds(
-        json.data.map((child: any[]) => child[0]?.rendszam).filter(Boolean),
-      );
-    } catch (e) {
-      console.error("Error fetching route data:", e);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const fetchStops = async () => {
     setLoading(true);
@@ -137,14 +126,14 @@ export const App = () => {
           zoom={13}
           className="h-full w-full"
         >
-          {/*<ClickHandler />*/}
+          <MapClickHandler />
 
           {/*<TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />*/}
           <TileLayer
             url="http://localhost:3000/Tiles/{z}/{x}/{y}.png"
             keepBuffer={20}
             minZoom={14}
-            maxZoom={16}
+            maxZoom={17}
             updateWhenIdle={false}
             updateInterval={0}
           />
@@ -153,12 +142,14 @@ export const App = () => {
               key={i}
               position={[stop.lat, stop.lon]}
               icon={stop.route == "G3" ? stopIconG3 : stopIconG4}
+              eventHandlers={{ click: () => setSelectedRoute(stop.route) }}
             >
               <Popup>
-                {stop.name}
-                <br />
+                <div className="text-sm font-bold flex pb-1 min-w-40">
+                  {stop.name}
+                </div>
                 <Pill variant={stop.route}>{stop.route}</Pill>
-
+                <div className="pb-6"></div>
                 <Timetable trips={stop.trips} />
               </Popup>
             </Marker>
@@ -168,15 +159,21 @@ export const App = () => {
               key={i}
               position={[bus.lat, bus.lon]}
               icon={bus.route === "G3" ? busIconG3 : busIconG4}
+              eventHandlers={{ click: () => setSelectedRoute(bus.route) }}
             >
               <Tooltip>
                 <Pill variant={bus.route}>{bus.route}</Pill> {bus.rendszam}
               </Tooltip>
             </Marker>
           ))}
-          {/*{stops.length > 0 && (
+          {stops.length > 0 && selectedRoute && (
             <RoutingMachine
-              waypoints={stops.map((s) => [s.lat, s.lon])}
+              key={selectedRoute}
+              waypoints={stops
+                .filter((stop) => {
+                  return stop.route === selectedRoute;
+                })
+                .map((s) => [s.lat, s.lon])}
               options={{
                 router: L.Routing.osrmv1({
                   serviceUrl: "https://osrm.hqnet.hu:8083/route/v1",
@@ -187,12 +184,16 @@ export const App = () => {
                 lineOptions: {
                   addWaypoints: false,
                   styles: [
-                    { color: "rgb(0, 158, 227)", opacity: 1, weight: 3 },
+                    {
+                      color: selectedRoute === "G3" ? "#009ee3" : "#e41f18",
+                      opacity: 1,
+                      weight: 3,
+                    },
                   ],
                 },
               }}
             />
-          )}*/}
+          )}
         </MapContainer>
       </div>
     </div>

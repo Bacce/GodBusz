@@ -17,7 +17,7 @@ export const Timetable = ({ trips }) => {
               fontWeight: isNext ? "bold" : "normal",
             }}
           >
-            {trip.time}
+            {trip.time.slice(0, -3)}
           </div>
         );
       })}
