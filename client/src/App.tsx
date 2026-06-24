@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -18,6 +18,10 @@ export const App = () => {
   const [loading, setLoading] = useState(false);
   const [busLoading, setBusLoading] = useState(false);
   const [selectedRoute, setSelectedRoute] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchStops();
+  }, []);
 
   const center = JSON.parse(
     localStorage.getItem("mapCenter") ||
@@ -126,13 +130,6 @@ export const App = () => {
             disabled={busLoading}
           >
             {busLoading ? "Fetching..." : "Get Bus Positions"}
-          </button>
-          <button
-            onClick={fetchStops}
-            className="px-4 py-2 bg-purple-600 text-white rounded w-fit"
-            disabled={loading}
-          >
-            {loading ? "Fetching..." : "Get Stops"}
           </button>
         </div>
       </header>
