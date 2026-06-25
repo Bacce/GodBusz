@@ -3,10 +3,11 @@ import { fetchBuses } from "../api/client";
 import { MAX_NO_CHANGE_COUNT, POLL_INTERVAL_MS } from "../lib/constants";
 import type { Bus } from "../lib/types";
 
-export function useBuses(polling: boolean) {
+export function useBuses(polling: boolean, onEmpty?: () => void) {
   const [buses, setBuses] = useState<Bus[]>([]);
   const lastBusesRef = useRef<Bus[]>([]);
   const noChangeCountRef = useRef(0);
+  const emptyCountRef = useRef(0);
 
   // Expose a setter so the caller can turn polling off when the feed stalls.
   const [active, setActive] = useState(polling);
@@ -19,6 +20,7 @@ export function useBuses(polling: boolean) {
   useEffect(() => {
     if (!active) {
       noChangeCountRef.current = 0;
+      emptyCountRef.current = 0;
       lastBusesRef.current = [];
       setBuses([]);
       return;
@@ -27,6 +29,15 @@ export function useBuses(polling: boolean) {
     const poll = async () => {
       try {
         const positions = await fetchBuses();
+
+        if (positions.length === 0) {
+          emptyCountRef.current++;
+          if (emptyCountRef.current >= 2) {
+            onEmpty?.();
+          }
+        } else {
+          emptyCountRef.current = 0;
+        }
 
         if (
           JSON.stringify(positions) === JSON.stringify(lastBusesRef.current)
@@ -42,6 +53,10 @@ export function useBuses(polling: boolean) {
         setBuses(positions);
       } catch (e) {
         console.error("Error fetching bus positions:", e);
+        emptyCountRef.current++;
+        if (emptyCountRef.current >= 2) {
+          onEmpty?.();
+        }
       }
     };
 

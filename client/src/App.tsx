@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { PopupData } from "./lib/types";
 import { MapView } from "./components/map/MapView";
 import { Header } from "./components/ui/Header";
 import { PopupModal } from "./components/ui/PopupModal";
@@ -10,9 +11,16 @@ import { useMapPersistence } from "./hooks/useMapPersistence";
 export const App = () => {
   const [polling, setPolling] = useState(false);
   const [selectedRoute, setSelectedRoute] = useState<string | null>(null);
+  const [errorPopup, setErrorPopup] = useState<PopupData | null>(null);
 
   const stops = useStops();
-  const buses = useBuses(polling);
+  const buses = useBuses(polling, () => {
+    setPolling(false);
+    setErrorPopup({
+      title: "Hiba",
+      txt: "Jármű követés nem elérhető, próbálja meg később",
+    });
+  });
   const { popup, dismiss } = usePopups();
   const { center, zoom, saveCenter, saveZoom } = useMapPersistence();
 
@@ -36,6 +44,9 @@ export const App = () => {
       </div>
 
       {popup && <PopupModal popup={popup} onDismiss={dismiss} />}
+      {errorPopup && (
+        <PopupModal popup={errorPopup} onDismiss={() => setErrorPopup(null)} />
+      )}
     </div>
   );
 };
