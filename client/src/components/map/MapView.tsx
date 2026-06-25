@@ -6,8 +6,6 @@ import { BusMarker } from "./BusMarker";
 import RoutingMachine from "../../RoutingMachine";
 import {
   MAP_BOUNDS,
-  COLOR_G3,
-  COLOR_G4,
   COLOR_G3_ROUTE,
   COLOR_G4_ROUTE,
   API_ROUTE_PROXY,
