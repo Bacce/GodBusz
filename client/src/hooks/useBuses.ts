@@ -54,7 +54,7 @@ export function useBuses(polling: boolean, onEmpty?: () => void) {
       } catch (e) {
         console.error("Error fetching bus positions:", e);
         emptyCountRef.current++;
-        if (emptyCountRef.current >= 2) {
+        if (emptyCountRef.current >= 3) {
           onEmpty?.();
         }
       }
