@@ -25,7 +25,7 @@ export const App = () => {
   const { center, zoom, saveCenter, saveZoom } = useMapPersistence();
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-dvh overflow-hidden">
       <Header polling={polling} onTogglePolling={() => setPolling((p) => !p)} />
 
       <div className="flex-1 relative">
