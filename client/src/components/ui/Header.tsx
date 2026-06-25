@@ -26,7 +26,11 @@ export const Header = ({ polling, onTogglePolling }: HeaderProps) => {
       <br/>
       <b><a href="https://github.com/Bacce/GodBusz/issues">https://github.com/Bacce/GodBusz/issues</a></b>
       <br/><br/>
-      Minden bejelentést és visszajelzést köszönettel fogadunk.</p>`,
+      Minden bejelentést és visszajelzést köszönettel fogadunk.</p>
+      <br/>
+      <h3><b>Sütik</b></h3>
+      <p>Sütiket használunk a weboldal használatának elemzésére. A Google Analytics anonim adatokat gyűjt az oldalmegtekintésekről a szolgáltatás fejlesztése érdekében. Az analitikai sütik csak hozzájárulás esetén aktiválódnak.</p>
+      `,
     });
   };
 

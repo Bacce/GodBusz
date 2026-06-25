@@ -8,6 +8,8 @@ import {
   MAP_BOUNDS,
   COLOR_G3,
   COLOR_G4,
+  COLOR_G3_ROUTE,
+  COLOR_G4_ROUTE,
   API_ROUTE_PROXY,
   BACKEND_URL,
 } from "../../lib/constants";
@@ -96,7 +98,8 @@ export const MapView = ({
               addWaypoints: false,
               styles: [
                 {
-                  color: selectedRoute === "G3" ? COLOR_G3 : COLOR_G4,
+                  color:
+                    selectedRoute === "G3" ? COLOR_G3_ROUTE : COLOR_G4_ROUTE,
                   opacity: 1,
                   weight: 3,
                 },

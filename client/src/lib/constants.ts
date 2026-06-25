@@ -14,6 +14,8 @@ export const MAP_BOUNDS: LatLngBoundsLiteral = [
 // ── Routes / colours ─────────────────────────────────────────────────────────
 export const COLOR_G3 = "#009ee3";
 export const COLOR_G4 = "#e41f18";
+export const COLOR_G3_ROUTE = "#0080B8";
+export const COLOR_G4_ROUTE = "#C01A13";
 
 // ── Bus icon URLs ─────────────────────────────────────────────────────────────
 export const BUS_ICON_URL_G3 = `/icons/bus_g3.png`;
