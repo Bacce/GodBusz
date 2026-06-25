@@ -16,9 +16,7 @@ export const StopMarker = ({ stop, onClick }: StopMarkerProps) => (
     eventHandlers={{ click: () => onClick(stop.route) }}
   >
     <Popup>
-      <div className="text-sm font-bold flex pb-1 min-w-40">
-        {stop.name} - {stop.mid}
-      </div>
+      <div className="text-sm font-bold flex pb-1 min-w-40">{stop.name}</div>
       <Pill variant={stop.route}>{stop.route}</Pill>
       <div className="pb-6"></div>
       <Timetable trips={stop.trips} />
