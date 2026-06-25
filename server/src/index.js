@@ -17,6 +17,10 @@ app.use((req, res, next) => {
 // Serve static files from the 'public' directory
 app.use(express.static("public"));
 
+app.get("/", (req, res) => {
+  res.send("These ain't the droids you're looking for. 🤖");
+});
+
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   limit: 1000, // Increased to accommodate 2s polling on /buses (~450 req/15min)
