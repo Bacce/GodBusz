@@ -16,12 +16,9 @@ export const COLOR_G3 = "#009ee3";
 export const COLOR_G4 = "#e41f18";
 
 // ── Bus icon URLs ─────────────────────────────────────────────────────────────
-const BKK_ICON_BASE =
-  "https://go.bkk.hu/api/ui-service/v1/icon?name=bus&secondaryColor=FFFFFF&scale=";
-
-export const BUS_ICON_URL_G3 = `${BKK_ICON_BASE}1&color=009EE3`;
-export const BUS_ICON_URL_G4 = `${BKK_ICON_BASE}1&color=e41f18`;
-export const BUS_ICON_URL_HEADER = `${BKK_ICON_BASE}0.3&color=009EE3`;
+export const BUS_ICON_URL_G3 = `/icons/bus_g3.png`;
+export const BUS_ICON_URL_G4 = `/icons/bus_g4.png`;
+export const BUS_ICON_URL_HEADER = `/icons/bus_g3.png`;
 
 // ── Stop arrow rotations (keyed by stop mid) ──────────────────────────────────
 export const STOP_ROTATIONS: Record<string, number> = {
