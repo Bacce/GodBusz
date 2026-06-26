@@ -8,7 +8,7 @@ import type { Stop, Bus, PopupData } from "../lib/types";
 
 async function get<T>(
   url: string,
-  params?: Record<string, string>,
+  params?: Record<string, string | undefined>,
 ): Promise<T> {
   const fullUrl = new URL(`${BACKEND_URL}${url}`, window.location.origin);
   if (params) {

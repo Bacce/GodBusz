@@ -70,6 +70,10 @@ export const App = () => {
     setCookiesAccepted(true);
   };
 
+  const handleDeclineCookies = () => {
+    setCookiesAccepted(false);
+  };
+
   const handleDateChange = (date: string) => {
     setSelectedDate(date);
     setSelectedRoute(null);

@@ -5,6 +5,7 @@ import "leaflet-routing-machine";
 
 interface RoutingMachineProps {
   waypoints: L.LatLngExpression[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   options?: any;
 }
 
@@ -18,6 +19,7 @@ const createRoutingMachineLayer = (props: RoutingMachineProps) => {
 };
 
 const RoutingMachine = createControlComponent(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   createRoutingMachineLayer as any,
 ) as React.ComponentType<RoutingMachineProps>;
 
