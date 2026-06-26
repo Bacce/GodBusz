@@ -70,8 +70,9 @@ export const App = () => {
     setCookiesAccepted(true);
   };
 
-  const handleDeclineCookies = () => {
-    setCookiesAccepted(false);
+  const handleDateChange = (date: string) => {
+    setSelectedDate(date);
+    setSelectedRoute(null);
   };
 
   return (
@@ -80,7 +81,7 @@ export const App = () => {
         polling={polling}
         onTogglePolling={() => setPolling((p) => !p)}
         selectedDate={selectedDate}
-        onDateChange={setSelectedDate}
+        onDateChange={handleDateChange}
       />
 
       <div className="flex-1 relative">
