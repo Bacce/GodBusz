@@ -5,39 +5,46 @@ function getCurrentHour() {
   return new Date().toISOString().slice(0, 13);
 }
 
+function getEndpoint(req) {
+  return req.route?.path || req.path;
+}
+
 // prepared statements (faster)
-const insertStmt = db.prepare(`
-  INSERT INTO hourly_requests(hour, count)
-  VALUES (?, 1)
-  ON CONFLICT(hour)
+const recordStmt = db.prepare(`
+  INSERT INTO hourly_endpoint_requests(hour, endpoint, count)
+  VALUES (?, ?, 1)
+  ON CONFLICT(hour, endpoint)
   DO UPDATE SET count = count + 1
 `);
 
 const selectStmt = db.prepare(`
-  SELECT hour, count
-  FROM hourly_requests
-  ORDER BY hour DESC
+  SELECT hour, endpoint, count
+  FROM hourly_endpoint_requests
+  ORDER BY hour DESC, count DESC
   LIMIT ?
 `);
 
 const deleteOldStmt = db.prepare(`
-  DELETE FROM hourly_requests
+  DELETE FROM hourly_endpoint_requests
   WHERE hour < ?
 `);
 
-export function recordRequest() {
+export function recordRequest(req) {
   try {
-    insertStmt.run(getCurrentHour());
+    const hour = getCurrentHour();
+    const endpoint = getEndpoint(req);
+
+    recordStmt.run(hour, endpoint);
   } catch (err) {
     console.error("analytics recordRequest failed:", err);
   }
 }
 
-export function getHourlyStats(limit = 168) {
+export function getHourlyEndpointStats(limit = 168) {
   try {
     return selectStmt.all(limit);
   } catch (err) {
-    console.error("analytics getHourlyStats failed:", err);
+    console.error("analytics getHourlyEndpointStats failed:", err);
     return [];
   }
 }

@@ -5,7 +5,8 @@ const router = express.Router();
 
 router.get("/request-stats", (req, res) => {
   const limit = Number(req.query.limit || 168);
-  const data = analytics.getHourlyStats(limit);
+  const data = analytics.getHourlyEndpointStats(limit);
+
   res.json(data);
 });
 

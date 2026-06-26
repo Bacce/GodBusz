@@ -1,7 +1,7 @@
 import * as analytics from "../analytics/service.js";
 
 function requestAnalytics(req, res, next) {
-  analytics.recordRequest();
+  analytics.recordRequest(req);
   next();
 }
 

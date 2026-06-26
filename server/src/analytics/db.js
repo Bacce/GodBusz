@@ -16,9 +16,12 @@ const db = new Database(dbPath);
 
 // initialize schema
 db.exec(`
-CREATE TABLE IF NOT EXISTS hourly_requests (
-  hour TEXT PRIMARY KEY,
-  count INTEGER NOT NULL DEFAULT 0
+DROP TABLE IF EXISTS hourly_requests;
+CREATE TABLE IF NOT EXISTS hourly_endpoint_requests (
+  hour TEXT NOT NULL,
+  endpoint TEXT NOT NULL,
+  count INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (hour, endpoint)
 );
 `);
 
