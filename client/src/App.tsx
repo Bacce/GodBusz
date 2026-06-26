@@ -31,6 +31,13 @@ const loadGTM = () => {
 
 export const App = () => {
   const [polling, setPolling] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<string>(() => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  });
   const [selectedRoute, setSelectedRoute] = useState<string | null>(null);
   const [errorPopup, setErrorPopup] = useState<PopupData | null>(null);
   const [cookiesAccepted, setCookiesAccepted] = useState<boolean | null>(
@@ -43,14 +50,18 @@ export const App = () => {
     }
   }, [cookiesAccepted]);
 
-  const { stops, loading: stopsLoading } = useStops();
-  const buses = useBuses(polling, () => {
-    setPolling(false);
-    setErrorPopup({
-      title: "Hiba",
-      txt: "Jármű követés nem elérhető, próbálja meg később",
-    });
-  });
+  const { stops, loading: stopsLoading } = useStops(selectedDate);
+  const buses = useBuses(
+    polling,
+    () => {
+      setPolling(false);
+      setErrorPopup({
+        title: "Hiba",
+        txt: "Jármű követés nem elérhető, próbálja meg később",
+      });
+    },
+    selectedDate,
+  );
   const { popup, dismiss } = usePopups();
   const { center, zoom, saveCenter, saveZoom } = useMapPersistence();
 
@@ -65,7 +76,12 @@ export const App = () => {
 
   return (
     <div className="flex flex-col h-dvh overflow-hidden">
-      <Header polling={polling} onTogglePolling={() => setPolling((p) => !p)} />
+      <Header
+        polling={polling}
+        onTogglePolling={() => setPolling((p) => !p)}
+        selectedDate={selectedDate}
+        onDateChange={setSelectedDate}
+      />
 
       <div className="flex-1 relative">
         <MapView

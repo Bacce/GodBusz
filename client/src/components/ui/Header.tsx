@@ -6,9 +6,16 @@ import type { PopupData } from "../../lib/types";
 interface HeaderProps {
   polling: boolean;
   onTogglePolling: () => void;
+  selectedDate: string;
+  onDateChange: (date: string) => void;
 }
 
-export const Header = ({ polling, onTogglePolling }: HeaderProps) => {
+export const Header = ({
+  polling,
+  onTogglePolling,
+  selectedDate,
+  onDateChange,
+}: HeaderProps) => {
   const [infoPopup, setInfoPopup] = useState<PopupData | null>(null);
 
   const openInfo = () => {
@@ -38,7 +45,13 @@ export const Header = ({ polling, onTogglePolling }: HeaderProps) => {
     <>
       <header className="flex items-center justify-between h-13.5 bg-white border-b-[3px] border-[#c6c6c6] px-4">
         <img src="/logo_godgo.png" alt="Logo" className="max-h-full" />
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={(e) => onDateChange(e.target.value)}
+            className="px-2 py-1 rounded border border-gray-300 text-sm text-gray-600 focus:outline-none focus:ring-1 focus:ring-[#009EE3]"
+          />
           <button
             onClick={onTogglePolling}
             className={`pl-2 pr-4 py-1 rounded w-fit flex items-center gap-2 transition-colors ${

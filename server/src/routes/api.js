@@ -2,6 +2,7 @@ import express from "express";
 import {
   formatData,
   getCurrentDate,
+  isValidDate,
   getAllStops,
   getAllBus,
   isTooOld,
@@ -40,7 +41,10 @@ router.use(
 router.get(
   "/route",
   asyncHandler(async (req, res) => {
-    const dateStr = getCurrentDate();
+    const dateStr =
+      req.query.date && isValidDate(req.query.date)
+        ? req.query.date
+        : getCurrentDate();
     const data = await apiService.loadRoute(dateStr);
     res.send(formatData(data));
   }),
@@ -49,7 +53,10 @@ router.get(
 router.get(
   "/stops",
   asyncHandler(async (req, res) => {
-    const dateStr = getCurrentDate();
+    const dateStr =
+      req.query.date && isValidDate(req.query.date)
+        ? req.query.date
+        : getCurrentDate();
     const data = await apiService.loadRoute(dateStr);
     res.send(getAllStops(data));
   }),
@@ -58,7 +65,10 @@ router.get(
 router.get(
   "/buses",
   asyncHandler(async (req, res) => {
-    const dateStr = getCurrentDate();
+    const dateStr =
+      req.query.date && isValidDate(req.query.date)
+        ? req.query.date
+        : getCurrentDate();
     const data = await apiService.loadRoute(dateStr);
     const buses = getAllBus(data);
     const locations = await apiService.getLocation(

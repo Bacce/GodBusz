@@ -3,7 +3,11 @@ import { fetchBuses } from "../api/client";
 import { MAX_NO_CHANGE_COUNT, POLL_INTERVAL_MS } from "../lib/constants";
 import type { Bus } from "../lib/types";
 
-export function useBuses(polling: boolean, onEmpty?: () => void) {
+export function useBuses(
+  polling: boolean,
+  onEmpty?: () => void,
+  date?: string,
+) {
   const [buses, setBuses] = useState<Bus[]>([]);
   const lastBusesRef = useRef<Bus[]>([]);
   const noChangeCountRef = useRef(0);
@@ -28,7 +32,7 @@ export function useBuses(polling: boolean, onEmpty?: () => void) {
 
     const poll = async () => {
       try {
-        const positions = await fetchBuses();
+        const positions = await fetchBuses(date);
 
         if (positions.length === 0) {
           emptyCountRef.current++;
@@ -63,7 +67,7 @@ export function useBuses(polling: boolean, onEmpty?: () => void) {
     poll();
     const id = setInterval(poll, POLL_INTERVAL_MS);
     return () => clearInterval(id);
-  }, [active]);
+  }, [active, date]);
 
   return buses;
 }

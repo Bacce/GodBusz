@@ -56,6 +56,28 @@ export const isTooOld = (dateString) => {
 };
 
 /**
+ * Validates if a string is in YYYY-MM-DD format and is a valid calendar date.
+ * @param {string} dateString - The date string to validate.
+ * @returns {boolean} True if valid, false otherwise.
+ */
+export const isValidDate = (dateString) => {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateString)) return false;
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return false;
+
+  const parts = dateString.split("-");
+  const year = parseInt(parts[0], 10);
+  const month = parseInt(parts[1], 10) - 1;
+  const day = parseInt(parts[2], 10);
+
+  return (
+    date.getUTCFullYear() === year &&
+    date.getUTCMonth() === month &&
+    date.getUTCDate() === day
+  );
+};
+
+/**
  * Returns the current date as a string in YYYY-MM-DD format.
  */
 export const getCurrentDate = () => {
