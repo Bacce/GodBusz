@@ -2,3 +2,4 @@ node_modules
 public/Tiles
 public/Tilesold
 sample
+data/*

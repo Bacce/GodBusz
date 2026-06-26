@@ -1,7 +1,10 @@
 import express from "express";
 import rateLimit from "express-rate-limit";
-import apiRoutes from "./routes.js";
+import apiRoutes from "./routes/api.js";
 import { errorHandler } from "./middleware/errorHandler.js";
+import requestAnalytics from "./middleware/requestAnalytics.js";
+import adminRoutes from "./routes/admin.js";
+import * as analytics from "./analytics/service.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,6 +26,8 @@ app.use((req, res, next) => {
   if (req.method === "OPTIONS") return res.sendStatus(200);
   next();
 });
+
+app.use(requestAnalytics);
 
 // Serve static files from the 'public' directory
 app.use(express.static("public"));
@@ -46,11 +51,9 @@ app.use(
     if (process.env.NODE_ENV === "production") {
       const origin = req.get("Origin");
       if (origin !== ALLOWED_ORIGIN) {
-        return res
-          .status(403)
-          .json({
-            error: "Forbidden: Access only allowed from the official domain.",
-          });
+        return res.status(403).json({
+          error: "Forbidden: Access only allowed from the official domain.",
+        });
       }
     }
     next();
@@ -59,8 +62,19 @@ app.use(
   apiRoutes,
 );
 
+app.use("/admin", adminRoutes);
+
 app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+// Analytics cleanup
+analytics.cleanupOldStats(90);
+setInterval(
+  () => {
+    analytics.cleanupOldStats(90);
+  },
+  24 * 60 * 60 * 1000,
+);
