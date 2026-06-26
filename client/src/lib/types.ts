@@ -4,6 +4,7 @@ export interface Stop {
   lat: number;
   lon: number;
   route: string;
+  dir: number | null;
   trips: Trip[];
 }
 

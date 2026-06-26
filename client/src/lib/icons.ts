@@ -2,7 +2,6 @@ import L from "leaflet";
 import {
   BUS_ICON_URL_G3,
   BUS_ICON_URL_G4,
-  STOP_ROTATIONS,
   COLOR_G3,
   COLOR_G4,
 } from "./constants";
@@ -28,5 +27,3 @@ export const getStopIcon = (route: string, rotation?: number) =>
       rotation === undefined ? "no-arrow" : ""
     }" style="${rotation !== undefined ? `--rotate: ${rotation}deg;` : ""} --stop-color: ${route === "G3" ? COLOR_G3 : COLOR_G4}"></div>`,
   });
-
-export { STOP_ROTATIONS };

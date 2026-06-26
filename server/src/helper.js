@@ -1,3 +1,47 @@
+const STOP_ROTATIONS = {
+  // G3 – Blue line
+  966: 40,
+  967: -150,
+  968: -150,
+  969: 140,
+  970: 125,
+  971: 210,
+  972: 180,
+  973: 0,
+  974: 90,
+  975: 140,
+  976: -120,
+  977: -140,
+  978: -140,
+  979: -140,
+  980: -90,
+  981: -130,
+  982: 0,
+  983: 0,
+  984: 0,
+  985: 0,
+  986: 0,
+  987: 0,
+
+  // G4 – Red line
+  991: 180,
+  992: 180,
+  993: 180,
+  994: 180,
+  995: 90,
+  996: 40,
+  997: 40,
+  998: 40,
+  999: -120,
+  1000: -30,
+  1001: -90,
+  1002: -90,
+  1003: 0,
+  1004: 30,
+  1005: -55,
+  1006: -55,
+};
+
 /**
  * Checks if a given date string is more than one hour old.
  * @param {string} dateString - The ISO date string to check.
@@ -121,6 +165,7 @@ export const getAllStops = (json) => {
           lon: s.lot,
           route: s.jarat,
           name: s.megallo,
+          dir: STOP_ROTATIONS[s.mid] ?? null,
           trips,
         };
       }),
