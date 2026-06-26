@@ -6,7 +6,19 @@ function getCurrentHour() {
 }
 
 function getEndpoint(req) {
-  return req.route?.path || req.path;
+  const path = req.path;
+
+  // Only retain logs for /admin and /api endpoints
+  if (!path.startsWith("/admin") && !path.startsWith("/api")) {
+    return null;
+  }
+
+  // Normalize /api/v1/route-proxy/... to a single entry
+  if (path.startsWith("/api/v1/route-proxy")) {
+    return "/api/v1/route-proxy";
+  }
+
+  return path;
 }
 
 // prepared statements (faster)
@@ -31,9 +43,10 @@ const deleteOldStmt = db.prepare(`
 
 export function recordRequest(req) {
   try {
-    const hour = getCurrentHour();
     const endpoint = getEndpoint(req);
+    if (!endpoint) return;
 
+    const hour = getCurrentHour();
     recordStmt.run(hour, endpoint);
   } catch (err) {
     console.error("analytics recordRequest failed:", err);
