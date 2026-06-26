@@ -12,12 +12,19 @@ export const MAP_BOUNDS: LatLngBoundsLiteral = [
 ];
 
 // ── Routes / colours ─────────────────────────────────────────────────────────
+export const COLOR_G1 = "#4ca22f";
+export const COLOR_G2 = "#005ca5";
 export const COLOR_G3 = "#009ee3";
 export const COLOR_G4 = "#e41f18";
+
+export const COLOR_G1_ROUTE = "#3d8526";
+export const COLOR_G2_ROUTE = "#004a82";
 export const COLOR_G3_ROUTE = "#0080B8";
 export const COLOR_G4_ROUTE = "#C01A13";
 
 // ── Bus icon URLs ─────────────────────────────────────────────────────────────
+export const BUS_ICON_URL_G1 = `/icons/bus_g1.png`;
+export const BUS_ICON_URL_G2 = `/icons/bus_g2.png`;
 export const BUS_ICON_URL_G3 = `/icons/bus_g3.png`;
 export const BUS_ICON_URL_G4 = `/icons/bus_g4.png`;
 export const BUS_ICON_URL_HEADER = `/icons/bus_g3.png`;

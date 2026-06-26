@@ -6,6 +6,8 @@ import { BusMarker } from "./BusMarker";
 import RoutingMachine from "../../RoutingMachine";
 import {
   MAP_BOUNDS,
+  COLOR_G1_ROUTE,
+  COLOR_G2_ROUTE,
   COLOR_G3_ROUTE,
   COLOR_G4_ROUTE,
   API_ROUTE_PROXY,
@@ -42,6 +44,13 @@ export const MapView = ({
     selectedRoute !== null
       ? stops.filter((s) => s.route === selectedRoute)
       : stops;
+
+  const routeColors: Record<string, string> = {
+    G1: COLOR_G1_ROUTE,
+    G2: COLOR_G2_ROUTE,
+    G3: COLOR_G3_ROUTE,
+    G4: COLOR_G4_ROUTE,
+  };
 
   return (
     <MapContainer
@@ -96,8 +105,7 @@ export const MapView = ({
               addWaypoints: false,
               styles: [
                 {
-                  color:
-                    selectedRoute === "G3" ? COLOR_G3_ROUTE : COLOR_G4_ROUTE,
+                  color: routeColors[selectedRoute] || COLOR_G3_ROUTE,
                   opacity: 1,
                   weight: 3,
                 },
