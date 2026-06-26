@@ -12,7 +12,7 @@ interface StopMarkerProps {
 export const StopMarker = ({ stop, onClick }: StopMarkerProps) => (
   <Marker
     position={[stop.lat, stop.lon]}
-    icon={getStopIcon(stop.route, stop.dir)}
+    icon={getStopIcon(stop.route, stop.dir ?? undefined)}
     eventHandlers={{ click: () => onClick(stop.route) }}
   >
     <Popup>
