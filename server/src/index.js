@@ -5,9 +5,19 @@ import { errorHandler } from "./middleware/errorHandler.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const ALLOWED_ORIGIN = "https://god-busz.vercel.app";
 
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  const origin = req.get("Origin");
+  if (process.env.NODE_ENV === "production") {
+    if (origin === ALLOWED_ORIGIN) {
+      res.setHeader("Access-Control-Allow-Origin", origin);
+    } else {
+      res.setHeader("Access-Control-Allow-Origin", "null");
+    }
+  } else {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+  }
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   if (req.method === "OPTIONS") return res.sendStatus(200);
@@ -30,7 +40,24 @@ const limiter = rateLimit({
 });
 
 // Backend endpoints
-app.use("/api/v1", limiter, apiRoutes);
+app.use(
+  "/api/v1",
+  (req, res, next) => {
+    if (process.env.NODE_ENV === "production") {
+      const origin = req.get("Origin");
+      if (origin !== ALLOWED_ORIGIN) {
+        return res
+          .status(403)
+          .json({
+            error: "Forbidden: Access only allowed from the official domain.",
+          });
+      }
+    }
+    next();
+  },
+  limiter,
+  apiRoutes,
+);
 
 app.use(errorHandler);
 
