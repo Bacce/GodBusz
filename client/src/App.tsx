@@ -39,6 +39,8 @@ export const App = () => {
     return `${year}-${month}-${day}`;
   });
   const [selectedRoute, setSelectedRoute] = useState<string | null>(null);
+  const [selectedStopId, setSelectedStopId] = useState<string | null>(null);
+  const [shouldFocusStop, setShouldFocusStop] = useState(false);
   const [errorPopup, setErrorPopup] = useState<PopupData | null>(null);
   const [cookiesAccepted, setCookiesAccepted] = useState<boolean | null>(
     localStorage.getItem("cookies_accepted") === "true" ? true : null,
@@ -77,6 +79,18 @@ export const App = () => {
   const handleDateChange = (date: string) => {
     setSelectedDate(date);
     setSelectedRoute(null);
+    setSelectedStopId(null);
+  };
+
+  const handleStopSelect = (mid: string, focusOnly = false) => {
+    const stop = stops.find((s) => s.mid === mid);
+    if (stop) {
+      if (!focusOnly) {
+        setSelectedRoute(stop.route);
+      }
+      setSelectedStopId(mid);
+      setShouldFocusStop(true);
+    }
   };
 
   return (
@@ -86,22 +100,28 @@ export const App = () => {
         onTogglePolling={() => setPolling((p) => !p)}
         selectedDate={selectedDate}
         onDateChange={handleDateChange}
+        stops={stops}
+        onStopSelect={handleStopSelect}
       />
 
       <div className="flex-1 relative">
-          <MapView
-            center={center}
-            zoom={zoom}
-            stops={stops}
-            buses={buses}
-            polling={polling}
-            onTogglePolling={() => setPolling((p) => !p)}
-            selectedRoute={selectedRoute}
-            onRouteSelect={setSelectedRoute}
-            onRouteDeselect={() => setSelectedRoute(null)}
-            onMoveEnd={saveCenter}
-            onZoomEnd={saveZoom}
-          />
+           <MapView
+             center={center}
+             zoom={zoom}
+             stops={stops}
+             buses={buses}
+             polling={polling}
+             onTogglePolling={() => setPolling((p) => !p)}
+             selectedRoute={selectedRoute}
+             onRouteSelect={setSelectedRoute}
+             onRouteDeselect={() => setSelectedRoute(null)}
+             onMoveEnd={saveCenter}
+             onZoomEnd={saveZoom}
+             selectedStopId={selectedStopId}
+             shouldFocusStop={shouldFocusStop}
+             onFocusHandled={() => setShouldFocusStop(false)}
+           />
+
 
         {stopsLoading && (
           <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[1000] bg-white px-3 py-1 rounded-full shadow-md flex items-center gap-2 text-sm font-medium text-gray-700">

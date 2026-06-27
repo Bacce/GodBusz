@@ -1,4 +1,5 @@
-import { MapContainer, TileLayer } from "react-leaflet";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import { useEffect, useRef } from "react";
 import L from "leaflet";
 import { MapClickHandler } from "./MapClickHandler";
 import { StopMarker } from "./StopMarker";
@@ -29,6 +30,9 @@ interface MapViewProps {
   onRouteDeselect: () => void;
   onMoveEnd: (lat: number, lng: number) => void;
   onZoomEnd: (zoom: number) => void;
+  selectedStopId: string | null;
+  shouldFocusStop: boolean;
+  onFocusHandled: () => void;
 }
 
 export const MapView = ({
@@ -43,6 +47,9 @@ export const MapView = ({
   onRouteDeselect,
   onMoveEnd,
   onZoomEnd,
+  selectedStopId,
+  shouldFocusStop,
+  onFocusHandled,
 }: MapViewProps) => {
   const visibleStops =
     selectedRoute !== null
@@ -55,6 +62,32 @@ export const MapView = ({
     G3: COLOR_G3_ROUTE,
     G4: COLOR_G4_ROUTE,
   };
+
+  const MapController = () => {
+    const map = useMap();
+    useEffect(() => {
+      if (shouldFocusStop && selectedStopId) {
+        const stop = stops.find((s) => s.mid === selectedStopId);
+        if (stop) {
+          map.flyTo([stop.lat, stop.lon], 16);
+          
+          const timer = setTimeout(() => {
+            map.eachLayer((layer) => {
+              if (layer && layer.options && (layer.options as any).stopMid === selectedStopId) {
+                layer.openPopup();
+              }
+            });
+            onFocusHandled();
+          }, 200);
+          return () => clearTimeout(timer);
+        } else {
+          onFocusHandled();
+        }
+      }
+    }, [shouldFocusStop, selectedStopId, stops, map, onFocusHandled]);
+    return null;
+  };
+
 
   return (
     <div className="relative h-full w-full">
@@ -72,15 +105,17 @@ export const MapView = ({
           <img src={BUS_ICON_URL_HEADER} alt="" className="w-5 h-5 ml-1.5 mr-0.5" />
         </button>
       </div>
-      <MapContainer
-        center={center}
-        maxBounds={MAP_BOUNDS}
-        maxBoundsViscosity={1.0}
-        zoom={zoom}
-        className="h-full w-full"
-      >
-        <MapClickHandler
-          onMapClick={onRouteDeselect}
+       <MapContainer
+         center={center}
+         maxBounds={MAP_BOUNDS}
+         maxBoundsViscosity={1.0}
+         zoom={zoom}
+         className="h-full w-full"
+       >
+         <MapController />
+         <MapClickHandler
+           onMapClick={onRouteDeselect}
+
           onMoveEnd={onMoveEnd}
           onZoomEnd={onZoomEnd}
         />

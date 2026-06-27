@@ -14,6 +14,7 @@ export const StopMarker = ({ stop, onClick }: StopMarkerProps) => (
     position={[stop.lat, stop.lon]}
     icon={getStopIcon(stop.route, stop.dir ?? undefined)}
     eventHandlers={{ click: () => onClick(stop.route) }}
+    options={{ stopMid: stop.mid }}
   >
     <Popup>
       <div className="text-sm font-bold flex pb-1 min-w-40">{stop.name}</div>
