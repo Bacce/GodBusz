@@ -56,7 +56,7 @@ export const Header = ({
     });
   };
 
-  const normalize = (text: string) => 
+  const normalize = (text: string) =>
     text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
   const filteredStops = stops.filter((s) =>
@@ -80,11 +80,11 @@ export const Header = ({
       <header className="flex items-center justify-between h-13.5 bg-white border-b-[3px] border-[#c6c6c6] px-4">
         <div className="flex items-center gap-4">
           <img src="/logo_godgo.png" alt="Logo" className="h-10 w-auto" />
-          
+
           <div className="relative" ref={dropdownRef}>
             <input
               type="text"
-              placeholder="Keresés megálló..."
+              placeholder="Keresés..."
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
@@ -98,8 +98,8 @@ export const Header = ({
                 {Object.entries(groupedStops).map(([_, group]) => {
                   const { originalName, stops: stopsForName } = group;
                   return (
-                    <div 
-                      key={originalName} 
+                    <div
+                      key={originalName}
                       className="flex items-center justify-between px-2 py-1.5 hover:bg-gray-100 cursor-pointer text-sm text-gray-700"
                       onClick={() => {
                         if (stopsForName.length === 1) {
@@ -134,19 +134,19 @@ export const Header = ({
         <div className="flex gap-2 items-center">
 
 
-            <input
-              type="date"
-              value={selectedDate}
-              onChange={(e) => onDateChange(e.target.value)}
-              className="w-44 px-2 py-1 rounded border border-gray-300 text-sm text-gray-600 focus:outline-none focus:ring-1 focus:ring-[#009EE3]"
-            />
-            <button
-              onClick={openInfo}
-              className="w-8 h-8 rounded-full flex items-center justify-center transition-colors bg-[#009EE3] text-white hover:bg-[#008BCC] font-bold text-lg"
-            >
-              i
-            </button>
-          </div>
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={(e) => onDateChange(e.target.value)}
+            className="w-44 px-2 py-1 rounded border border-gray-300 text-sm text-gray-600 focus:outline-none focus:ring-1 focus:ring-[#009EE3]"
+          />
+          <button
+            onClick={openInfo}
+            className="w-8 h-8 rounded-full flex items-center justify-center transition-colors bg-[#009EE3] text-white hover:bg-[#008BCC] font-bold text-lg"
+          >
+            i
+          </button>
+        </div>
       </header>
       {infoPopup && (
         <PopupModal popup={infoPopup} onDismiss={() => setInfoPopup(null)} />

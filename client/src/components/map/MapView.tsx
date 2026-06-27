@@ -1,5 +1,5 @@
-import { MapContainer, TileLayer, useMap } from "react-leaflet";
-import { useEffect } from "react";
+import { MapContainer, TileLayer, useMap, Marker } from "react-leaflet";
+import { useEffect, useState } from "react";
 import L from "leaflet";
 import { MapClickHandler } from "./MapClickHandler";
 import { StopMarker } from "./StopMarker";
@@ -36,21 +36,41 @@ interface MapViewProps {
 }
 
 export const MapView = ({
-  center,
-  zoom,
-  stops,
-  buses,
-  polling,
-  onTogglePolling,
-  selectedRoute,
-  onRouteSelect,
-  onRouteDeselect,
-  onMoveEnd,
-  onZoomEnd,
-  selectedStopId,
-  shouldFocusStop,
-  onFocusHandled,
-}: MapViewProps) => {
+    center,
+    zoom,
+    stops,
+    buses,
+    polling,
+    onTogglePolling,
+    selectedRoute,
+    onRouteSelect,
+    onRouteDeselect,
+    onMoveEnd,
+    onZoomEnd,
+    selectedStopId,
+    shouldFocusStop,
+    onFocusHandled,
+  }: MapViewProps) => {
+    const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+    const [shouldFlyToUser, setShouldFlyToUser] = useState(false);
+
+    const handleLocateUser = () => {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const coords: [number, number] = [pos.coords.latitude, pos.coords.longitude];
+          
+          const bounds = L.latLngBounds(MAP_BOUNDS);
+          if (bounds.contains(L.latLng(coords[0], coords[1]))) {
+            setUserLocation(coords);
+            setShouldFlyToUser(true);
+          } else {
+            console.warn("User location is outside map bounds");
+          }
+        },
+        (err) => console.error(err)
+      );
+    };
+
   const visibleStops =
     selectedRoute !== null
       ? stops.filter((s) => s.route === selectedRoute)
@@ -63,8 +83,21 @@ export const MapView = ({
     G4: COLOR_G4_ROUTE,
   };
 
-  const MapController = () => {
+  const MapController = ({ userPos, shouldFlyToUser, onFlyToUserHandled }: { userPos: [number, number] | null, shouldFlyToUser: boolean, onFlyToUserHandled: () => void }) => {
     const map = useMap();
+    const userIcon = L.icon({
+      iconUrl: "/icons/player1.png",
+      iconSize: [32, 32],
+      iconAnchor: [16, 16],
+    });
+
+    useEffect(() => {
+      if (shouldFlyToUser && userPos) {
+        map.flyTo(userPos, 16);
+        onFlyToUserHandled();
+      }
+    }, [shouldFlyToUser, userPos, map, onFlyToUserHandled]);
+
     useEffect(() => {
       if (shouldFocusStop && selectedStopId) {
         const stop = stops.find((s) => s.mid === selectedStopId);
@@ -85,34 +118,54 @@ export const MapView = ({
         }
       }
     }, [shouldFocusStop, selectedStopId, stops, map, onFocusHandled]);
-    return null;
+
+    return (
+      <>
+        {userPos && <Marker position={userPos} icon={userIcon} />}
+      </>
+    );
   };
 
 
-  return (
-    <div className="relative h-full w-full">
-      <div className="absolute top-1 right-2 z-[1000]">
-        <button
-          onClick={onTogglePolling}
-          title="Járművek megjelenítése"
-          className={`px-1.5 py-0.5 mt-1 flex items-center justify-between gap-1.5 rounded border font-bold text-[13px] cursor-pointer select-none pointer-events-auto opacity-70 transition-colors ${
-            polling
-              ? "bg-[#4c0e5f] text-white border-[#c6c6c6] hover:border-[#1e1e1e]"
-              : "bg-white text-[#1e1e1e] border-[#c6c6c6] hover:border-[#1e1e1e]"
-          }`}
+    return (
+      <div className="relative h-full w-full">
+        <div className="absolute top-1 right-2 z-[1000] flex flex-col items-end">
+          <button
+            onClick={onTogglePolling}
+            title="Járművek megjelenítése"
+            className={`px-1.5 py-0.5 mt-1 flex items-center justify-between gap-1.5 rounded border font-bold text-[13px] cursor-pointer select-none pointer-events-auto opacity-70 transition-colors min-w-[110px] ${
+              polling
+                ? "bg-[#4c0e5f] text-white border-[#c6c6c6] hover:border-[#1e1e1e]"
+                : "bg-white text-[#1e1e1e] border-[#c6c6c6] hover:border-[#1e1e1e]"
+            }`}
+          >
+            <span className="pl-0.5">Járművek</span>
+            <img src={BUS_ICON_URL_HEADER} alt="" className="w-5 h-5 ml-1.5 mr-1" />
+          </button>
+          <button
+            onClick={handleLocateUser}
+            title="Saját helyzet"
+            className="px-1.5 py-0.5 mt-1 flex items-center justify-between gap-1.5 rounded border font-bold text-[13px] cursor-pointer select-none pointer-events-auto opacity-70 transition-colors bg-white text-[#1e1e1e] border-[#c6c6c6] hover:border-[#1e1e1e] min-w-[110px]"
+          >
+            <span className="pl-0.5">Helyem</span>
+            <span className="ml-1.5 mr-0.5">📍</span>
+          </button>
+        </div>
+        <MapContainer
+          center={center}
+          maxBounds={MAP_BOUNDS}
+          maxBoundsViscosity={1.0}
+          zoom={zoom}
+          className="h-full w-full"
         >
-          <span className="pl-0.5">Járművek</span>
-          <img src={BUS_ICON_URL_HEADER} alt="" className="w-5 h-5 ml-1.5 mr-0.5" />
-        </button>
-      </div>
-       <MapContainer
-         center={center}
-         maxBounds={MAP_BOUNDS}
-         maxBoundsViscosity={1.0}
-         zoom={zoom}
-         className="h-full w-full"
-       >
-         <MapController />
+          <MapController 
+            userPos={userLocation} 
+            shouldFlyToUser={shouldFlyToUser} 
+            onFlyToUserHandled={() => setShouldFlyToUser(false)} 
+          />
+
+
+
          <MapClickHandler
            onMapClick={onRouteDeselect}
 
