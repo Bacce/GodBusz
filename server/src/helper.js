@@ -1,5 +1,11 @@
+const STOP_NAME_CORRECTIONS = {
+  "Gárdonyi Gáza utca": "Gárdonyi Géza utca",
+  "Bőlcsőde": "Bölcsőde"
+};
+
 const STOP_ROTATIONS = {
   // G1 - Green line
+
   820: 90,
   821: 40,
   822: 200,
@@ -250,7 +256,8 @@ export const getAllStops = (json) => {
           lat: s.lan,
           lon: s.lot,
           route: s.jarat,
-          name: s.megallo,
+          name: STOP_NAME_CORRECTIONS[s.megallo] ?? s.megallo,
+
           dir: STOP_ROTATIONS[s.mid] ?? null,
           trips,
         };
