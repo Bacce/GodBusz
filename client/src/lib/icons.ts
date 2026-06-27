@@ -41,12 +41,15 @@ const ROUTE_COLORS: Record<string, string> = {
   G4: COLOR_G4,
 };
 
-export const getStopIcon = (route: string, rotation?: number) =>
-  L.divIcon({
+export const getStopIcon = (route: string, rotation?: number, zoom?: number) => {
+  const isSmall = zoom !== undefined && zoom < 15;
+  const size = isSmall ? 14 : 20;
+  return L.divIcon({
     className: "",
-    iconSize: [20, 20],
-    iconAnchor: [10, 10],
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
     html: `<div class="stop-icon ${
       rotation === undefined ? "no-arrow" : ""
-    }" style="${rotation !== undefined ? `--rotate: ${rotation}deg;` : ""} --stop-color: ${ROUTE_COLORS[route] || COLOR_G3}"></div>`,
+    } ${isSmall ? "small" : ""}" style="${rotation !== undefined ? `--rotate: ${rotation}deg;` : ""} --stop-color: ${ROUTE_COLORS[route] || COLOR_G3}"></div>`,
   });
+};

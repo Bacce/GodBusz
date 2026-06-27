@@ -7,22 +7,27 @@ import { Timetable } from "../ui/Timetable";
 interface StopMarkerProps {
   stop: Stop;
   onClick: (route: string) => void;
+  zoom: number;
 }
 
-export const StopMarker = ({ stop, onClick }: StopMarkerProps) => (
-  <Marker
-    position={[stop.lat, stop.lon]}
-    icon={getStopIcon(stop.route, stop.dir ?? undefined)}
-    eventHandlers={{ click: () => onClick(stop.route) }}
-  >
-    <Tooltip direction="top" offset={[0, -20]} opacity={1}>
-      {stop.name}
-    </Tooltip>
-    <Popup>
-      <div className="text-sm font-bold flex pb-1 min-w-40">{stop.name}</div>
-      <Pill variant={stop.route}>{stop.route}</Pill>
-      <div className="pb-6"></div>
-      <Timetable trips={stop.trips} />
-    </Popup>
-  </Marker>
-);
+export const StopMarker = ({ stop, onClick, zoom }: StopMarkerProps) => {
+  const icon = getStopIcon(stop.route, stop.dir ?? undefined, zoom);
+
+  return (
+    <Marker
+      position={[stop.lat, stop.lon]}
+      icon={icon}
+      eventHandlers={{ click: () => onClick(stop.route) }}
+    >
+      <Tooltip direction="top" offset={[0, -20]} opacity={1}>
+        {stop.name}
+      </Tooltip>
+      <Popup>
+        <div className="text-sm font-bold flex pb-1 min-w-40">{stop.name}</div>
+        <Pill variant={stop.route}>{stop.route}</Pill>
+        <div className="pb-6"></div>
+        <Timetable trips={stop.trips} />
+      </Popup>
+    </Marker>
+  );
+};

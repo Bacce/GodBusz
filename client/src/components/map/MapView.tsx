@@ -183,10 +183,10 @@ export const MapView = ({
           updateInterval={0}
         />
 
-        {/* Draw stops */}
-        {visibleStops.map((stop) => (
-          <StopMarker key={stop.mid} stop={stop} onClick={onRouteSelect} />
-        ))}
+          {/* Draw stops */}
+          {visibleStops.map((stop) => (
+            <StopMarker key={stop.mid} stop={stop} onClick={onRouteSelect} zoom={zoom} />
+          ))}
 
         {/* Draw buses */}
         {polling &&

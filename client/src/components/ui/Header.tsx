@@ -84,7 +84,7 @@ export const Header = ({
           <div className="relative" ref={dropdownRef}>
             <input
               type="text"
-              placeholder="Keresés..."
+              placeholder="Megállók..."
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);

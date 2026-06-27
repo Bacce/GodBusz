@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   MAP_DEFAULT_CENTER,
   MAP_DEFAULT_ZOOM,
@@ -18,14 +19,19 @@ function readZoom(): number {
 }
 
 export function useMapPersistence() {
-  const center = readCenter();
-  const zoom = readZoom();
+  const [center, setCenter] = useState<[number, number]>(readCenter());
+  const [zoom, setZoom] = useState<number>(readZoom());
 
-  const saveCenter = (lat: number, lng: number) =>
-    localStorage.setItem("mapCenter", JSON.stringify([lat, lng]));
+  const saveCenter = (lat: number, lng: number) => {
+    const newCenter: [number, number] = [lat, lng];
+    localStorage.setItem("mapCenter", JSON.stringify(newCenter));
+    setCenter(newCenter);
+  };
 
-  const saveZoom = (z: number) =>
+  const saveZoom = (z: number) => {
     localStorage.setItem("mapZoom", z.toString());
+    setZoom(z);
+  };
 
   return { center, zoom, saveCenter, saveZoom };
 }

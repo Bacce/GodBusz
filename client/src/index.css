@@ -30,6 +30,19 @@
     transform: rotate(calc(var(--rotate) - 90deg));
 }
 
+.stop-icon.small {
+    width: 14px;
+    height: 14px;
+    border-width: 2px;
+}
+
+.stop-icon.small:after {
+    border-left-width: 4px;
+    border-top-width: 4px;
+    border-bottom-width: 4px;
+    transform: translateX(7px) translateY(-4px);
+}
+
 .stop-icon:after {
     content: "";
     position: absolute;
