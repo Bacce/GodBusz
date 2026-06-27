@@ -1,4 +1,4 @@
-import { Marker, Popup } from "react-leaflet";
+import { Marker, Popup, Tooltip } from "react-leaflet";
 import { getStopIcon } from "../../lib/icons";
 import type { Stop } from "../../lib/types";
 import { Pill } from "../ui/Pill";
@@ -15,6 +15,9 @@ export const StopMarker = ({ stop, onClick }: StopMarkerProps) => (
     icon={getStopIcon(stop.route, stop.dir ?? undefined)}
     eventHandlers={{ click: () => onClick(stop.route) }}
   >
+    <Tooltip direction="top" offset={[0, -20]} opacity={1}>
+      {stop.name}
+    </Tooltip>
     <Popup>
       <div className="text-sm font-bold flex pb-1 min-w-40">{stop.name}</div>
       <Pill variant={stop.route}>{stop.route}</Pill>
