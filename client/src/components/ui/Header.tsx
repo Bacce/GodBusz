@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { BUS_ICON_URL_HEADER } from "../../lib/constants";
 import { PopupModal } from "./PopupModal";
 import { Pill } from "./Pill";
 import type { PopupData, Stop } from "../../lib/types";
@@ -14,8 +13,6 @@ interface HeaderProps {
 }
 
 export const Header = ({
-  polling,
-  onTogglePolling,
   selectedDate,
   onDateChange,
   stops,

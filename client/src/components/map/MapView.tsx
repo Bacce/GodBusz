@@ -1,5 +1,5 @@
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import L from "leaflet";
 import { MapClickHandler } from "./MapClickHandler";
 import { StopMarker } from "./StopMarker";
