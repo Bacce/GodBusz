@@ -45,31 +45,20 @@ export const Header = ({
     <>
       <header className="flex items-center justify-between h-13.5 bg-white border-b-[3px] border-[#c6c6c6] px-4">
         <img src="/logo_godgo.png" alt="Logo" className="max-h-full" />
-        <div className="flex gap-2 items-center">
-          <input
-            type="date"
-            value={selectedDate}
-            onChange={(e) => onDateChange(e.target.value)}
-            className="px-2 py-1 rounded border border-gray-300 text-sm text-gray-600 focus:outline-none focus:ring-1 focus:ring-[#009EE3]"
-          />
-          <button
-            onClick={onTogglePolling}
-            className={`pl-2 pr-4 py-1 rounded w-fit flex items-center gap-2 transition-colors ${
-              polling
-                ? "bg-[#009EE3] text-white"
-                : "bg-transparent text-gray-600 border border-gray-300 hover:bg-gray-100"
-            }`}
-          >
-            <img src={BUS_ICON_URL_HEADER} alt="" className="w-8" />
-            Járművek követése
-          </button>
-          <button
-            onClick={openInfo}
-            className="w-10 h-10 rounded-full flex items-center justify-center transition-colors bg-[#009EE3] text-white hover:bg-[#008BCC] font-bold text-xl"
-          >
-            i
-          </button>
-        </div>
+          <div className="flex gap-2 items-center">
+            <input
+              type="date"
+              value={selectedDate}
+              onChange={(e) => onDateChange(e.target.value)}
+              className="px-2 py-1 rounded border border-gray-300 text-sm text-gray-600 focus:outline-none focus:ring-1 focus:ring-[#009EE3]"
+            />
+            <button
+              onClick={openInfo}
+              className="w-8 h-8 rounded-full flex items-center justify-center transition-colors bg-[#009EE3] text-white hover:bg-[#008BCC] font-bold text-lg"
+            >
+              i
+            </button>
+          </div>
       </header>
       {infoPopup && (
         <PopupModal popup={infoPopup} onDismiss={() => setInfoPopup(null)} />

@@ -4,6 +4,7 @@ import { MapClickHandler } from "./MapClickHandler";
 import { StopMarker } from "./StopMarker";
 import { BusMarker } from "./BusMarker";
 import RoutingMachine from "../../RoutingMachine";
+import { BUS_ICON_URL_HEADER } from "../../lib/constants";
 import {
   MAP_BOUNDS,
   COLOR_G1_ROUTE,
@@ -15,12 +16,14 @@ import {
 } from "../../lib/constants";
 import type { Stop, Bus } from "../../lib/types";
 
+
 interface MapViewProps {
   center: [number, number];
   zoom: number;
   stops: Stop[];
   buses: Bus[];
   polling: boolean;
+  onTogglePolling: () => void;
   selectedRoute: string | null;
   onRouteSelect: (route: string) => void;
   onRouteDeselect: () => void;
@@ -34,6 +37,7 @@ export const MapView = ({
   stops,
   buses,
   polling,
+  onTogglePolling,
   selectedRoute,
   onRouteSelect,
   onRouteDeselect,
@@ -53,67 +57,83 @@ export const MapView = ({
   };
 
   return (
-    <MapContainer
-      center={center}
-      maxBounds={MAP_BOUNDS}
-      maxBoundsViscosity={1.0}
-      zoom={zoom}
-      className="h-full w-full"
-    >
-      <MapClickHandler
-        onMapClick={onRouteDeselect}
-        onMoveEnd={onMoveEnd}
-        onZoomEnd={onZoomEnd}
-      />
+    <div className="relative h-full w-full">
+      <div className="absolute top-1 right-2 z-[1000]">
+        <button
+          onClick={onTogglePolling}
+          title="Járművek megjelenítése"
+          className={`px-1.5 py-0.5 mt-1 flex items-center justify-between gap-1.5 rounded border font-bold text-[13px] cursor-pointer select-none pointer-events-auto opacity-70 transition-colors ${
+            polling
+              ? "bg-[#4c0e5f] text-white border-[#c6c6c6] hover:border-[#1e1e1e]"
+              : "bg-white text-[#1e1e1e] border-[#c6c6c6] hover:border-[#1e1e1e]"
+          }`}
+        >
+          <span className="pl-0.5">Járművek</span>
+          <img src={BUS_ICON_URL_HEADER} alt="" className="w-5 h-5 ml-1.5 mr-0.5" />
+        </button>
+      </div>
+      <MapContainer
+        center={center}
+        maxBounds={MAP_BOUNDS}
+        maxBoundsViscosity={1.0}
+        zoom={zoom}
+        className="h-full w-full"
+      >
+        <MapClickHandler
+          onMapClick={onRouteDeselect}
+          onMoveEnd={onMoveEnd}
+          onZoomEnd={onZoomEnd}
+        />
 
-      {/* <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" /> */}
-      <TileLayer
-        url={import.meta.env.VITE_BACKEND_URL + "/Tiles/{z}/{x}/{y}.png"}
-        keepBuffer={20}
-        minZoom={14}
-        maxZoom={17}
-        updateWhenIdle={false}
-        updateInterval={0}
-      />
+        {/* <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" /> */}
+        <TileLayer
+          url={import.meta.env.VITE_BACKEND_URL + "/Tiles/{z}/{x}/{y}.png"}
+          keepBuffer={20}
+          minZoom={14}
+          maxZoom={17}
+          updateWhenIdle={false}
+          updateInterval={0}
+        />
 
-      {/* Draw stops */}
-      {visibleStops.map((stop) => (
-        <StopMarker key={stop.mid} stop={stop} onClick={onRouteSelect} />
-      ))}
-
-      {/* Draw buses */}
-      {polling &&
-        buses.map((bus) => (
-          <BusMarker key={bus.rendszam} bus={bus} onClick={onRouteSelect} />
+        {/* Draw stops */}
+        {visibleStops.map((stop) => (
+          <StopMarker key={stop.mid} stop={stop} onClick={onRouteSelect} />
         ))}
 
-      {/* Draw route line */}
-      {stops.length > 0 && selectedRoute && (
-        <RoutingMachine
-          key={selectedRoute}
-          waypoints={stops
-            .filter((s) => s.route === selectedRoute)
-            .map((s) => [s.lat, s.lon])}
-          options={{
-            router: L.Routing.osrmv1({
-              serviceUrl: BACKEND_URL + API_ROUTE_PROXY,
-            }),
-            show: false,
-            routeWhileDragging: false,
-            createMarker: () => false,
-            lineOptions: {
-              addWaypoints: false,
-              styles: [
-                {
-                  color: routeColors[selectedRoute] || COLOR_G3_ROUTE,
-                  opacity: 1,
-                  weight: 3,
-                },
-              ],
-            },
-          }}
-        />
-      )}
-    </MapContainer>
+        {/* Draw buses */}
+        {polling &&
+          buses.map((bus) => (
+            <BusMarker key={bus.rendszam} bus={bus} onClick={onRouteSelect} />
+          ))}
+
+        {/* Draw route line */}
+        {stops.length > 0 && selectedRoute && (
+          <RoutingMachine
+            key={selectedRoute}
+            waypoints={stops
+              .filter((s) => s.route === selectedRoute)
+              .map((s) => [s.lat, s.lon])}
+            options={{
+              router: L.Routing.osrmv1({
+                serviceUrl: BACKEND_URL + API_ROUTE_PROXY,
+              }),
+              show: false,
+              routeWhileDragging: false,
+              createMarker: () => false,
+              lineOptions: {
+                addWaypoints: false,
+                styles: [
+                  {
+                    color: routeColors[selectedRoute] || COLOR_G3_ROUTE,
+                    opacity: 1,
+                    weight: 3,
+                  },
+                ],
+              },
+            }}
+          />
+        )}
+      </MapContainer>
+    </div>
   );
 };

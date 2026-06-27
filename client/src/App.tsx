@@ -89,18 +89,19 @@ export const App = () => {
       />
 
       <div className="flex-1 relative">
-        <MapView
-          center={center}
-          zoom={zoom}
-          stops={stops}
-          buses={buses}
-          polling={polling}
-          selectedRoute={selectedRoute}
-          onRouteSelect={setSelectedRoute}
-          onRouteDeselect={() => setSelectedRoute(null)}
-          onMoveEnd={saveCenter}
-          onZoomEnd={saveZoom}
-        />
+          <MapView
+            center={center}
+            zoom={zoom}
+            stops={stops}
+            buses={buses}
+            polling={polling}
+            onTogglePolling={() => setPolling((p) => !p)}
+            selectedRoute={selectedRoute}
+            onRouteSelect={setSelectedRoute}
+            onRouteDeselect={() => setSelectedRoute(null)}
+            onMoveEnd={saveCenter}
+            onZoomEnd={saveZoom}
+          />
 
         {stopsLoading && (
           <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[1000] bg-white px-3 py-1 rounded-full shadow-md flex items-center gap-2 text-sm font-medium text-gray-700">
