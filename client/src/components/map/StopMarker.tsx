@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Marker, Popup, Tooltip } from "react-leaflet";
 import { getStopIcon } from "../../lib/icons";
 import type { Stop } from "../../lib/types";
@@ -11,6 +12,19 @@ interface StopMarkerProps {
 }
 
 export const StopMarker = ({ stop, onClick, zoom }: StopMarkerProps) => {
+  const [favorites, setFavorites] = useState<string[]>(() => {
+    const saved = localStorage.getItem("favorite_stops");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const toggleFavorite = (mid: string) => {
+    const newFavorites = favorites.includes(mid)
+      ? favorites.filter((id) => id !== mid)
+      : [...favorites, mid];
+    setFavorites(newFavorites);
+    localStorage.setItem("favorite_stops", JSON.stringify(newFavorites));
+  };
+
   const icon = getStopIcon(stop.route, stop.dir ?? undefined, zoom);
 
   return (
@@ -22,12 +36,27 @@ export const StopMarker = ({ stop, onClick, zoom }: StopMarkerProps) => {
       <Tooltip direction="top" offset={[0, -20]} opacity={1}>
         {stop.name}
       </Tooltip>
-      <Popup>
-        <div className="text-sm font-bold flex pb-1 min-w-40">{stop.name}</div>
-        <Pill variant={stop.route}>{stop.route}</Pill>
-        <div className="pb-6"></div>
-        <Timetable trips={stop.trips} />
-      </Popup>
+       <Popup>
+         <div className="text-sm font-bold flex items-center gap-2 pb-1 min-w-40">
+           <button 
+             className={`transition-colors ${
+               favorites.includes(stop.mid)
+                 ? "text-yellow-500" 
+                 : "text-gray-400 hover:text-yellow-500"
+             }`}
+             onClick={(e) => {
+               e.stopPropagation();
+               toggleFavorite(stop.mid);
+             }}
+           >
+             {favorites.includes(stop.mid) ? "★" : "☆"}
+           </button>
+           {stop.name}
+         </div>
+         <Pill variant={stop.route}>{stop.route}</Pill>
+         <div className="pb-6"></div>
+         <Timetable trips={stop.trips} />
+       </Popup>
     </Marker>
   );
 };

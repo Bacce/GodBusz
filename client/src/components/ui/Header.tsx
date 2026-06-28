@@ -59,6 +59,28 @@ export const Header = ({
   const normalize = (text: string) =>
     text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
+  const [favorites, setFavorites] = useState<string[]>(() => {
+    const saved = localStorage.getItem("favorite_stops");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const toggleFavorite = (mids: string | string[]) => {
+    const targetMids = Array.isArray(mids) ? mids : [mids];
+    const isRemoving = targetMids.every((mid) => favorites.includes(mid));
+    
+    let newFavorites = [...favorites];
+    if (isRemoving) {
+      newFavorites = favorites.filter((id) => !targetMids.includes(id));
+    } else {
+      targetMids.forEach((mid) => {
+        if (!newFavorites.includes(mid)) newFavorites.push(mid);
+      });
+    }
+    
+    setFavorites(newFavorites);
+    localStorage.setItem("favorite_stops", JSON.stringify(newFavorites));
+  };
+
   const filteredStops = stops.filter((s) =>
     normalize(s.name).includes(normalize(searchQuery))
   );
@@ -74,6 +96,14 @@ export const Header = ({
     acc[normName].stops.push(stop);
     return acc;
   }, {} as Record<string, { originalName: string; stops: Stop[] }>);
+
+  const sortedGroups = Object.entries(groupedStops).sort(([_, a], [__, b]) => {
+    const aFav = a.stops.some((s) => favorites.includes(s.mid));
+    const bFav = b.stops.some((s) => favorites.includes(s.mid));
+    if (aFav && !bFav) return -1;
+    if (!aFav && bFav) return 1;
+    return 0;
+  });
 
   return (
     <>
@@ -96,42 +126,57 @@ export const Header = ({
               onFocus={() => setIsOpen(true)}
               className="w-64 max-sm:w-[100px] px-2 py-1 rounded border border-gray-300 text-sm text-gray-600 focus:outline-none focus:ring-1 focus:ring-[#009EE3]"
             />
-            {isOpen && Object.keys(groupedStops).length > 0 && (
-              <div className="absolute top-full left-0 w-full min-w-[250px] bg-white border border-gray-300 shadow-lg rounded-b-md z-[1001] max-h-60 overflow-y-auto py-1">
-                {Object.entries(groupedStops).map(([_, group]) => {
-                  const { originalName, stops: stopsForName } = group;
-                  return (
-                    <div
-                      key={originalName}
-                      className="flex items-center justify-between px-2 py-1.5 hover:bg-gray-100 cursor-pointer text-sm text-gray-700"
-                      onClick={() => {
-                        if (stopsForName.length === 1) {
-                          onStopSelect(stopsForName[0].mid);
-                          setIsOpen(false);
-                          setSearchQuery("");
-                        } else {
-                          onStopSelect(stopsForName[0].mid, true);
-                        }
-                      }}
-                    >
-                      <span>{originalName}</span>
-                      <div className="flex gap-1">
-                        {stopsForName.map((s) => (
-                          <div key={s.mid} onClick={(e) => {
-                            e.stopPropagation();
-                            onStopSelect(s.mid);
-                            setIsOpen(false);
-                            setSearchQuery("");
-                          }}>
-                            <Pill variant={s.route}>{s.route}</Pill>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+             {isOpen && sortedGroups.length > 0 && (
+               <div className="absolute top-full left-0 w-full min-w-[250px] bg-white border border-gray-300 shadow-lg rounded-b-md z-[1001] max-h-60 overflow-y-auto py-1">
+                 {sortedGroups.map(([_, group]) => {
+                   const { originalName, stops: stopsForName } = group;
+                   return (
+                     <div
+                       key={originalName}
+                       className="flex items-center justify-between px-2 py-1.5 hover:bg-gray-100 cursor-pointer text-sm text-gray-700"
+                       onClick={() => {
+                         if (stopsForName.length === 1) {
+                           onStopSelect(stopsForName[0].mid);
+                           setIsOpen(false);
+                           setSearchQuery("");
+                         } else {
+                           onStopSelect(stopsForName[0].mid, true);
+                         }
+                       }}
+                     >
+                       <span className="flex items-center gap-2">
+                          <button 
+                            className={`transition-colors ${
+                              stopsForName.some((s) => favorites.includes(s.mid))
+                                ? "text-yellow-500" 
+                                : "text-gray-400 hover:text-yellow-500"
+                            }`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleFavorite(stopsForName.map((s) => s.mid));
+                            }}
+                          >
+                            {stopsForName.some((s) => favorites.includes(s.mid)) ? "★" : "☆"}
+                          </button>
+                         {originalName}
+                       </span>
+                       <div className="flex gap-1">
+                         {stopsForName.map((s) => (
+                           <div key={s.mid} onClick={(e) => {
+                             e.stopPropagation();
+                             onStopSelect(s.mid);
+                             setIsOpen(false);
+                             setSearchQuery("");
+                           }}>
+                             <Pill variant={s.route}>{s.route}</Pill>
+                           </div>
+                         ))}
+                       </div>
+                     </div>
+                   );
+                 })}
+               </div>
+             )}
           </div>
         </div>
         <div className="flex gap-2 items-center">
