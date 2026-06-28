@@ -77,12 +77,12 @@ export const Header = ({
 
   return (
     <>
-      <header className="flex items-center justify-between h-13.5 bg-white border-b-[3px] border-[#c6c6c6] px-4">
-        <div className="flex items-center gap-4">
-           <div 
-             className="h-10 w-[150px] bg-cover bg-left max-sm:w-[45px]" 
-             style={{ backgroundImage: 'url(/logo_godgo.png)' }} 
-           />
+      <header className="flex items-center justify-between h-13.5 bg-white border-b-[3px] border-[#c6c6c6] px-4 max-sm:px-2">
+        <div className="flex items-center gap-2">
+          <div
+            className="h-10 w-[150px] bg-cover bg-left max-sm:w-[40px]"
+            style={{ backgroundImage: 'url(/logo_godgo.png)' }}
+          />
 
           <div className="relative" ref={dropdownRef}>
             <input
@@ -141,7 +141,7 @@ export const Header = ({
             type="date"
             value={selectedDate}
             onChange={(e) => onDateChange(e.target.value)}
-            className="w-44 px-2 py-1 rounded border border-gray-300 text-sm text-gray-600 focus:outline-none focus:ring-1 focus:ring-[#009EE3]"
+            className="w-44 max-sm:w-auto px-2 py-1 rounded border border-gray-300 text-sm text-gray-600 focus:outline-none focus:ring-1 focus:ring-[#009EE3]"
           />
           <button
             onClick={openInfo}
