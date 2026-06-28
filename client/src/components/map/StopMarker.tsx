@@ -10,9 +10,10 @@ interface StopMarkerProps {
   stop: Stop;
   onClick: (route: string) => void;
   zoom: number;
+  selectedDate?: string;
 }
 
-export const StopMarker = ({ stop, onClick, zoom }: StopMarkerProps) => {
+export const StopMarker = ({ stop, onClick, zoom, selectedDate }: StopMarkerProps) => {
   const navigate = useNavigate();
   const [favorites, setFavorites] = useState<string[]>(() => {
     const saved = localStorage.getItem("favorite_stops");
@@ -38,32 +39,31 @@ export const StopMarker = ({ stop, onClick, zoom }: StopMarkerProps) => {
       <Tooltip direction="top" offset={[0, -20]} opacity={1}>
         {stop.name}
       </Tooltip>
-        <Popup>
-          <div className="text-sm font-bold flex items-center gap-2 pb-1 min-w-40">
-            <button 
-              className={`transition-colors ${
-                favorites.includes(stop.mid)
-                  ? "text-yellow-500" 
-                  : "text-gray-400 hover:text-yellow-500"
+      <Popup>
+        <div className="text-sm font-bold flex items-center gap-2 pb-1 min-w-40">
+          <button
+            className={`transition-colors ${favorites.includes(stop.mid)
+                ? "text-yellow-500"
+                : "text-gray-400 hover:text-yellow-500"
               }`}
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleFavorite(stop.mid);
-              }}
-            >
-              {favorites.includes(stop.mid) ? "★" : "☆"}
-            </button>
-            <span 
-              className="cursor-pointer hover:text-gray-500 transition-colors" 
-              onClick={() => navigate(`/stop/${stop.mid}`)}
-            >
-              {stop.name}
-            </span>
-          </div>
-          <Pill variant={stop.route}>{stop.route}</Pill>
-          <div className="pb-6"></div>
-          <Timetable trips={stop.trips} />
-        </Popup>
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleFavorite(stop.mid);
+            }}
+          >
+            {favorites.includes(stop.mid) ? "★" : "☆"}
+          </button>
+          <span
+            className="cursor-pointer hover:text-gray-500 transition-colors"
+            onClick={() => navigate(`/stop/${stop.mid}`)}
+          >
+            {stop.name}
+          </span>
+        </div>
+        <Pill variant={stop.route}>{stop.route}</Pill>
+        <div className="pb-6"></div>
+         <Timetable trips={stop.trips} date={selectedDate} />
+      </Popup>
 
     </Marker>
   );

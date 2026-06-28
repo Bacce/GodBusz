@@ -33,6 +33,7 @@ interface MapViewProps {
   selectedStopId: string | null;
   shouldFocusStop: boolean;
   onFocusHandled: () => void;
+  selectedDate: string;
 }
 
 export const MapView = ({
@@ -50,6 +51,7 @@ export const MapView = ({
     selectedStopId,
     shouldFocusStop,
     onFocusHandled,
+    selectedDate,
   }: MapViewProps) => {
     const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
     const [shouldFlyToUser, setShouldFlyToUser] = useState(false);
@@ -185,7 +187,7 @@ export const MapView = ({
 
           {/* Draw stops */}
           {visibleStops.map((stop) => (
-            <StopMarker key={stop.mid} stop={stop} onClick={onRouteSelect} zoom={zoom} />
+            <StopMarker key={stop.mid} stop={stop} onClick={onRouteSelect} zoom={zoom} selectedDate={selectedDate} />
           ))}
 
         {/* Draw buses */}

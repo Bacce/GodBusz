@@ -2,19 +2,24 @@ import type { Trip } from "../../lib/types";
 
 interface TimetableProps {
   trips: Trip[];
+  date?: string;
 }
 
-export const Timetable = ({ trips }: TimetableProps) => {
+export const Timetable = ({ trips, date }: TimetableProps) => {
   const now = new Date();
   const nowSeconds =
     now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
 
+  const isToday = !date || (date && new Date(date).toLocaleDateString() === now.toLocaleDateString());
+
   const filteredTrips = trips.filter((t) => !t.time.startsWith("00:00"));
 
-  const nextIndex = filteredTrips.findIndex((trip) => {
-    const [h, m, s = 0] = trip.time.split(":").map(Number);
-    return nowSeconds <= h * 3600 + m * 60 + s + 120;
-  });
+  const nextIndex = isToday
+    ? filteredTrips.findIndex((trip) => {
+        const [h, m, s = 0] = trip.time.split(":").map(Number);
+        return nowSeconds <= h * 3600 + m * 60 + s + 120;
+      })
+    : -1;
 
   return (
     <div className="max-w-auto mx-auto font-sans">
@@ -22,8 +27,8 @@ export const Timetable = ({ trips }: TimetableProps) => {
         const [h, m, s = 0] = trip.time.split(":").map(Number);
         const tripSeconds = h * 3600 + m * 60 + s;
 
-        const isPast = nowSeconds > tripSeconds + 120;
-        const isNext = index === nextIndex;
+        const isPast = isToday && nowSeconds > tripSeconds + 120;
+        const isNext = isToday && index === nextIndex;
 
         return (
           <div

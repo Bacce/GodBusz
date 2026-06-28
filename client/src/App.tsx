@@ -127,6 +127,7 @@ export const App = () => {
                   selectedStopId={selectedStopId}
                   shouldFocusStop={shouldFocusStop}
                   onFocusHandled={() => setShouldFocusStop(false)}
+                  selectedDate={selectedDate}
                 />
 
                 {stopsLoading && (
@@ -143,7 +144,7 @@ export const App = () => {
               </div>
             }
           />
-           <Route path="/stop/:mid" element={<StopPage selectedDate={selectedDate} />} />
+          <Route path="/stop/:mid" element={<StopPage selectedDate={selectedDate} />} />
 
         </Routes>
 

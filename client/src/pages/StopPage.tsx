@@ -27,7 +27,7 @@ export const StopPage = ({ selectedDate }: { selectedDate: string }) => {
       
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
         <h2 className="text-lg font-semibold mb-4 border-b pb-2">Menetrend</h2>
-        <Timetable trips={stop.trips} />
+        <Timetable trips={stop.trips} date={selectedDate} />
       </div>
     </div>
   );
