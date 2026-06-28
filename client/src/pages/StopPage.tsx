@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useStop } from '../hooks/useStop';
 import { Timetable } from '../components/ui/Timetable';
+import { Pill } from '../components/ui/Pill';
 
 export const StopPage = ({ selectedDate }: { selectedDate: string }) => {
   const { mid } = useParams<{ mid: string }>();
@@ -19,12 +20,16 @@ export const StopPage = ({ selectedDate }: { selectedDate: string }) => {
 
   return (
     <div className="p-4 w-full max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold mb-6">{stop.name}</h1>
-
+      <div className="flex items-center gap-3 mb-6">
+        <h1 className="text-2xl font-bold">{stop.name}</h1>
+        <Pill variant={stop.route}>{stop.route}</Pill>
+      </div>
+      
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
         <h2 className="text-lg font-semibold mb-4 border-b pb-2">Menetrend</h2>
         <Timetable trips={stop.trips} />
       </div>
     </div>
   );
+
 };
