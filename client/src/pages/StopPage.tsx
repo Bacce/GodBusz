@@ -12,7 +12,7 @@ export const StopPage = ({ selectedDate }: { selectedDate: string }) => {
     return (
       <div className="p-4 flex items-center justify-center h-full">
         <div className="bg-white px-3 py-1 rounded-full shadow-md flex items-center gap-2 text-sm font-medium text-gray-700">
-          <span>Nincsenek megjelenítendő járatok erre a napra.</span>
+          <span>Nincsenek megjelenítendő járatok erre a napra. (hétvégén és ünnepnapokon nem közlekedik)</span>
         </div>
       </div>
     );
@@ -24,7 +24,7 @@ export const StopPage = ({ selectedDate }: { selectedDate: string }) => {
         <h1 className="text-2xl font-bold">{stop.name}</h1>
         <Pill variant={stop.route}>{stop.route}</Pill>
       </div>
-      
+
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
         <h2 className="text-lg font-semibold mb-4 border-b pb-2">Menetrend</h2>
         <Timetable trips={stop.trips} date={selectedDate} />

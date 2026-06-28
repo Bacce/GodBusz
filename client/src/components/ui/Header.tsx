@@ -43,13 +43,14 @@ export const Header = ({
       <p>Ez az alkalmazás egy független projekt, és semmilyen kapcsolatban nem áll a BudapestGO-val, a BKK-val vagy azok kapcsolt szervezeteivel. Az alkalmazás nem hivatalos termék, nem áll támogatás, jóváhagyás vagy együttműködés alatt. Az esetleges formai vagy funkcionális hasonlóságok kizárólag a felhasználói élmény javítását szolgálják. Minden védjegy, logó és márkanév a jogos tulajdonosának tulajdonát képezi.</p>
       <br/>
       <p>Az alkalmazás továbbá semmilyen kapcsolatban nem áll a Molteam vállalattal, amely a gödi buszkövető alkalmazás eredeti fejlesztője, és nem áll fenn köztük semmilyen együttműködés, támogatás vagy hivatalos kapcsolat. A projekt teljes mértékben független a Molteam által fejlesztett szolgáltatásoktól és alkalmazásoktól.
-      <b><a href="https://god.molteam.hu/">https://god.molteam.hu/</a></b>
+      <br/>Link: <b><a href="https://god.molteam.hu/">Hivatalos buszkövető alkalmazás</a></b>
+      <br/>Link: <b><a href="https://god.hu/elet-a-varosban/varosinformacio/kozossegi-kozlekedes/">További információk Göd város weboldalán</a></b>
       </p>
       <br/>
       <h3><b>Kapcsolat</b></h3>
       <p>Amennyiben kérdése, észrevétele vagy hibabejelentése van az alkalmazással kapcsolatban, kérjük, nyisson egy új hibajegyet (Issue) a projekt GitHub-oldalán:
       <br/>
-      <b><a href="https://github.com/Bacce/GodBusz/issues">https://github.com/Bacce/GodBusz/issues</a></b>
+      Link: <b><a href="https://github.com/Bacce/GodBusz/issues">GitHub hibajegyek</a></b>
       <br/><br/>
       Minden bejelentést és visszajelzést köszönettel fogadunk.</p>
       <br/>
@@ -70,7 +71,7 @@ export const Header = ({
   const toggleFavorite = (mids: string | string[]) => {
     const targetMids = Array.isArray(mids) ? mids : [mids];
     const isRemoving = targetMids.every((mid) => favorites.includes(mid));
-    
+
     let newFavorites = [...favorites];
     if (isRemoving) {
       newFavorites = favorites.filter((id) => !targetMids.includes(id));
@@ -79,7 +80,7 @@ export const Header = ({
         if (!newFavorites.includes(mid)) newFavorites.push(mid);
       });
     }
-    
+
     setFavorites(newFavorites);
     localStorage.setItem("favorite_stops", JSON.stringify(newFavorites));
   };
@@ -111,12 +112,12 @@ export const Header = ({
   return (
     <>
       <header className="flex items-center justify-between h-13.5 bg-white border-b-[3px] border-[#c6c6c6] px-4 max-sm:px-2">
-         <div className="flex items-center gap-2">
-           <div
-             className="h-10 w-[150px] bg-cover bg-left max-sm:w-[40px] cursor-pointer"
-             style={{ backgroundImage: 'url(/logo_godgo.png)' }}
-             onClick={() => navigate("/")}
-           />
+        <div className="flex items-center gap-2">
+          <div
+            className="h-10 w-[150px] bg-cover bg-left max-sm:w-[40px] cursor-pointer"
+            style={{ backgroundImage: 'url(/logo_godgo.png)' }}
+            onClick={() => navigate("/")}
+          />
 
 
           <div className="relative" ref={dropdownRef}>
@@ -152,12 +153,11 @@ export const Header = ({
                           }}
                         >
                           <span className="flex items-center gap-2">
-                            <button 
-                              className={`transition-colors ${
-                                stopsForName.some((s) => favorites.includes(s.mid))
-                                  ? "text-yellow-500" 
-                                  : "text-gray-400 hover:text-yellow-500"
-                              }`}
+                            <button
+                              className={`transition-colors ${stopsForName.some((s) => favorites.includes(s.mid))
+                                ? "text-yellow-500"
+                                : "text-gray-400 hover:text-yellow-500"
+                                }`}
                               onClick={(e) => {
                                 e.stopPropagation();
                                 toggleFavorite(stopsForName.map((s) => s.mid));
