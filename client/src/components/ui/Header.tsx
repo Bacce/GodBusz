@@ -79,7 +79,10 @@ export const Header = ({
     <>
       <header className="flex items-center justify-between h-13.5 bg-white border-b-[3px] border-[#c6c6c6] px-4">
         <div className="flex items-center gap-4">
-          <img src="/logo_godgo.png" alt="Logo" className="h-10 w-auto" />
+           <div 
+             className="h-10 w-[150px] bg-cover bg-left max-sm:w-[45px]" 
+             style={{ backgroundImage: 'url(/logo_godgo.png)' }} 
+           />
 
           <div className="relative" ref={dropdownRef}>
             <input
