@@ -94,10 +94,10 @@ export const Header = ({
                 setIsOpen(true);
               }}
               onFocus={() => setIsOpen(true)}
-              className="w-64 px-2 py-1 rounded border border-gray-300 text-sm text-gray-600 focus:outline-none focus:ring-1 focus:ring-[#009EE3]"
+              className="w-64 max-sm:w-[100px] px-2 py-1 rounded border border-gray-300 text-sm text-gray-600 focus:outline-none focus:ring-1 focus:ring-[#009EE3]"
             />
             {isOpen && Object.keys(groupedStops).length > 0 && (
-              <div className="absolute top-full left-0 w-full bg-white border border-gray-300 shadow-lg rounded-b-md z-[1001] max-h-60 overflow-y-auto py-1">
+              <div className="absolute top-full left-0 w-full min-w-[250px] bg-white border border-gray-300 shadow-lg rounded-b-md z-[1001] max-h-60 overflow-y-auto py-1">
                 {Object.entries(groupedStops).map(([_, group]) => {
                   const { originalName, stops: stopsForName } = group;
                   return (
