@@ -2,6 +2,7 @@ import {
   API_STOPS,
   API_BUSES,
   API_POPUPS,
+  API_STOP,
   BACKEND_URL,
 } from "../lib/constants";
 import type { Stop, Bus, PopupData } from "../lib/types";
@@ -25,6 +26,10 @@ async function get<T>(
 export async function fetchStops(date?: string): Promise<Stop[]> {
   const json = await get<{ stops?: Stop[] } | Stop[]>(API_STOPS, { date });
   return (Array.isArray(json) ? json : json.stops) ?? [];
+}
+
+export async function fetchStop(mid: string, date?: string): Promise<Stop> {
+  return get<Stop>(`${API_STOP}/${mid}`, { date });
 }
 
 export async function fetchBuses(date?: string): Promise<Bus[]> {

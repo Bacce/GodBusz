@@ -104,6 +104,23 @@ router.get(
 );
 
 router.get(
+  "/stop/:mid",
+  asyncHandler(async (req, res) => {
+    const dateStr =
+      req.query.date && isValidDate(req.query.date)
+        ? req.query.date
+        : getCurrentDate();
+    const data = await apiService.loadRoute(dateStr);
+    const stops = getAllStops(data).stops;
+    const stop = stops.find((s) => s.mid.toString() === req.params.mid);
+    if (!stop) {
+      return res.status(404).json({ error: "Stop not found" });
+    }
+    res.json(stop);
+  }),
+);
+
+router.get(
   "/popups",
   asyncHandler(async (req, res) => {
     res.json(await apiService.getPopups());

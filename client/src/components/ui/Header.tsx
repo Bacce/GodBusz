@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { PopupModal } from "./PopupModal";
 import { Pill } from "./Pill";
 import type { PopupData, Stop } from "../../lib/types";
@@ -18,6 +19,8 @@ export const Header = ({
   stops,
   onStopSelect,
 }: HeaderProps) => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [infoPopup, setInfoPopup] = useState<PopupData | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -108,76 +111,83 @@ export const Header = ({
   return (
     <>
       <header className="flex items-center justify-between h-13.5 bg-white border-b-[3px] border-[#c6c6c6] px-4 max-sm:px-2">
-        <div className="flex items-center gap-2">
-          <div
-            className="h-10 w-[150px] bg-cover bg-left max-sm:w-[40px]"
-            style={{ backgroundImage: 'url(/logo_godgo.png)' }}
-          />
+         <div className="flex items-center gap-2">
+           <div
+             className="h-10 w-[150px] bg-cover bg-left max-sm:w-[40px] cursor-pointer"
+             style={{ backgroundImage: 'url(/logo_godgo.png)' }}
+             onClick={() => navigate("/")}
+           />
+
 
           <div className="relative" ref={dropdownRef}>
-            <input
-              type="text"
-              placeholder="Megállók..."
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                setIsOpen(true);
-              }}
-              onFocus={() => setIsOpen(true)}
-              className="w-64 max-sm:w-[100px] px-2 py-1 rounded border border-gray-300 text-sm text-gray-600 focus:outline-none focus:ring-1 focus:ring-[#009EE3]"
-            />
-             {isOpen && sortedGroups.length > 0 && (
-               <div className="absolute top-full left-0 w-full min-w-[250px] bg-white border border-gray-300 shadow-lg rounded-b-md z-[1001] max-h-60 overflow-y-auto py-1">
-                 {sortedGroups.map(([_, group]) => {
-                   const { originalName, stops: stopsForName } = group;
-                   return (
-                     <div
-                       key={originalName}
-                       className="flex items-center justify-between px-2 py-1.5 hover:bg-gray-100 cursor-pointer text-sm text-gray-700"
-                       onClick={() => {
-                         if (stopsForName.length === 1) {
-                           onStopSelect(stopsForName[0].mid);
-                           setIsOpen(false);
-                           setSearchQuery("");
-                         } else {
-                           onStopSelect(stopsForName[0].mid, true);
-                         }
-                       }}
-                     >
-                       <span className="flex items-center gap-2">
-                          <button 
-                            className={`transition-colors ${
-                              stopsForName.some((s) => favorites.includes(s.mid))
-                                ? "text-yellow-500" 
-                                : "text-gray-400 hover:text-yellow-500"
-                            }`}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              toggleFavorite(stopsForName.map((s) => s.mid));
-                            }}
-                          >
-                            {stopsForName.some((s) => favorites.includes(s.mid)) ? "★" : "☆"}
-                          </button>
-                         {originalName}
-                       </span>
-                       <div className="flex gap-1">
-                         {stopsForName.map((s) => (
-                           <div key={s.mid} onClick={(e) => {
-                             e.stopPropagation();
-                             onStopSelect(s.mid);
-                             setIsOpen(false);
-                             setSearchQuery("");
-                           }}>
-                             <Pill variant={s.route}>{s.route}</Pill>
-                           </div>
-                         ))}
-                       </div>
-                     </div>
-                   );
-                 })}
-               </div>
-             )}
+            {!location.pathname.startsWith("/stop/") && (
+              <>
+                <input
+                  type="text"
+                  placeholder="Megállók..."
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setIsOpen(true);
+                  }}
+                  onFocus={() => setIsOpen(true)}
+                  className="w-64 max-sm:w-[100px] px-2 py-1 rounded border border-gray-300 text-sm text-gray-600 focus:outline-none focus:ring-1 focus:ring-[#009EE3]"
+                />
+                {isOpen && sortedGroups.length > 0 && (
+                  <div className="absolute top-full left-0 w-full min-w-[250px] bg-white border border-gray-300 shadow-lg rounded-b-md z-[1001] max-h-60 overflow-y-auto py-1">
+                    {sortedGroups.map(([_, group]) => {
+                      const { originalName, stops: stopsForName } = group;
+                      return (
+                        <div
+                          key={originalName}
+                          className="flex items-center justify-between px-2 py-1.5 hover:bg-gray-100 cursor-pointer text-sm text-gray-700"
+                          onClick={() => {
+                            if (stopsForName.length === 1) {
+                              onStopSelect(stopsForName[0].mid);
+                              setIsOpen(false);
+                              setSearchQuery("");
+                            } else {
+                              onStopSelect(stopsForName[0].mid, true);
+                            }
+                          }}
+                        >
+                          <span className="flex items-center gap-2">
+                            <button 
+                              className={`transition-colors ${
+                                stopsForName.some((s) => favorites.includes(s.mid))
+                                  ? "text-yellow-500" 
+                                  : "text-gray-400 hover:text-yellow-500"
+                              }`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleFavorite(stopsForName.map((s) => s.mid));
+                              }}
+                            >
+                              {stopsForName.some((s) => favorites.includes(s.mid)) ? "★" : "☆"}
+                            </button>
+                            {originalName}
+                          </span>
+                          <div className="flex gap-1">
+                            {stopsForName.map((s) => (
+                              <div key={s.mid} onClick={(e) => {
+                                e.stopPropagation();
+                                onStopSelect(s.mid);
+                                setIsOpen(false);
+                                setSearchQuery("");
+                              }}>
+                                <Pill variant={s.route}>{s.route}</Pill>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </>
+            )}
           </div>
+
         </div>
         <div className="flex gap-2 items-center">
 

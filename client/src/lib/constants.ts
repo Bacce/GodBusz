@@ -37,6 +37,7 @@ export const BACKEND_URL = (import.meta.env.VITE_BACKEND_URL || "").replace(
 export const API_STOPS = "/api/v1/stops";
 export const API_BUSES = "/api/v1/buses";
 export const API_POPUPS = "/api/v1/popups";
+export const API_STOP = "/api/v1/stop";
 export const API_ROUTE_PROXY = "/api/v1/route-proxy";
 
 // ── Bus polling ───────────────────────────────────────────────────────────────

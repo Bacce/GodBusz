@@ -17,7 +17,7 @@ export const Timetable = ({ trips }: TimetableProps) => {
   });
 
   return (
-    <div className="max-w-50 mx-auto font-sans">
+    <div className="max-w-auto mx-auto font-sans">
       {filteredTrips.map((trip, index) => {
         const [h, m, s = 0] = trip.time.split(":").map(Number);
         const tripSeconds = h * 3600 + m * 60 + s;
@@ -28,13 +28,12 @@ export const Timetable = ({ trips }: TimetableProps) => {
         return (
           <div
             key={trip.time}
-            className={`flex justify-between py-1 border-b border-gray-100 ${
-              isPast
+            className={`flex justify-between py-1 border-b border-gray-100 ${isPast
                 ? "text-gray-400"
                 : isNext
                   ? "text-black font-bold bg-gray-50"
                   : ""
-            }`}
+              }`}
           >
             <span className="font-mono">{trip.time.slice(0, -3)}</span>
             {isNext && <span className="text-xs">következő</span>}
