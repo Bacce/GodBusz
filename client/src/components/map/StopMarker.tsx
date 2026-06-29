@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Marker, Popup, Tooltip } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 import { getStopIcon } from "../../lib/icons";
@@ -15,6 +15,7 @@ interface StopMarkerProps {
 
 export const StopMarker = ({ stop, onClick, zoom, selectedDate }: StopMarkerProps) => {
   const navigate = useNavigate();
+  const markerRef = useRef<any>(null);
   const [favorites, setFavorites] = useState<string[]>(() => {
     const saved = localStorage.getItem("favorite_stops");
     return saved ? JSON.parse(saved) : [];
@@ -34,6 +35,7 @@ export const StopMarker = ({ stop, onClick, zoom, selectedDate }: StopMarkerProp
     <Marker
       position={[stop.lat, stop.lon]}
       icon={icon}
+      ref={markerRef}
       eventHandlers={{ click: () => onClick(stop.route) }}
     >
       <Tooltip direction="top" offset={[0, -20]} opacity={1}>
@@ -53,10 +55,13 @@ export const StopMarker = ({ stop, onClick, zoom, selectedDate }: StopMarkerProp
           >
             {favorites.includes(stop.mid) ? "★" : "☆"}
           </button>
-          <span
-            className="cursor-pointer hover:text-gray-500 transition-colors"
-            onClick={() => navigate(`/stop/${stop.mid}`)}
-          >
+           <span
+             className="cursor-pointer hover:text-gray-500 transition-colors"
+             onClick={() => {
+               navigate(`/stop/${stop.mid}`);
+               markerRef.current?.closePopup();
+             }}
+           >
             {stop.name}
           </span>
         </div>
