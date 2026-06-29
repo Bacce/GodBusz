@@ -113,10 +113,10 @@ export const Header = ({
     <>
       <header className="flex items-center justify-between h-13.5 bg-white border-b-[3px] border-[#c6c6c6] px-4 max-sm:px-2">
         <div className="flex items-center gap-2">
-           <div
-             className="h-10 w-[140px] bg-cover bg-left max-sm:w-[40px] cursor-pointer bg-[url('/logo_godgo.svg')] max-sm:bg-[url('/icon.svg')]"
-             onClick={() => navigate("/")}
-           />
+          <div
+            className="h-10 w-[140px] bg-cover bg-left max-sm:w-[40px] cursor-pointer bg-[url('/logo_godgo.svg')] max-sm:bg-[url('/icon.svg')]"
+            onClick={() => navigate("/")}
+          />
 
 
           <div className="relative" ref={dropdownRef}>
@@ -173,6 +173,9 @@ export const Header = ({
                                 onStopSelect(s.mid);
                                 setIsOpen(false);
                                 setSearchQuery("");
+                                setTimeout(() => {
+                                  window.dispatchEvent(new CustomEvent("open-stop-popup", { detail: s.mid }));
+                                }, 500);
                               }}>
                                 <Pill variant={s.route}>{s.route}</Pill>
                               </div>

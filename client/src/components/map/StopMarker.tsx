@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Marker, Popup, Tooltip } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 import { getStopIcon } from "../../lib/icons";
@@ -16,6 +16,18 @@ interface StopMarkerProps {
 export const StopMarker = ({ stop, onClick, zoom, selectedDate }: StopMarkerProps) => {
   const navigate = useNavigate();
   const markerRef = useRef<any>(null);
+
+  useEffect(() => {
+    const handleOpenPopup = (event: Event) => {
+      if ((event as CustomEvent).detail === stop.mid) {
+        markerRef.current?.openPopup();
+      }
+    };
+
+    window.addEventListener("open-stop-popup", handleOpenPopup);
+    return () => window.removeEventListener("open-stop-popup", handleOpenPopup);
+  }, [stop.mid]);
+
   const [favorites, setFavorites] = useState<string[]>(() => {
     const saved = localStorage.getItem("favorite_stops");
     return saved ? JSON.parse(saved) : [];
