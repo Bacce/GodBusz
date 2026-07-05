@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { Marker, Popup, Tooltip } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 import { getStopIcon } from "../../lib/icons";
@@ -11,9 +11,10 @@ interface StopMarkerProps {
   onClick: (route: string) => void;
   zoom: number;
   selectedDate?: string;
+  allStops: Stop[];
 }
 
-export const StopMarker = ({ stop, onClick, zoom, selectedDate }: StopMarkerProps) => {
+export const StopMarker = ({ stop, onClick, zoom, selectedDate, allStops }: StopMarkerProps) => {
   const navigate = useNavigate();
   const markerRef = useRef<any>(null);
 
@@ -42,6 +43,14 @@ export const StopMarker = ({ stop, onClick, zoom, selectedDate }: StopMarkerProp
   };
 
   const icon = getStopIcon(stop.route, stop.dir ?? undefined, zoom);
+
+  const normalize = (text: string) =>
+    text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+  const siblingStops = useMemo(() => {
+    const normName = normalize(stop.name);
+    return allStops.filter((s) => normalize(s.name) === normName);
+  }, [stop.name, allStops]);
 
   return (
     <Marker
@@ -77,7 +86,26 @@ export const StopMarker = ({ stop, onClick, zoom, selectedDate }: StopMarkerProp
             {stop.name}
           </span>
         </div>
-        <Pill variant={stop.route}>{stop.route}</Pill>
+        <div className="flex gap-1">
+          {siblingStops.map((s) => (
+            <div
+              key={s.mid}
+              className={`cursor-pointer ${s.mid === stop.mid ? "opacity-100" : "opacity-50 hover:opacity-100"} transition-opacity`}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (s.mid !== stop.mid) {
+                  onClick(s.route);
+                  markerRef.current?.closePopup();
+                  setTimeout(() => {
+                    window.dispatchEvent(new CustomEvent("open-stop-popup", { detail: s.mid }));
+                  }, 300);
+                }
+              }}
+            >
+              <Pill variant={s.route}>{s.route}</Pill>
+            </div>
+          ))}
+        </div>
         <div className="pb-6"></div>
          <Timetable trips={stop.trips} date={selectedDate} />
       </Popup>

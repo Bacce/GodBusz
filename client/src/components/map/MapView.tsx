@@ -186,7 +186,7 @@ export const MapView = ({
 
         {/* Draw stops */}
         {visibleStops.map((stop) => (
-          <StopMarker key={stop.mid} stop={stop} onClick={onRouteSelect} zoom={zoom} selectedDate={selectedDate} />
+          <StopMarker key={stop.mid} stop={stop} onClick={onRouteSelect} zoom={zoom} selectedDate={selectedDate} allStops={stops} />
         ))}
 
         {/* Draw buses */}
