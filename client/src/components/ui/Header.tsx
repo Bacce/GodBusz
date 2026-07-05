@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { PopupModal } from "./PopupModal";
 import { Pill } from "./Pill";
 import type { PopupData, Stop } from "../../lib/types";
+import { normalize } from "../../lib/utils";
 
 interface HeaderProps {
   polling: boolean;
@@ -59,9 +60,6 @@ export const Header = ({
       `,
     });
   };
-
-  const normalize = (text: string) =>
-    text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
   const [favorites, setFavorites] = useState<string[]>(() => {
     const saved = localStorage.getItem("favorite_stops");

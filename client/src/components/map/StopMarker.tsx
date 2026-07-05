@@ -5,6 +5,7 @@ import { getStopIcon } from "../../lib/icons";
 import type { Stop } from "../../lib/types";
 import { Pill } from "../ui/Pill";
 import { Timetable } from "../ui/Timetable";
+import { normalize } from "../../lib/utils";
 
 interface StopMarkerProps {
   stop: Stop;
@@ -43,9 +44,6 @@ export const StopMarker = ({ stop, onClick, zoom, selectedDate, allStops }: Stop
   };
 
   const icon = getStopIcon(stop.route, stop.dir ?? undefined, zoom);
-
-  const normalize = (text: string) =>
-    text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
   const siblingStops = useMemo(() => {
     const normName = normalize(stop.name);
