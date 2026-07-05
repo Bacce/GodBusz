@@ -12,16 +12,11 @@ import { StopPage } from "./pages/StopPage";
 import { CookieBanner } from "./components/ui/CookieBanner";
 import { MapStatusOverlay } from "./components/map/MapStatusOverlay";
 import { initGTM } from "./lib/analytics";
+import { getTodayISO } from "./lib/utils";
 
 export const App = () => {
   const [polling, setPolling] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<string>(() => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0");
-    const day = String(now.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  });
+  const [selectedDate, setSelectedDate] = useState<string>(getTodayISO);
   const [selectedRoute, setSelectedRoute] = useState<string | null>(null);
   const [selectedStopId, setSelectedStopId] = useState<string | null>(null);
   const [shouldFocusStop, setShouldFocusStop] = useState(false);
@@ -81,8 +76,6 @@ export const App = () => {
     <Router>
       <div className="flex flex-col h-dvh overflow-hidden">
         <Header
-          polling={polling}
-          onTogglePolling={() => setPolling((p) => !p)}
           selectedDate={selectedDate}
           onDateChange={handleDateChange}
           stops={stops}

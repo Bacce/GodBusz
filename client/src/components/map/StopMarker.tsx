@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useRef, useEffect, useMemo } from "react";
 import { Marker, Popup, Tooltip } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 import { getStopIcon } from "../../lib/icons";
@@ -54,8 +54,8 @@ export const StopMarker = ({ stop, onClick, zoom, selectedDate, allStops }: Stop
         <div className="text-sm font-bold flex items-center gap-2 pb-1 min-w-40">
           <button
             className={`transition-colors ${favorites.includes(stop.mid)
-                ? "text-yellow-500"
-                : "text-gray-400 hover:text-yellow-500"
+              ? "text-yellow-500"
+              : "text-gray-400 hover:text-yellow-500"
               }`}
             onClick={(e) => {
               e.stopPropagation();
@@ -64,13 +64,13 @@ export const StopMarker = ({ stop, onClick, zoom, selectedDate, allStops }: Stop
           >
             {favorites.includes(stop.mid) ? "★" : "☆"}
           </button>
-           <span
-             className="cursor-pointer hover:text-gray-500 transition-colors"
-             onClick={() => {
-               navigate(`/stop/${stop.mid}`);
-               markerRef.current?.closePopup();
-             }}
-           >
+          <span
+            className="cursor-pointer hover:text-gray-500 transition-colors"
+            onClick={() => {
+              navigate(`/stop/${stop.mid}`);
+              markerRef.current?.closePopup();
+            }}
+          >
             {stop.name}
           </span>
         </div>
@@ -95,7 +95,7 @@ export const StopMarker = ({ stop, onClick, zoom, selectedDate, allStops }: Stop
           ))}
         </div>
         <div className="pb-6"></div>
-         <Timetable trips={stop.trips} date={selectedDate} />
+        <Timetable trips={stop.trips} date={selectedDate} />
       </Popup>
 
     </Marker>

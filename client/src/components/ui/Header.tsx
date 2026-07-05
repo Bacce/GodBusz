@@ -7,8 +7,6 @@ import { normalize } from "../../lib/utils";
 import { useFavorites } from "../../hooks/useFavorites";
 
 interface HeaderProps {
-  polling: boolean;
-  onTogglePolling: () => void;
   selectedDate: string;
   onDateChange: (date: string) => void;
   stops: Stop[];

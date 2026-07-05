@@ -4,7 +4,7 @@ import L from "leaflet";
 import { MapClickHandler } from "./MapClickHandler";
 import { StopMarker } from "./StopMarker";
 import { BusMarker } from "./BusMarker";
-import RoutingMachine from "../../RoutingMachine";
+import RoutingMachine from "./RoutingMachine";
 import {
   BUS_ICON_URL_HEADER,
   MAP_BOUNDS,
