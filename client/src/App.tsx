@@ -11,27 +11,7 @@ import { useMapPersistence } from "./hooks/useMapPersistence";
 import { StopPage } from "./pages/StopPage";
 import { CookieBanner } from "./components/ui/CookieBanner";
 import { MapStatusOverlay } from "./components/map/MapStatusOverlay";
-
-const GTM_ID = "G-EL1XL7XCKT";
-
-const loadGTM = () => {
-  if (typeof window === "undefined") return;
-
-  const script = document.createElement("script");
-  script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${GTM_ID}`;
-  document.head.appendChild(script);
-  // @ts-expect-error google tag manager
-  window.dataLayer = window.dataLayer || [];
-  function gtag() {
-    // @ts-expect-error google tag manager
-    window.dataLayer.push(arguments);
-  }
-  // @ts-expect-error google tag manager
-  gtag("js", new Date());
-  // @ts-expect-error google tag manager
-  gtag("config", GTM_ID);
-};
+import { initGTM } from "./lib/analytics";
 
 export const App = () => {
   const [polling, setPolling] = useState(false);
@@ -52,7 +32,7 @@ export const App = () => {
 
   useEffect(() => {
     if (cookiesAccepted === true) {
-      loadGTM();
+      initGTM();
     }
   }, [cookiesAccepted]);
 
