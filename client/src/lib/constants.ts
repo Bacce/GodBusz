@@ -22,6 +22,13 @@ export const COLOR_G2_ROUTE = "#004a82";
 export const COLOR_G3_ROUTE = "#0080B8";
 export const COLOR_G4_ROUTE = "#C01A13";
 
+export const ROUTE_COLORS: Record<string, string> = {
+  G1: COLOR_G1_ROUTE,
+  G2: COLOR_G2_ROUTE,
+  G3: COLOR_G3_ROUTE,
+  G4: COLOR_G4_ROUTE,
+};
+
 // ── Bus icon URLs ─────────────────────────────────────────────────────────────
 export const BUS_ICON_URL_G1 = `/icons/bus_g1.png`;
 export const BUS_ICON_URL_G2 = `/icons/bus_g2.png`;

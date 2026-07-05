@@ -1,20 +1,19 @@
-import { MapContainer, TileLayer, useMap, Marker } from "react-leaflet";
-import { useEffect, useState } from "react";
+import { MapContainer, TileLayer } from "react-leaflet";
+import { useState } from "react";
 import L from "leaflet";
 import { MapClickHandler } from "./MapClickHandler";
 import { StopMarker } from "./StopMarker";
 import { BusMarker } from "./BusMarker";
 import RoutingMachine from "../../RoutingMachine";
-import { BUS_ICON_URL_HEADER } from "../../lib/constants";
 import {
+  BUS_ICON_URL_HEADER,
   MAP_BOUNDS,
-  COLOR_G1_ROUTE,
-  COLOR_G2_ROUTE,
   COLOR_G3_ROUTE,
-  COLOR_G4_ROUTE,
+  ROUTE_COLORS,
   API_ROUTE_PROXY,
   BACKEND_URL,
 } from "../../lib/constants";
+import { MapController } from "./MapController";
 import type { Stop, Bus } from "../../lib/types";
 
 
@@ -78,55 +77,7 @@ export const MapView = ({
       ? stops.filter((s) => s.route === selectedRoute)
       : stops;
 
-  const routeColors: Record<string, string> = {
-    G1: COLOR_G1_ROUTE,
-    G2: COLOR_G2_ROUTE,
-    G3: COLOR_G3_ROUTE,
-    G4: COLOR_G4_ROUTE,
-  };
 
-  const MapController = ({ userPos, shouldFlyToUser, onFlyToUserHandled }: { userPos: [number, number] | null, shouldFlyToUser: boolean, onFlyToUserHandled: () => void }) => {
-    const map = useMap();
-    const userIcon = L.icon({
-      iconUrl: "/icons/player1.png",
-      iconSize: [32, 32],
-      iconAnchor: [16, 16],
-    });
-
-    useEffect(() => {
-      if (shouldFlyToUser && userPos) {
-        map.flyTo(userPos, 16);
-        onFlyToUserHandled();
-      }
-    }, [shouldFlyToUser, userPos, map, onFlyToUserHandled]);
-
-    useEffect(() => {
-      if (shouldFocusStop && selectedStopId) {
-        const stop = stops.find((s) => s.mid === selectedStopId);
-        if (stop) {
-          map.flyTo([stop.lat, stop.lon], 16);
-
-          const timer = setTimeout(() => {
-            map.eachLayer((layer) => {
-              if (layer && layer.options && (layer.options as any).stopMid === selectedStopId) {
-                layer.openPopup();
-              }
-            });
-            onFocusHandled();
-          }, 200);
-          return () => clearTimeout(timer);
-        } else {
-          onFocusHandled();
-        }
-      }
-    }, [shouldFocusStop, selectedStopId, stops, map, onFocusHandled]);
-
-    return (
-      <>
-        {userPos && <Marker position={userPos} icon={userIcon} />}
-      </>
-    );
-  };
 
 
   return (
@@ -163,6 +114,10 @@ export const MapView = ({
           userPos={userLocation}
           shouldFlyToUser={shouldFlyToUser}
           onFlyToUserHandled={() => setShouldFlyToUser(false)}
+          shouldFocusStop={shouldFocusStop}
+          selectedStopId={selectedStopId}
+          stops={stops}
+          onFocusHandled={onFocusHandled}
         />
 
 
@@ -213,7 +168,7 @@ export const MapView = ({
                 addWaypoints: false,
                 styles: [
                   {
-                    color: routeColors[selectedRoute] || COLOR_G3_ROUTE,
+                    color: ROUTE_COLORS[selectedRoute] || COLOR_G3_ROUTE,
                     opacity: 1,
                     weight: 3,
                   },
