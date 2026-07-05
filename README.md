@@ -1,64 +1,107 @@
 # 🚌 GödBusz
 
-GödBusz is a real-time bus tracking and routing application designed to provide live updates and route information for buses in the city Göd.
+GödBusz is a real-time bus tracking and routing application designed to provide live updates, schedules, and route information for buses in the city of Göd.
 
-The application build on the backend of the Molteam Göd bus application. My intention to improve the UX and design of the application.
+The application builds on the backend of the Molteam Göd bus application with the goal of dramatically improving the user interface, experience (UX), and layout.
 
-https://god.molteam.hu/
+🔗 **Original application:** [https://god.molteam.hu/](https://god.molteam.hu/)
 
-## AI
+---
 
-Initially this started as an experimenting with AI assisted coding. I used gemma4:31b to build most of the features, and as a last round, I ran Claude Opus 4.6 to clean up and give improvement suggestions.
+## 🤖 AI Assisted Development
 
-[Medium article](https://medium.com/p/aa5b7a4178de)
+This project started as an experiment in AI-assisted coding:
+1. **Initial Phase**: Built primarily using `gemma4:31b`.
+2. **Refactoring & Optimization**: `Claude Opus 4.6/Gemini 3.5` was used to clean up code structures and provide architectural improvement suggestions.
+3. **Advanced Enhancements & Modularization**: Refactored, modularized, and optimized using **Antigravity** (an agentic AI coding assistant designed by Google DeepMind). This phase focused on component modularity, strict state synchronization, security sanitization, and the introduction of advanced routing and filtering features.
+
+📝 [Medium article detailing the process](https://medium.com/p/aa5b7a4178de)
+
+---
 
 ## ✨ Features
-- **Real-time Tracking**: Monitor the live positions of buses on an interactive map.
-- **Route Information**: View detailed bus routes and schedules.
-- **Stop Locator**: Easily find and locate bus stops.
-- **Intelligent Routing**: Integrated routing proxy powered by OSRM for efficient pathfinding.
-- **Interactive Map**: Built with Leaflet for a smooth, responsive geographic interface.
-- **Dynamic Popups**: Contextual information about stops and routes via interactive markers.
 
-## Design
+- **Real-time Tracking**: Live GPS-based positions of active buses updating dynamically on an interactive map.
+- **Route Selection & Visualizations**: Detailed rendering of bus routes and paths.
+- **Stop Locator**: Interactive bus stop markers containing route details and physical locations.
+- **Sibling Stop & Multi-Route Navigation**: Stops with matching names are grouped, letting users navigate between different routes served by the same stop using interactive pills in the stop popup.
+- **Timetable & Date Filtering**: Search and view bus schedules for specific dates, supporting date-based timetable queries.
+- **Favorites Management**: Save frequently used bus stops to a favorites list, synchronized seamlessly across search components and map overlays via a custom `useFavorites` hook.
+- **Intelligent Routing**: Integrated OSRM-powered route proxy caching calls to provide efficient pathfinding between stops.
+- **Interactive Map**: Built with React-Leaflet with support for persistent map coordinates and zoom states.
+- **Cookie Consent & Google Tag Manager (GTM)**: Privacy-compliant cookie banner that initializes GTM analytics tracking only upon user consent.
+- **Security & XSS Mitigation**: Secure stop popup content rendering using DOMPurify sanitization.
 
-I tried to follow the design language of the Budapest Go webapplication.
+---
 
-## Map
+## 🎨 Design & Aesthetics
 
-While the original molteam application uses OpenStreetMap, I found the default map of theirs not perfectly adequate for the job, so I created my own take. It is not included in the git repository, if you want to run it locally, you can uncomment the TileLayer component in the client application to change back to the original map.
-The deployed map is created with Maperitive from the OSM data, only the style is changed over the city.
-Fun fact, if you look around other cities around Göd in the application, you can see those remain the default OSM with individual buildings drawn.
-I will go into detail in the planned Medium article.
+The application layout, color tokens, and styling follow the clean, modern design language of the **BudapestGO** web application. 
+
+- **Styling**: Powered by Tailwind CSS v4 custom properties configured inside the `@theme` definitions of `index.css`.
+- **Icons**: Clean, modern custom SVG vector markers for stops and active buses.
+
+---
+
+## 🗺️ Map Data & Tiles
+
+While the original Molteam application relies on default OpenStreetMap tiles, GödBusz features a custom-styled city map. 
+* The deployed map tiles were created with **Maperitive** from OpenStreetMap data, applying custom styles tailored to Göd.
+* For local development, or if you prefer the default tiles, you can swap the tile provider inside the React map components.
+* Neighboring areas beyond Göd fallback gracefully to standard OSM tiles.
+
+---
 
 ## 📂 Project Structure
 
+Both the frontend and backend architectures have been refactored into a highly modular, decoupled structure:
+
 ```text
 GödBusz/
-├── client/                # Frontend application (React + Vite)
-│   ├── src/               # React components and logic
-│   ├── public/            # Static assets
-│   └── Dockerfile         # Client container configuration
-├── server/                # Backend API (Node.js + Express)
-│   ├── src/               # API routes, services, and middleware
-│   ├── public/            # Server-side static files
-│   └── Dockerfile         # Server container configuration
-├── build-client.sh        # Script to build the client docker image
-└── build-serve.sh         # Script to build the server docker image
+├── client/                      # Frontend application (React + Vite + Tailwind CSS v4)
+│   ├── src/
+│   │   ├── api/                 # API client interfaces (communicates with Express server)
+│   │   ├── components/          # Reusable UI & Map components
+│   │   │   ├── map/             # MapView, StopMarker, BusMarker, RoutingMachine, etc.
+│   │   │   └── ui/              # Header, CookieBanner, Timetable, Pill, Plate, PopupModal
+│   │   ├── hooks/               # Custom React hooks (useFavorites, useBuses, useStop, etc.)
+│   │   ├── lib/                 # Shared utilities (normalize helper, date utils, constants, GTM)
+│   │   ├── pages/               # StopPage and client-side routes
+│   │   ├── types/               # TypeScript type declarations
+│   │   ├── App.tsx              # Main App orchestrator and routing layout
+│   │   ├── index.css            # Stylesheets using Tailwind v4 theme definitions
+│   │   └── main.tsx             # React DOM entry point
+│   ├── Dockerfile               # Client container configuration
+│   └── vercel.json              # Configures rewrites for client-side routing on Vercel
+│
+├── server/                      # Backend API (Node.js + Express + SQLite)
+│   ├── src/
+│   │   ├── analytics/           # SQLite database services for tracking API usage stats
+│   │   ├── middleware/          # Cache, asyncHandler, errorHandler, and requestAnalytics
+│   │   ├── routes/              # Express API endpoints (api.js, admin.js)
+│   │   ├── services/            # external API service integration (Molteam wrapper)
+│   │   ├── helper.js            # Server-side parsing, parsing-helper, and transformations
+│   │   └── index.js             # Express application server entry point
+│   └── Dockerfile               # Server container configuration
+│
+├── build-client.sh              # Script to build client Docker image
+└── build-serve.sh               # Script to build server Docker image
 ```
+
+---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 - [Node.js](https://nodejs.org/) (Latest LTS recommended)
 - [npm](https://www.npmjs.com/)
-- Docker (Optional, for containerized deployment)
+- Docker (Optional, for containerized deployments)
 
 ### Installation
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/godbusz.git
+   git clone https://github.com/Bacce/GodBusz.git
    cd godbusz
    ```
 
@@ -68,28 +111,36 @@ GödBusz/
    npm install
    npm run dev
    ```
-   The server will start on `http://localhost:3000`.
+   The backend server will start on `http://localhost:3000`.
 
 3. **Setup Frontend:**
    ```bash
-   cd client
+   cd ../client
    npm install
    npm run dev
    ```
-   The client will start on `http://localhost:5173` (default Vite port).
+   The frontend client will start on `http://localhost:5173`.
+
+---
 
 ## 🐳 Deployment
 
 The project is containerized using Docker. You can build and run the services using the provided Dockerfiles in the `client` and `server` directories.
 
-Example build scripts available in the root:
-- `./build-client.sh`
-- `./build-serve.sh`
+Root helper scripts are available for quick container building:
+* `./build-client.sh`
+* `./build-serve.sh`
+
+Frontend deployment is optimized for Vercel, supporting full SPA client-side routing via custom configuration (`vercel.json`).
+
+---
 
 ## 📄 License
 
 This project is licensed under the [ISC License](https://opensource.org/licenses/ISC).
 
-## Contribution
+---
 
-Any contribution is welcomed as long as it is not AI slop, feel free to create PR's.
+## 🤝 Contribution
+
+Any contribution is welcome! Please ensure pull requests are clean, well-formatted, and do not contain generic or unverified code suggestions. Feel free to submit PRs and issues.
