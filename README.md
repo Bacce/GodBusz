@@ -10,7 +10,7 @@ https://god.molteam.hu/
 
 Initially this started as an experimenting with AI assisted coding. I used gemma4:31b to build most of the features, and as a last round, I ran Claude Opus 4.6 to clean up and give improvement suggestions.
 
-TODO: Add Medium article link
+[Medium article](https://medium.com/p/aa5b7a4178de)
 
 ## ✨ Features
 - **Real-time Tracking**: Monitor the live positions of buses on an interactive map.
