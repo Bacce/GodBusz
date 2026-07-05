@@ -4,6 +4,7 @@ import { PopupModal } from "./PopupModal";
 import { Pill } from "./Pill";
 import type { PopupData, Stop } from "../../lib/types";
 import { normalize } from "../../lib/utils";
+import { useFavorites } from "../../hooks/useFavorites";
 
 interface HeaderProps {
   polling: boolean;
@@ -61,27 +62,7 @@ export const Header = ({
     });
   };
 
-  const [favorites, setFavorites] = useState<string[]>(() => {
-    const saved = localStorage.getItem("favorite_stops");
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  const toggleFavorite = (mids: string | string[]) => {
-    const targetMids = Array.isArray(mids) ? mids : [mids];
-    const isRemoving = targetMids.every((mid) => favorites.includes(mid));
-
-    let newFavorites = [...favorites];
-    if (isRemoving) {
-      newFavorites = favorites.filter((id) => !targetMids.includes(id));
-    } else {
-      targetMids.forEach((mid) => {
-        if (!newFavorites.includes(mid)) newFavorites.push(mid);
-      });
-    }
-
-    setFavorites(newFavorites);
-    localStorage.setItem("favorite_stops", JSON.stringify(newFavorites));
-  };
+  const { favorites, toggleFavorite } = useFavorites();
 
   const filteredStops = stops.filter((s) =>
     normalize(s.name).includes(normalize(searchQuery))

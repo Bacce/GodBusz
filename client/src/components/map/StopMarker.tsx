@@ -6,6 +6,7 @@ import type { Stop } from "../../lib/types";
 import { Pill } from "../ui/Pill";
 import { Timetable } from "../ui/Timetable";
 import { normalize } from "../../lib/utils";
+import { useFavorites } from "../../hooks/useFavorites";
 
 interface StopMarkerProps {
   stop: Stop;
@@ -30,18 +31,7 @@ export const StopMarker = ({ stop, onClick, zoom, selectedDate, allStops }: Stop
     return () => window.removeEventListener("open-stop-popup", handleOpenPopup);
   }, [stop.mid]);
 
-  const [favorites, setFavorites] = useState<string[]>(() => {
-    const saved = localStorage.getItem("favorite_stops");
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  const toggleFavorite = (mid: string) => {
-    const newFavorites = favorites.includes(mid)
-      ? favorites.filter((id) => id !== mid)
-      : [...favorites, mid];
-    setFavorites(newFavorites);
-    localStorage.setItem("favorite_stops", JSON.stringify(newFavorites));
-  };
+  const { favorites, toggleFavorite } = useFavorites();
 
   const icon = getStopIcon(stop.route, stop.dir ?? undefined, zoom);
 
