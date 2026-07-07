@@ -1,28 +1,46 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="manifest" href="/manifest.json" />
-        <title>GödGO Busz menetrend</title>
-        <link rel="icon" type="image/png" sizes="16x16" href="/icon.png" />
-        <link
-            rel="stylesheet"
-            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-            integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-            crossorigin=""
-        />
-    </head>
-    <body>
-        <div id="root"></div>
-        <script>
-            if ("serviceWorker" in navigator) {
-                window.addEventListener("load", () => {
-                    navigator.serviceWorker.register("/sw.js");
-                });
-            }
-        </script>
-        <script type="module" src="/src/main.tsx"></script>
-    </body>
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Göd város busz menetrend és járatinformációk" />
+
+    <meta property="og:title" content="GödGO Busz menetrend" />
+    <meta property="og:description" content="Göd város busz menetrend és járatinformációk" />
+    <meta property="og:image" content="/public/og-image.jpg" />
+    <meta property="og:image:alt" content="GödGO Busz menetrend" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content="https://godgo.hu" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="hu_HU" />
+    <meta property="og:site_name" content="GödGO Busz menetrend" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="GödGO Busz menetrend" />
+    <meta name="twitter:description" content="Göd város busz menetrend és járatinformációk" />
+    <meta name="twitter:image" content="/public/og-image.jpg" />
+    <meta name="twitter:image:alt" content="GödGO Busz menetrend" />
+
+    <link rel="manifest" href="/manifest.json" />
+    <title>GödGO Busz menetrend</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="/icon.png" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+</head>
+
+<body>
+    <div id="root"></div>
+    <script>
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+                navigator.serviceWorker.register("/sw.js");
+            });
+        }
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>
