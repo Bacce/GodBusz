@@ -47,9 +47,12 @@ export const StopMarker = ({ stop, onClick, zoom, selectedDate, allStops }: Stop
       ref={markerRef}
       eventHandlers={{ click: () => onClick(stop.route) }}
     >
-      <Tooltip direction="top" offset={[0, -20]} opacity={1}>
-        {stop.name}
-      </Tooltip>
+       <Tooltip direction="top" offset={[0, -20]} opacity={1}>
+         <div className="flex items-center gap-1">
+           <Pill variant={stop.route}>{stop.route}</Pill>
+           {stop.name}
+         </div>
+       </Tooltip>
       <Popup>
         <div className="text-sm font-bold flex items-center gap-2 pb-1 min-w-40">
           <button
