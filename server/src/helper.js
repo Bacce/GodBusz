@@ -113,16 +113,17 @@ const STOP_ROTATIONS = {
 };
 
 /**
- * Checks if a given date string is more than one hour old.
+ * Checks if a given date string is older than the specified max age.
  * @param {string} dateString - The ISO date string to check.
- * @returns {boolean} True if the date is more than one hour ago, false otherwise.
+ * @param {number} [maxAgeMs=3600000] - Maximum age in milliseconds (default: 1 hour).
+ * @returns {boolean} True if the date is older than maxAgeMs, false otherwise.
  */
-export const isTooOld = (dateString) => {
+export const isTooOld = (dateString, maxAgeMs = 60 * 60 * 1000) => {
   if (!dateString) return true;
   const lastUpdate = new Date(dateString);
   const now = new Date();
   const diff = now - lastUpdate;
-  return diff > 60 * 60 * 1000;
+  return diff > maxAgeMs;
 };
 
 /**

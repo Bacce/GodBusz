@@ -1,6 +1,7 @@
 import express from "express";
 import rateLimit from "express-rate-limit";
 import apiRoutes from "./routes/api.js";
+import mavRoutes from "./routes/mav.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import requestAnalytics from "./middleware/requestAnalytics.js";
 import adminRoutes from "./routes/admin.js";
@@ -61,6 +62,9 @@ app.use(
   limiter,
   apiRoutes,
 );
+
+// MAV endpoints
+app.use("/api/v1/mav", mavRoutes);
 
 app.use("/admin", adminRoutes);
 
