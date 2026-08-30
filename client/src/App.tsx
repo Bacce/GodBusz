@@ -49,7 +49,7 @@ export const App = () => {
   const trainStopMarkers: TrainStopMarkerData[] = [
     { id: "Felsőgöd", lat: 47.7054455, lng: 19.1430698 },
     { id: "Göd", lat: 47.687874, lng: 19.137394 },
-    { id: "Alsógöd", lat: 47.6780254, lng: 19.1322194 },
+    { id: "Alsógöd", lat: 47.67823981970107, lng: 19.134696722030643 },
   ];
 
   const handleAcceptCookies = () => {
