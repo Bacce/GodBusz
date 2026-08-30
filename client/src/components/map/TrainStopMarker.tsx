@@ -3,7 +3,7 @@ import { Marker, Popup, Tooltip } from "react-leaflet";
 import type { TrainStopMarkerData, MavStopEntry } from "../../lib/types";
 import { fetchMavStop } from "../../api/client";
 import { getStopIcon } from "../../lib/icons";
-import { Pill } from "../ui/Pill";
+import { MavTimetable } from "../ui/MavTimetable";
 
 interface TrainStopMarkerProps {
   marker: TrainStopMarkerData;
@@ -41,11 +41,15 @@ export const TrainStopMarker = ({ marker }: TrainStopMarkerProps) => {
         </div>
       </Tooltip>
       <Popup>
+        <div className="text-sm font-bold pb-2">{marker.id} vasútállomás</div>
         {loading && <div className="text-sm text-gray-500">Betöltés…</div>}
         {error && <div className="text-sm text-red-500">{error}</div>}
         {!loading && !error && entries.length === 0 && !hasFetched.current && null}
         {!loading && !error && entries.length === 0 && hasFetched.current && (
           <div className="text-sm text-gray-400">Nincs adat</div>
+        )}
+        {!loading && !error && entries.length > 0 && (
+          <MavTimetable entries={entries} />
         )}
       </Popup>
     </Marker>
