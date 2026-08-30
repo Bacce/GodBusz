@@ -40,7 +40,7 @@ export const TrainStopMarker = ({ marker }: TrainStopMarkerProps) => {
           <h1 className="font-bold">{marker.id} vasútállomás</h1>
         </div>
       </Tooltip>
-      <Popup>
+      <Popup maxWidth={400}>
         <div className="text-sm font-bold pb-2">{marker.id} vasútállomás</div>
         {loading && <div className="text-sm text-gray-500">Betöltés…</div>}
         {error && <div className="text-sm text-red-500">{error}</div>}

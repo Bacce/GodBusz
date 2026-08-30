@@ -39,4 +39,5 @@ export interface MavStopEntry {
   departureActual: number | null;
   track: string | null;
   description: string;
+  rawDescription?: string;
 }

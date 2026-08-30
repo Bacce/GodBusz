@@ -20,17 +20,10 @@ export const Timetable = ({ trips, date }: TimetableProps) => {
     if (!isToday) return false;
     const [h, m, s = 0] = trip.time.split(":").map(Number);
     const tripSeconds = h * 3600 + m * 60 + s;
-    return nowSeconds > tripSeconds + 120;
+    return nowSeconds > tripSeconds + 60;
   };
 
   const pastCount = filteredTrips.filter(isTripPast).length;
-
-  const nextIndex = isToday
-    ? filteredTrips.findIndex((trip) => {
-        const [h, m, s = 0] = trip.time.split(":").map(Number);
-        return nowSeconds <= h * 3600 + m * 60 + s + 120;
-      })
-    : -1;
 
   const visibleTrips = showPast ? filteredTrips : filteredTrips.filter((t) => !isTripPast(t));
 
@@ -46,23 +39,16 @@ export const Timetable = ({ trips, date }: TimetableProps) => {
         </button>
       )}
       {visibleTrips.map((trip) => {
-        const originalIndex = filteredTrips.indexOf(trip);
         const isPast = isTripPast(trip);
-        const isNext = isToday && originalIndex === nextIndex;
 
         return (
           <div
             key={trip.time}
             className={`flex justify-between py-1 border-b border-gray-100 ${
-              isPast
-                ? "text-gray-400"
-                : isNext
-                  ? "text-black font-bold bg-gray-50"
-                  : ""
+              isPast ? "text-gray-400" : ""
             }`}
           >
             <span className="font-mono text-xs">{trip.time.slice(0, -3)}</span>
-            {isNext && <span className="text-xs">következő</span>}
           </div>
         );
       })}

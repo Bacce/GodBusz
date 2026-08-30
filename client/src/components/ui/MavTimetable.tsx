@@ -22,24 +22,15 @@ export const MavTimetable = ({ entries }: MavTimetableProps) => {
     const arrTs = entry.arrivalActual ?? entry.arrival;
     const depTs = entry.departureActual ?? entry.departure;
     const refTs = depTs ?? arrTs;
-    return refTs ? nowMs > refTs + 120000 : false;
+    return refTs ? nowMs > refTs + 60000 : false;
   };
 
   const pastCount = entries.filter(isEntryPast).length;
 
-  const nextIndex = entries.findIndex((entry) => {
-    const ts =
-      entry.departureActual ??
-      entry.departure ??
-      entry.arrivalActual ??
-      entry.arrival;
-    return ts ? ts >= nowMs - 120000 : false;
-  });
-
   const visibleEntries = showPast ? entries : entries.filter((entry) => !isEntryPast(entry));
 
   return (
-    <div className="max-w-auto mx-auto font-sans text-xs">
+    <div className="max-w-auto mx-auto font-sans text-xs w-[350px]">
       {pastCount > 0 && (
         <button
           type="button"
@@ -56,7 +47,7 @@ export const MavTimetable = ({ entries }: MavTimetableProps) => {
               <th className="py-1 px-2 font-mono whitespace-nowrap">Érkezés</th>
               <th className="py-1 px-2 font-mono whitespace-nowrap">Indulás</th>
               <th className="py-1 px-2 whitespace-nowrap">Leírás</th>
-              <th className="py-1 px-2 font-mono whitespace-nowrap">Járat</th>
+              {/* <th className="py-1 px-2 font-mono whitespace-nowrap">Járat</th> */}
             </tr>
           </thead>
           <tbody>
@@ -68,18 +59,11 @@ export const MavTimetable = ({ entries }: MavTimetableProps) => {
               const depTime = formatTime(entry.departureActual ?? entry.departure);
 
               const isPast = isEntryPast(entry);
-              const isNext = originalIndex === nextIndex;
 
               return (
                 <tr
                   key={entry.trainId ? `${entry.trainId}-${originalIndex}` : originalIndex}
-                  className={`border-b border-gray-100 ${
-                    isPast
-                      ? "text-gray-400"
-                      : isNext
-                        ? "text-black font-bold bg-gray-50"
-                        : ""
-                  }`}
+                  className={`border-b border-gray-100 ${isPast ? "text-gray-400" : ""}`}
                 >
                   <td className="py-1 px-2 font-mono whitespace-nowrap">
                     {isArrivalActualUsed ? (
@@ -98,8 +82,8 @@ export const MavTimetable = ({ entries }: MavTimetableProps) => {
                     )}
                   </td>
                   <td className="py-1 px-2 font-mono whitespace-nowrap">{depTime}</td>
-                  <td className="py-1 px-2 whitespace-nowrap">{entry.description}</td>
-                  <td className="py-1 px-2 font-mono whitespace-nowrap">{entry.trainId ?? "-"}</td>
+                  <td className="py-1 px-2 whitespace-nowrap" title={entry.rawDescription}>{entry.description}</td>
+                  {/* <td className="py-1 px-2 font-mono whitespace-nowrap">{entry.trainId ?? "-"}</td> */}
                 </tr>
               );
             })}

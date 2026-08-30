@@ -107,11 +107,12 @@ function parseMavSchedule(htmlString) {
             descClone.find('a').remove();
 
             // Clean up description text
-            const description = descClone
+            const rawDescription = descClone
                 .text()
                 .replace(/\u00a0/g, ' ')
                 .replace(/\s+/g, ' ')
                 .trim();
+            const description = cleanTrainDescription(rawDescription);
 
             const track = trackCell.text().trim() || null;
 
@@ -122,7 +123,8 @@ function parseMavSchedule(htmlString) {
                 departure: departure.scheduled,
                 departureActual: departure.actual,
                 track: track,
-                description: description
+                description: description,
+                rawDescription: rawDescription
             });
         }
     });
@@ -130,4 +132,25 @@ function parseMavSchedule(htmlString) {
     return results;
 }
 
-export const mavService = { requestMavStopData };
+/**
+ * Pure helper function to clean up MÁV train description text.
+ * Strips all text up to and including the first time (HH:MM),
+ * as well as any trailing time (HH:MM) at the end.
+ *
+ * Example:
+ *   "személy 14:34 Vác -- Budapest-Nyugati 15:14" -> "Vác -- Budapest-Nyugati"
+ *
+ * @param {string} text - Raw description text.
+ * @returns {string} Cleaned description text.
+ */
+export function cleanTrainDescription(text) {
+    if (!text) return "";
+    return text
+        .replace(/\u00a0/g, ' ')
+        .replace(/\s+/g, ' ')
+        .replace(/^.*?\b\d{1,2}:\d{2}\s*/, '')
+        .replace(/\s*\b\d{1,2}:\d{2}\s*$/, '')
+        .trim();
+}
+
+export const mavService = { requestMavStopData, cleanTrainDescription };
