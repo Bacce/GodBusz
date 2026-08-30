@@ -24,3 +24,19 @@ export interface PopupData {
   title: string;
   txt: string;
 }
+
+export interface TrainStopMarkerData {
+  id: string;
+  lat: number;
+  lng: number;
+}
+
+export interface MavStopEntry {
+  trainId: string | null;
+  arrival: number | null;
+  arrivalActual: number | null;
+  departure: number | null;
+  departureActual: number | null;
+  track: string | null;
+  description: string;
+}

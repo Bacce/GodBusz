@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import type { PopupData } from "./lib/types";
+import type { PopupData, TrainStopMarkerData } from "./lib/types";
 import { MapView } from "./components/map/MapView";
 import { Header } from "./components/ui/Header";
 import { PopupModal } from "./components/ui/PopupModal";
@@ -45,6 +45,12 @@ export const App = () => {
   );
   const { popup, dismiss } = usePopups();
   const { center, zoom, saveCenter, saveZoom } = useMapPersistence();
+
+  const trainStopMarkers: TrainStopMarkerData[] = [
+    { id: "Felsőgöd", lat: 47.7054455, lng: 19.1430698 },
+    { id: "Göd", lat: 47.687874, lng: 19.137394 },
+    { id: "Alsógöd", lat: 47.6780254, lng: 19.1322194 },
+  ];
 
   const handleAcceptCookies = () => {
     localStorage.setItem("cookies_accepted", "true");
@@ -103,6 +109,7 @@ export const App = () => {
                   shouldFocusStop={shouldFocusStop}
                   onFocusHandled={() => setShouldFocusStop(false)}
                   selectedDate={selectedDate}
+                  trainStopMarkers={trainStopMarkers}
                 />
 
                 <MapStatusOverlay loading={stopsLoading} empty={stops.length === 0} />

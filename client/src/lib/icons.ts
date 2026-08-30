@@ -39,6 +39,7 @@ const ROUTE_COLORS: Record<string, string> = {
   G2: COLOR_G2,
   G3: COLOR_G3,
   G4: COLOR_G4,
+  TRAIN: "#000",
 };
 
 export const getStopIcon = (route: string, rotation?: number, zoom?: number) => {
@@ -48,8 +49,7 @@ export const getStopIcon = (route: string, rotation?: number, zoom?: number) => 
     className: "",
     iconSize: [size, size],
     iconAnchor: [size / 2, size / 2],
-    html: `<div class="stop-icon ${
-      rotation === undefined ? "no-arrow" : ""
-    } ${isSmall ? "small" : ""}" style="${rotation !== undefined ? `--rotate: ${rotation}deg;` : ""} --stop-color: ${ROUTE_COLORS[route] || COLOR_G3}"></div>`,
+    html: `<div class="stop-icon ${rotation === undefined ? "no-arrow" : ""
+      } ${isSmall ? "small" : ""}" style="${rotation !== undefined ? `--rotate: ${rotation}deg;` : ""} --stop-color: ${ROUTE_COLORS[route] || COLOR_G3}"></div>`,
   });
 };

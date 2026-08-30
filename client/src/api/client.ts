@@ -3,9 +3,10 @@ import {
   API_BUSES,
   API_POPUPS,
   API_STOP,
+  API_MAV_STOP,
   BACKEND_URL,
 } from "../lib/constants";
-import type { Stop, Bus, PopupData } from "../lib/types";
+import type { Stop, Bus, PopupData, MavStopEntry } from "../lib/types";
 
 async function get<T>(
   url: string,
@@ -46,4 +47,8 @@ export async function fetchBuses(date?: string): Promise<Bus[]> {
 export async function fetchPopups(): Promise<PopupData | null> {
   const json = await get<{ data?: PopupData[] }>(API_POPUPS);
   return json.data && json.data.length > 0 ? json.data[0] : null;
+}
+
+export async function fetchMavStop(stopId: string): Promise<MavStopEntry[]> {
+  return get<MavStopEntry[]>(`${API_MAV_STOP}/${stopId}`);
 }

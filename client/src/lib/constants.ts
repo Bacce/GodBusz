@@ -46,6 +46,7 @@ export const API_BUSES = "/api/v1/buses";
 export const API_POPUPS = "/api/v1/popups";
 export const API_STOP = "/api/v1/stop";
 export const API_ROUTE_PROXY = "/api/v1/route-proxy";
+export const API_MAV_STOP = "/api/v1/mav/stop";
 
 // ── Bus polling ───────────────────────────────────────────────────────────────
 /** Number of consecutive identical responses before polling is auto-stopped. */

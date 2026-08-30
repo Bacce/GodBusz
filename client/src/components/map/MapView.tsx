@@ -4,6 +4,7 @@ import L from "leaflet";
 import { MapClickHandler } from "./MapClickHandler";
 import { StopMarker } from "./StopMarker";
 import { BusMarker } from "./BusMarker";
+import { TrainStopMarker } from "./TrainStopMarker";
 import RoutingMachine from "./RoutingMachine";
 import {
   BUS_ICON_URL_HEADER,
@@ -14,7 +15,7 @@ import {
   BACKEND_URL,
 } from "../../lib/constants";
 import { MapController } from "./MapController";
-import type { Stop, Bus } from "../../lib/types";
+import type { Stop, Bus, TrainStopMarkerData } from "../../lib/types";
 
 
 interface MapViewProps {
@@ -33,6 +34,7 @@ interface MapViewProps {
   shouldFocusStop: boolean;
   onFocusHandled: () => void;
   selectedDate: string;
+  trainStopMarkers?: TrainStopMarkerData[];
 }
 
 export const MapView = ({
@@ -51,6 +53,7 @@ export const MapView = ({
   shouldFocusStop,
   onFocusHandled,
   selectedDate,
+  trainStopMarkers = [],
 }: MapViewProps) => {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [shouldFlyToUser, setShouldFlyToUser] = useState(false);
@@ -149,6 +152,11 @@ export const MapView = ({
           buses.map((bus) => (
             <BusMarker key={bus.rendszam} bus={bus} onClick={onRouteSelect} />
           ))}
+
+        {/* Draw train stop markers */}
+        {trainStopMarkers.map((marker) => (
+          <TrainStopMarker key={marker.id} marker={marker} />
+        ))}
 
         {/* Draw route line */}
         {stops.length > 0 && selectedRoute && (

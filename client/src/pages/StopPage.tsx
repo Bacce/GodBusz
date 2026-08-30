@@ -12,7 +12,7 @@ export const StopPage = ({ selectedDate }: { selectedDate: string }) => {
     return (
       <div className="p-4 flex items-center justify-center h-full">
         <div className="bg-white px-3 py-1 rounded-full shadow-md flex items-center gap-2 text-sm font-medium text-gray-700">
-          <span>Nincsenek megjelenítendő járatok erre a napra. (hétvégén és ünnepnapokon nem közlekedik)</span>
+          <span>Nincsenek megjelenítendő buszjáratok erre a napra. (hétvégén és ünnepnapokon nem közlekedik)</span>
         </div>
       </div>
     );
