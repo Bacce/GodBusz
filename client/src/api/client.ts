@@ -50,5 +50,5 @@ export async function fetchPopups(): Promise<PopupData | null> {
 }
 
 export async function fetchMavStop(stopId: string): Promise<MavStopEntry[]> {
-  return get<MavStopEntry[]>(`${API_MAV_STOP}/${stopId}`);
+  return get<MavStopEntry[]>(`${API_MAV_STOP}/${encodeURIComponent(stopId)}`);
 }

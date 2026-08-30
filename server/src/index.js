@@ -1,7 +1,6 @@
 import express from "express";
 import rateLimit from "express-rate-limit";
 import apiRoutes from "./routes/api.js";
-import mavRoutes from "./routes/mav.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import requestAnalytics from "./middleware/requestAnalytics.js";
 import adminRoutes from "./routes/admin.js";
@@ -9,13 +8,13 @@ import * as analytics from "./analytics/service.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const ALLOWED_ORIGIN = "https://god-busz.vercel.app";
+const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "https://god-busz.vercel.app";
 
 app.use((req, res, next) => {
   const origin = req.get("Origin");
   if (process.env.NODE_ENV === "production") {
-    if (origin === ALLOWED_ORIGIN) {
-      res.setHeader("Access-Control-Allow-Origin", origin);
+    if (!origin || origin === ALLOWED_ORIGIN) {
+      res.setHeader("Access-Control-Allow-Origin", origin || ALLOWED_ORIGIN);
     } else {
       res.setHeader("Access-Control-Allow-Origin", "null");
     }
@@ -51,7 +50,7 @@ app.use(
   (req, res, next) => {
     if (process.env.NODE_ENV === "production") {
       const origin = req.get("Origin");
-      if (origin !== ALLOWED_ORIGIN) {
+      if (origin && origin !== ALLOWED_ORIGIN) {
         return res.status(403).json({
           error: "Forbidden: Access only allowed from the official domain.",
         });
@@ -62,9 +61,6 @@ app.use(
   limiter,
   apiRoutes,
 );
-
-// MAV endpoints
-app.use("/api/v1/mav", mavRoutes);
 
 app.use("/admin", adminRoutes);
 

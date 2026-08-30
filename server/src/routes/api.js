@@ -9,8 +9,12 @@ import {
 } from "../helper.js";
 import { apiService } from "../services/apiService.js";
 import { asyncHandler } from "../middleware/asyncHandler.js";
+import mavRoutes from "./mav.js";
+
 const router = express.Router();
 const routeCache = new Map();
+
+router.use("/mav", mavRoutes);
 
 router.use(
   "/route-proxy",
