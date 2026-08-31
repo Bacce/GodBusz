@@ -14,6 +14,28 @@ const formatTime = (ts: number | null | undefined): string => {
   return `${hours}:${minutes}`;
 };
 
+const renderTimeCell = (scheduled: number | null | undefined, actual: number | null | undefined) => {
+  if (scheduled == null && actual == null) return "-";
+  if (scheduled == null) return formatTime(actual);
+
+  const schedTime = formatTime(scheduled);
+  if (actual == null) return schedTime;
+
+  const diffMs = actual - scheduled;
+  const deltaMinutes = Math.round(diffMs / 60000);
+
+  if (deltaMinutes > 0) {
+    return (
+      <span>
+        {schedTime}
+        <span className="text-red-600 font-semibold ml-1">+{deltaMinutes}'</span>
+      </span>
+    );
+  }
+
+  return schedTime;
+};
+
 export const MavTimetable = ({ entries }: MavTimetableProps) => {
   const [showPast, setShowPast] = useState(false);
   const nowMs = new Date().getTime();
@@ -53,11 +75,6 @@ export const MavTimetable = ({ entries }: MavTimetableProps) => {
           <tbody>
             {visibleEntries.map((entry) => {
               const originalIndex = entries.indexOf(entry);
-              const isArrivalActualUsed = entry.arrivalActual != null;
-              const arrTime = formatTime(entry.arrivalActual ?? entry.arrival);
-              const schedArrTime = formatTime(entry.arrival);
-              const depTime = formatTime(entry.departureActual ?? entry.departure);
-
               const isPast = isEntryPast(entry);
 
               return (
@@ -66,22 +83,11 @@ export const MavTimetable = ({ entries }: MavTimetableProps) => {
                   className={`border-b border-gray-100 ${isPast ? "text-gray-400" : ""}`}
                 >
                   <td className="py-1 px-2 font-mono whitespace-nowrap">
-                    {isArrivalActualUsed ? (
-                      <div className="relative inline-block pr-6">
-                        <span className="text-red-600 font-semibold">
-                          {arrTime}
-                        </span>
-                        {entry.arrival != null && (
-                          <span className="absolute top-0 right-0 text-[9px] text-black font-normal leading-none">
-                            {schedArrTime}
-                          </span>
-                        )}
-                      </div>
-                    ) : (
-                      arrTime
-                    )}
+                    {renderTimeCell(entry.arrival, entry.arrivalActual)}
                   </td>
-                  <td className="py-1 px-2 font-mono whitespace-nowrap">{depTime}</td>
+                  <td className="py-1 px-2 font-mono whitespace-nowrap">
+                    {renderTimeCell(entry.departure, entry.departureActual)}
+                  </td>
                   <td className="py-1 px-2 whitespace-nowrap" title={entry.rawDescription}>{entry.description}</td>
                   {/* <td className="py-1 px-2 font-mono whitespace-nowrap">{entry.trainId ?? "-"}</td> */}
                 </tr>
