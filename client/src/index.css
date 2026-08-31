@@ -7,6 +7,13 @@
     --color-g4: #e41f18;
 }
 
+html,
+body,
+#root {
+    overscroll-behavior: none;
+    overscroll-behavior-y: none;
+}
+
 .leaflet-control-container .leaflet-routing-container-hide {
     display: none;
 }
