@@ -24,7 +24,7 @@ async function requestMavStopData(stopId) {
 
     const json = await response.json();
     // safe guard to prevent null
-    if (!json.d.result) {
+    if (!json?.d?.result) {
         throw new Error("No result from MAV API");
     }
 
