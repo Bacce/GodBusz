@@ -10,6 +10,7 @@ import { usePopups } from "./hooks/usePopups";
 import { useMapPersistence } from "./hooks/useMapPersistence";
 import { StopPage } from "./pages/StopPage";
 import { CookieBanner } from "./components/ui/CookieBanner";
+import { PwaInstallBanner } from "./components/ui/PwaInstallBanner";
 import { MapStatusOverlay } from "./components/map/MapStatusOverlay";
 import { initGTM } from "./lib/analytics";
 import { getTodayISO } from "./lib/utils";
@@ -124,6 +125,8 @@ export const App = () => {
         {errorPopup && (
           <PopupModal popup={errorPopup} onDismiss={() => setErrorPopup(null)} />
         )}
+
+        <PwaInstallBanner />
 
         {cookiesAccepted === null && <CookieBanner onAccept={handleAcceptCookies} onDecline={handleDeclineCookies} />}
       </div>

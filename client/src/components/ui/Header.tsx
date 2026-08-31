@@ -56,6 +56,13 @@ export const Header = ({
       <br/>
       <h3><b>Sütik</b></h3>
       <p>Sütiket használunk a weboldal használatának elemzésére. A Google Analytics anonim adatokat gyűjt az oldalmegtekintésekről a szolgáltatás fejlesztése érdekében. Az analitikai sütik csak hozzájárulás esetén aktiválódnak.</p>
+      <br/>
+      <h3><b>Alkalmazás telepítése (PWA)</b></h3>
+      <p>Az alkalmazás telepíthető a telefon kezdőképernyőjére:</p>
+      <ul style="list-style-type: disc; padding-left: 20px; margin-top: 5px; margin-bottom: 10px;">
+        <li><b>iOS (iPhone / iPad):</b> Nyisd meg az oldalt a Safari böngészőben, koppints a <b>Megosztás</b> gombra (felfelé mutató nyíl ikon), majd válaszd a <b>"Hozzáadás a kezdőképernyőhöz"</b> opciót.</li>
+        <li><b>Android / Chrome:</b> Koppints a böngésző menüjében a <b>"Telepítés"</b> vagy <b>"Hozzáadás a kezdőképernyőhöz"</b> lehetőségre.</li>
+      </ul>
       `,
     });
   };
