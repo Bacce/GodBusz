@@ -32,6 +32,54 @@ async function requestMavStopData(stopId) {
 }
 
 /**
+ * Helper function to convert local date components in Europe/Budapest timezone (CET/CEST)
+ * into a UTC epoch timestamp (in milliseconds).
+ *
+ * @param {number} year - Full year
+ * @param {number} monthIndex - Month index (0-indexed)
+ * @param {number} day - Day of month
+ * @param {number} hours - Hours (0-23)
+ * @param {number} minutes - Minutes (0-59)
+ * @returns {number} Epoch timestamp in milliseconds.
+ */
+export function toCetTimestamp(year, monthIndex, day, hours, minutes) {
+    const utcGuess = Date.UTC(year, monthIndex, day, hours, minutes, 0, 0);
+    const formatter = new Intl.DateTimeFormat("en-US", {
+        timeZone: "Europe/Budapest",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+    });
+
+    const parts = formatter.formatToParts(new Date(utcGuess));
+    const partObj = {};
+    for (const p of parts) {
+        if (p.type !== "literal") {
+            partObj[p.type] = p.value;
+        }
+    }
+
+    let bHour = parseInt(partObj.hour, 10);
+    if (bHour === 24) bHour = 0;
+
+    const budapestAsUtc = Date.UTC(
+        parseInt(partObj.year, 10),
+        parseInt(partObj.month, 10) - 1,
+        parseInt(partObj.day, 10),
+        bHour,
+        parseInt(partObj.minute, 10),
+        parseInt(partObj.second, 10)
+    );
+
+    const offsetMs = budapestAsUtc - utcGuess;
+    return utcGuess - offsetMs;
+}
+
+/**
  * Parses MÁV schedule HTML table into JSON with Unix timestamps (in ms).
  * @param {string} htmlString - The raw HTML content.
  * @returns {Array<Object>} List of parsed train entries.
@@ -41,7 +89,7 @@ function parseMavSchedule(htmlString) {
     const results = [];
 
     // 1. Try to extract the base date from the HTML (e.g., "2026.08.29.")
-    // If not found, default to today's current date.
+    // If not found, default to today's current date in CET/CEST (Europe/Budapest).
     let baseYear, baseMonth, baseDay;
     const titleText = $('table.af th.title font').text().trim();
     const dateMatch = titleText.match(/(\d{4})\.(\d{2})\.(\d{2})\.?/);
@@ -51,20 +99,20 @@ function parseMavSchedule(htmlString) {
         baseMonth = parseInt(dateMatch[2], 10) - 1; // 0-indexed in JS Date
         baseDay = parseInt(dateMatch[3], 10);
     } else {
-        const today = new Date();
-        baseYear = today.getFullYear();
-        baseMonth = today.getMonth();
-        baseDay = today.getDate();
+        const nowStr = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Budapest" }).format(new Date());
+        const [y, m, d] = nowStr.split("-").map(Number);
+        baseYear = y;
+        baseMonth = m - 1;
+        baseDay = d;
     }
 
-    // Helper to convert "HH:MM" string to a timestamp (milliseconds)
+    // Helper to convert "HH:MM" string to a timestamp (milliseconds) in CET (Europe/Budapest)
     function toTimestamp(timeStr) {
         if (!timeStr || !/^[0-9]{2}:[0-9]{2}$/.test(timeStr)) {
             return null;
         }
         const [hours, minutes] = timeStr.split(':').map(Number);
-        const date = new Date(baseYear, baseMonth, baseDay, hours, minutes, 0, 0);
-        return date.getTime(); // Returns epoch timestamp in milliseconds
+        return toCetTimestamp(baseYear, baseMonth, baseDay, hours, minutes);
     }
 
     // Helper to extract scheduled and actual times from a <td> cell
@@ -154,4 +202,5 @@ export function cleanTrainDescription(text) {
         .trim();
 }
 
-export const mavService = { requestMavStopData, cleanTrainDescription };
+export const mavService = { requestMavStopData, cleanTrainDescription, toCetTimestamp };
+
