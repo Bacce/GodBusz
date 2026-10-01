@@ -4,14 +4,17 @@ import type { AirMonitoringMarkerData } from "../../lib/types";
 
 interface AirMonitoringMarkerProps {
   marker: AirMonitoringMarkerData;
+  zoom: number;
 }
 
-export const AirMonitoringMarker = ({ marker }: AirMonitoringMarkerProps) => {
+export const AirMonitoringMarker = ({ marker, zoom }: AirMonitoringMarkerProps) => {
+  const isSmall = zoom < 15;
+  const size = isSmall ? 14 : 20;
   const icon = L.divIcon({
     className: "",
-    iconSize: [20, 20],
-    iconAnchor: [10, 10],
-    html: `<div class="stop-icon no-arrow stop-icon-filled" style="--stop-color: #20b2aa;"></div>`,
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
+    html: `<div class="stop-icon no-arrow stop-icon-filled ${isSmall ? "small" : ""}" style="--stop-color: #4988dbff;"></div>`,
   });
   return (
     <Marker position={[marker.lat, marker.lng]} icon={icon}>

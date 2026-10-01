@@ -134,15 +134,15 @@ export const MapView = ({
           onZoomEnd={onZoomEnd}
         />
 
-        {/* <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" /> */}
-        <TileLayer
+        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        {/* <TileLayer
           url={import.meta.env.VITE_BACKEND_URL + "/Tiles/{z}/{x}/{y}.png"}
           keepBuffer={20}
           minZoom={14}
           maxZoom={17}
           updateWhenIdle={false}
           updateInterval={0}
-        />
+        /> */}
 
         {/* Draw stops */}
         {visibleStops.map((stop) => (
@@ -162,7 +162,7 @@ export const MapView = ({
 
         {/* Draw air monitoring markers */}
         {AIR_MONITORING_STATIONS.map((marker) => (
-          <AirMonitoringMarker key={marker.id} marker={marker} />
+          <AirMonitoringMarker key={marker.id} marker={marker} zoom={zoom} />
         ))}
 
         {/* Draw route line */}

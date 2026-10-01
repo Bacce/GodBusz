@@ -12,7 +12,10 @@ export const MapClickHandler = ({
   onZoomEnd,
 }: MapClickHandlerProps) => {
   useMapEvents({
-    click: () => onMapClick(),
+    click: (e) => {
+      console.log(`Lat: ${e.latlng.lat}, Lng: ${e.latlng.lng}`);
+      onMapClick();
+    },
     moveend: (e) => {
       const { lat, lng } = e.target.getCenter();
       onMoveEnd(lat, lng);
