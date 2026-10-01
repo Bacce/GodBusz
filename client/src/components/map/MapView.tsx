@@ -59,6 +59,7 @@ export const MapView = ({
 }: MapViewProps) => {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [shouldFlyToUser, setShouldFlyToUser] = useState(false);
+  const [showAirQuality, setShowAirQuality] = useState(true);
 
   const handleLocateUser = () => {
     navigator.geolocation.getCurrentPosition(
@@ -89,6 +90,14 @@ export const MapView = ({
     <div className="relative h-full w-full">
       <div className="absolute top-1 right-2 z-[1000] flex flex-col items-end">
         <button
+          onClick={handleLocateUser}
+          title="Saját helyzet"
+          className="px-1.5 py-0.5 mt-1 flex items-center justify-between gap-1.5 rounded border font-bold text-[13px] cursor-pointer select-none pointer-events-auto opacity-70 transition-colors bg-white text-[#1e1e1e] border-[#c6c6c6] hover:border-[#1e1e1e] min-w-[110px]"
+        >
+          <span className="pl-0.5">Helyzetem</span>
+          <span className="ml-1.5 mr-0.5">📍</span>
+        </button>
+        <button
           onClick={onTogglePolling}
           title="Járművek megjelenítése"
           className={`px-1.5 py-0.5 mt-1 flex items-center justify-between gap-1.5 rounded border font-bold text-[13px] cursor-pointer select-none pointer-events-auto opacity-70 transition-colors min-w-[110px] ${polling
@@ -100,12 +109,15 @@ export const MapView = ({
           <img src={BUS_ICON_URL_HEADER} alt="" className="w-5 h-5 ml-1.5 mr-1" />
         </button>
         <button
-          onClick={handleLocateUser}
-          title="Saját helyzet"
-          className="px-1.5 py-0.5 mt-1 flex items-center justify-between gap-1.5 rounded border font-bold text-[13px] cursor-pointer select-none pointer-events-auto opacity-70 transition-colors bg-white text-[#1e1e1e] border-[#c6c6c6] hover:border-[#1e1e1e] min-w-[110px]"
+          onClick={() => setShowAirQuality(!showAirQuality)}
+          title="Levegő minőség megjelenítése"
+          className={`px-1.5 py-0.5 mt-1 flex items-center justify-between gap-1.5 rounded border font-bold text-[13px] cursor-pointer select-none pointer-events-auto opacity-70 transition-colors min-w-[110px] ${showAirQuality
+            ? "bg-[#4c0e5f] text-white border-[#c6c6c6] hover:border-[#1e1e1e]"
+            : "bg-white text-[#1e1e1e] border-[#c6c6c6] hover:border-[#1e1e1e]"
+            }`}
         >
-          <span className="pl-0.5">Helyem</span>
-          <span className="ml-1.5 mr-0.5">📍</span>
+          <span className="pl-0.5">Levegő minőség</span>
+          <span className="ml-1.5 mr-0.5">🍃</span>
         </button>
       </div>
       <MapContainer
@@ -134,15 +146,15 @@ export const MapView = ({
           onZoomEnd={onZoomEnd}
         />
 
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        {/* <TileLayer
+        {/* <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" /> */}
+        <TileLayer
           url={import.meta.env.VITE_BACKEND_URL + "/Tiles/{z}/{x}/{y}.png"}
           keepBuffer={20}
           minZoom={14}
           maxZoom={17}
           updateWhenIdle={false}
           updateInterval={0}
-        /> */}
+        />
 
         {/* Draw stops */}
         {visibleStops.map((stop) => (
@@ -161,7 +173,7 @@ export const MapView = ({
         ))}
 
         {/* Draw air monitoring markers */}
-        {AIR_MONITORING_STATIONS.map((marker) => (
+        {showAirQuality && AIR_MONITORING_STATIONS.map((marker) => (
           <AirMonitoringMarker key={marker.id} marker={marker} zoom={zoom} />
         ))}
 
