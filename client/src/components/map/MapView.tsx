@@ -5,6 +5,8 @@ import { MapClickHandler } from "./MapClickHandler";
 import { StopMarker } from "./StopMarker";
 import { BusMarker } from "./BusMarker";
 import { TrainStopMarker } from "./TrainStopMarker";
+import { AirMonitoringMarker } from "./AirMonitoringMarker";
+import { AIR_MONITORING_STATIONS } from "../../lib/air-monitoring";
 import RoutingMachine from "./RoutingMachine";
 import {
   BUS_ICON_URL_HEADER,
@@ -15,7 +17,7 @@ import {
   BACKEND_URL,
 } from "../../lib/constants";
 import { MapController } from "./MapController";
-import type { Stop, Bus, TrainStopMarkerData } from "../../lib/types";
+import type { Stop, Bus, TrainStopMarkerData, AirMonitoringMarkerData } from "../../lib/types";
 
 
 interface MapViewProps {
@@ -156,6 +158,11 @@ export const MapView = ({
         {/* Draw train stop markers */}
         {trainStopMarkers.map((marker) => (
           <TrainStopMarker key={marker.id} marker={marker} />
+        ))}
+
+        {/* Draw air monitoring markers */}
+        {AIR_MONITORING_STATIONS.map((marker) => (
+          <AirMonitoringMarker key={marker.id} marker={marker} />
         ))}
 
         {/* Draw route line */}

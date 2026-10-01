@@ -27,6 +27,7 @@ export const ROUTE_COLORS: Record<string, string> = {
   G2: COLOR_G2_ROUTE,
   G3: COLOR_G3_ROUTE,
   G4: COLOR_G4_ROUTE,
+  AIR: "#20b2aa",
 };
 
 // ── Bus icon URLs ─────────────────────────────────────────────────────────────

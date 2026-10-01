@@ -30,6 +30,14 @@ export interface TrainStopMarkerData {
   lat: number;
   lng: number;
 }
+export interface AirMonitoringMarkerData {
+  id: string;
+  name: string;
+  lat: number;
+  lng: number;
+  url: string;
+}
+
 
 export interface MavStopEntry {
   trainId: string | null;

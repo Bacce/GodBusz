@@ -67,3 +67,8 @@ body,
 .no-arrow:after {
     display: none;
 }
+
+.stop-icon-filled {
+    background: var(--stop-color) !important;
+    border-color: var(--stop-color) !important;
+}
