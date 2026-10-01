@@ -1,6 +1,5 @@
 import L from "leaflet";
 import { Marker, Popup, Tooltip } from "react-leaflet";
-import { getStopIcon } from "../../lib/icons";
 import type { AirMonitoringMarkerData } from "../../lib/types";
 
 interface AirMonitoringMarkerProps {

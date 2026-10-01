@@ -17,7 +17,7 @@ import {
   BACKEND_URL,
 } from "../../lib/constants";
 import { MapController } from "./MapController";
-import type { Stop, Bus, TrainStopMarkerData, AirMonitoringMarkerData } from "../../lib/types";
+import type { Stop, Bus, TrainStopMarkerData } from "../../lib/types";
 
 
 interface MapViewProps {
