@@ -5,8 +5,9 @@ import {
   API_STOP,
   API_MAV_STOP,
   BACKEND_URL,
+  API_AIR,
 } from "../lib/constants";
-import type { Stop, Bus, PopupData, MavStopEntry } from "../lib/types";
+import type { Stop, Bus, PopupData, MavStopEntry, AirQualityResponse } from "../lib/types";
 
 async function get<T>(
   url: string,
@@ -51,4 +52,8 @@ export async function fetchPopups(): Promise<PopupData | null> {
 
 export async function fetchMavStop(stopId: string): Promise<MavStopEntry[]> {
   return get<MavStopEntry[]>(`${API_MAV_STOP}/${encodeURIComponent(stopId)}`);
+}
+
+export async function fetchAirQuality(id: string): Promise<AirQualityResponse> {
+  return get<AirQualityResponse>(`${API_AIR}/${encodeURIComponent(id)}`);
 }

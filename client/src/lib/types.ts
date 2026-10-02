@@ -49,3 +49,23 @@ export interface MavStopEntry {
   description: string;
   rawDescription?: string;
 }
+export interface AirQualityMetric {
+  rco2: number;
+  pm01: number;
+  pm02: number;
+  pm10: number;
+  atmp: number;
+  rhum: number;
+  tvocIndex: number;
+  noxIndex: number;
+  createdAt: string;
+}
+
+export interface AirQualityResponse {
+  device: {
+    id: string;
+    name: string;
+    locationId: string;
+  };
+  metrics: AirQualityMetric[];
+}
