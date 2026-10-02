@@ -22,7 +22,7 @@ router.use("/mav", mavRoutes);
 router.use(
   "/route-proxy",
   asyncHandler(async (req, res) => {
-    const targetUrl = "https://osrm.hqnet.hu:8083/route/v1" + req.url;
+    const targetUrl = "https://osrm.hqnet.hu:8084/route/v1" + req.url;
     const cached = routeCache.get(targetUrl);
     if (cached && !isTooOld(cached.timestamp)) {
       return res.json(cached.data);
