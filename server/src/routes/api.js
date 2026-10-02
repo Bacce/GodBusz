@@ -9,9 +9,12 @@ import {
 } from "../helper.js";
 import { apiService } from "../services/apiService.js";
 import { asyncHandler } from "../middleware/asyncHandler.js";
+import { cache } from "../middleware/cache.js";
+import airRoutes from "./air.js";
 import mavRoutes from "./mav.js";
 
 const router = express.Router();
+router.use("/air", airRoutes);
 const routeCache = new Map();
 
 router.use("/mav", mavRoutes);
@@ -130,5 +133,6 @@ router.get(
     res.json(await apiService.getPopups());
   }),
 );
+
 
 export default router;
