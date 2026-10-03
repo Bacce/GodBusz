@@ -62,7 +62,7 @@ export const WebcamMarker = ({ marker, zoom }: WebcamMarkerProps) => {
   return (
     <Marker icon={icon} position={[marker.lat, marker.lng]}>
       <Tooltip direction="top" offset={[0, -20]} opacity={1}>
-        Webkamera
+        Webkamera "{marker.id}"
       </Tooltip>
       <Popup eventHandlers={{ add: () => setIsOpen(true), remove: () => setIsOpen(false) }} minWidth={300}>
         <WebcamPopupContent key={isOpen ? 'open' : 'closed'} marker={marker} timestamp={timestamp} />

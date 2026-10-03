@@ -39,6 +39,7 @@ export interface AirMonitoringMarkerData {
 }
 
 export interface WebcamMarkerData {
+  id: string;
   lat: number;
   lng: number;
   feedType?: string;

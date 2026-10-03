@@ -79,6 +79,15 @@ export const MapView = ({
     localStorage.setItem("map_show_webcams", showWebcams.toString());
   }, [showWebcams]);
 
+  const [showTrainStops, setShowTrainStops] = useState(() => {
+    const saved = localStorage.getItem("map_show_train_stops");
+    return saved === null ? true : saved === "true";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("map_show_train_stops", showTrainStops.toString());
+  }, [showTrainStops]);
+
   useEffect(() => {
     fetchWebcams().then(setWebcams).catch(console.error);
   }, []);
@@ -120,24 +129,35 @@ export const MapView = ({
         </button>
         <button
           onClick={onTogglePolling}
-          title="Járművek megjelenítése"
+          title="Élő busz helyzet követés"
           className={`px-1.5 py-0.5 mt-1 flex items-center justify-between gap-1.5 rounded border font-bold text-[13px] cursor-pointer select-none pointer-events-auto opacity-70 transition-colors min-w-[110px] ${polling
             ? "bg-[#4c0e5f] text-white border-[#c6c6c6] hover:border-[#1e1e1e]"
             : "bg-white text-[#1e1e1e] border-[#c6c6c6] hover:border-[#1e1e1e]"
             }`}
         >
-          <span className="pl-0.5">Járművek</span>
+          <span className="pl-0.5">Busz követés</span>
           <img src={BUS_ICON_URL_HEADER} alt="" className="w-5 h-5 ml-1.5 mr-1" />
         </button>
         <button
+          onClick={() => setShowTrainStops(!showTrainStops)}
+          title="Vonatok megjelenítése"
+          className={`px-1.5 py-0.5 mt-1 flex items-center justify-between gap-1.5 rounded border font-bold text-[13px] cursor-pointer select-none pointer-events-auto opacity-70 transition-colors min-w-[110px] ${showTrainStops
+            ? "bg-[#4c0e5f] text-white border-[#c6c6c6] hover:border-[#1e1e1e]"
+            : "bg-white text-[#1e1e1e] border-[#c6c6c6] hover:border-[#1e1e1e]"
+            }`}
+        >
+          <span className="pl-0.5">Vasút megállók</span>
+          <span className="ml-1.5 mr-0.5">🚆</span>
+        </button>
+        <button
           onClick={() => setShowAirQuality(!showAirQuality)}
-          title="Levegő minőség megjelenítése"
+          title="Levegőminőség mérők megjelenítése"
           className={`px-1.5 py-0.5 mt-1 flex items-center justify-between gap-1.5 rounded border font-bold text-[13px] cursor-pointer select-none pointer-events-auto opacity-70 transition-colors min-w-[110px] ${showAirQuality
             ? "bg-[#4c0e5f] text-white border-[#c6c6c6] hover:border-[#1e1e1e]"
             : "bg-white text-[#1e1e1e] border-[#c6c6c6] hover:border-[#1e1e1e]"
             }`}
         >
-          <span className="pl-0.5">Levegő minőség</span>
+          <span className="pl-0.5">Levegőminőség mérők</span>
           <span className="ml-1.5 mr-0.5">🍃</span>
         </button>
         <button
@@ -200,7 +220,7 @@ export const MapView = ({
           ))}
 
         {/* Draw train stop markers */}
-        {trainStopMarkers.map((marker) => (
+        {showTrainStops && trainStopMarkers.map((marker) => (
           <TrainStopMarker key={marker.id} marker={marker} />
         ))}
 
