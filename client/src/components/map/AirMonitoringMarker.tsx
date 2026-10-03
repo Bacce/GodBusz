@@ -72,12 +72,12 @@ export const AirMonitoringMarker = ({ marker, zoom }: AirMonitoringMarkerProps) 
     >
       <Tooltip direction="top" offset={[0, -20]} opacity={1}>
         <div className="flex items-center gap-1">
-          <h1 className="font-bold">Levegő minőség - {marker.name}</h1>
+          <h1 className="font-bold">Levegőminőség - {marker.name}</h1>
         </div>
       </Tooltip>
       <Popup maxWidth={300}>
         <div className="flex flex-col gap-2">
-          <div className="text-sm font-bold">Levegő minőség - {marker.name}</div>
+          <div className="text-sm font-bold">Levegőminőség - {marker.name}</div>
           {loading && <div className="text-sm text-gray-500">Betöltés…</div>}
           {error && <div className="text-sm text-red-500">{error}</div>}
           {!loading && !error && metric && (

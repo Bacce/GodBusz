@@ -1,5 +1,5 @@
 import { MapContainer, TileLayer } from "react-leaflet";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import L from "leaflet";
 import { MapClickHandler } from "./MapClickHandler";
 import { StopMarker } from "./StopMarker";
@@ -59,8 +59,14 @@ export const MapView = ({
 }: MapViewProps) => {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [shouldFlyToUser, setShouldFlyToUser] = useState(false);
-  const [showAirQuality, setShowAirQuality] = useState(true);
+  const [showAirQuality, setShowAirQuality] = useState(() => {
+    const saved = localStorage.getItem("map_show_air_quality");
+    return saved === null ? true : saved === "true";
+  });
 
+  useEffect(() => {
+    localStorage.setItem("map_show_air_quality", showAirQuality.toString());
+  }, [showAirQuality]);
   const handleLocateUser = () => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
