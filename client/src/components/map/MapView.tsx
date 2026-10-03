@@ -6,7 +6,9 @@ import { StopMarker } from "./StopMarker";
 import { BusMarker } from "./BusMarker";
 import { TrainStopMarker } from "./TrainStopMarker";
 import { AirMonitoringMarker } from "./AirMonitoringMarker";
+import { WebcamMarker } from "./WebcamMarker";
 import { AIR_MONITORING_STATIONS } from "../../lib/air-monitoring";
+import { fetchWebcams } from "../../api/client";
 import RoutingMachine from "./RoutingMachine";
 import {
   BUS_ICON_URL_HEADER,
@@ -17,7 +19,7 @@ import {
   BACKEND_URL,
 } from "../../lib/constants";
 import { MapController } from "./MapController";
-import type { Stop, Bus, TrainStopMarkerData } from "../../lib/types";
+import type { Stop, Bus, TrainStopMarkerData, WebcamMarkerData } from "../../lib/types";
 
 
 interface MapViewProps {
@@ -63,10 +65,23 @@ export const MapView = ({
     const saved = localStorage.getItem("map_show_air_quality");
     return saved === null ? true : saved === "true";
   });
-
   useEffect(() => {
     localStorage.setItem("map_show_air_quality", showAirQuality.toString());
   }, [showAirQuality]);
+
+  const [webcams, setWebcams] = useState<WebcamMarkerData[]>([]);
+  const [showWebcams, setShowWebcams] = useState(() => {
+    const saved = localStorage.getItem("map_show_webcams");
+    return saved === null ? true : saved === "true";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("map_show_webcams", showWebcams.toString());
+  }, [showWebcams]);
+
+  useEffect(() => {
+    fetchWebcams().then(setWebcams).catch(console.error);
+  }, []);
   const handleLocateUser = () => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
@@ -125,6 +140,17 @@ export const MapView = ({
           <span className="pl-0.5">Levegő minőség</span>
           <span className="ml-1.5 mr-0.5">🍃</span>
         </button>
+        <button
+          onClick={() => setShowWebcams(!showWebcams)}
+          title="Webkamerák megjelenítése"
+          className={`px-1.5 py-0.5 mt-1 flex items-center justify-between gap-1.5 rounded border font-bold text-[13px] cursor-pointer select-none pointer-events-auto opacity-70 transition-colors min-w-[110px] ${showWebcams
+            ? "bg-[#4c0e5f] text-white border-[#c6c6c6] hover:border-[#1e1e1e]"
+            : "bg-white text-[#1e1e1e] border-[#c6c6c6] hover:border-[#1e1e1e]"
+            }`}
+        >
+          <span className="pl-0.5">Webkamerák</span>
+          <span className="ml-1.5 mr-0.5">📷</span>
+        </button>
       </div>
       <MapContainer
         center={center}
@@ -181,6 +207,11 @@ export const MapView = ({
         {/* Draw air monitoring markers */}
         {showAirQuality && AIR_MONITORING_STATIONS.map((marker) => (
           <AirMonitoringMarker key={marker.id} marker={marker} zoom={zoom} />
+        ))}
+
+        {/* Draw webcam markers */}
+        {showWebcams && webcams.map((marker, idx) => (
+          <WebcamMarker key={idx} marker={marker} zoom={zoom} />
         ))}
 
         {/* Draw route line */}

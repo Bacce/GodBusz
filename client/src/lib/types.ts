@@ -38,6 +38,16 @@ export interface AirMonitoringMarkerData {
   url: string;
 }
 
+export interface WebcamMarkerData {
+  lat: number;
+  lng: number;
+  feedType?: string;
+  cameraFeedUrl?: string;
+  stationUrl?: string;
+  cameraUrl?: string;
+  [key: string]: unknown;
+}
+
 
 export interface MavStopEntry {
   trainId: string | null;

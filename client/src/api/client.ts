@@ -6,8 +6,9 @@ import {
   API_MAV_STOP,
   BACKEND_URL,
   API_AIR,
+  API_WEBCAMS,
 } from "../lib/constants";
-import type { Stop, Bus, PopupData, MavStopEntry, AirQualityResponse } from "../lib/types";
+import type { Stop, Bus, PopupData, MavStopEntry, AirQualityResponse, WebcamMarkerData } from "../lib/types";
 
 async function get<T>(
   url: string,
@@ -56,4 +57,8 @@ export async function fetchMavStop(stopId: string): Promise<MavStopEntry[]> {
 
 export async function fetchAirQuality(id: string): Promise<AirQualityResponse> {
   return get<AirQualityResponse>(`${API_AIR}/${encodeURIComponent(id)}`);
+}
+
+export async function fetchWebcams(): Promise<WebcamMarkerData[]> {
+  return get<WebcamMarkerData[]>(API_WEBCAMS);
 }
