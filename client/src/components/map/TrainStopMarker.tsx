@@ -17,9 +17,7 @@ export const TrainStopMarker = ({ marker }: TrainStopMarkerProps) => {
 
   const icon = getStopIcon("TRAIN");
 
-  const handlePopupOpen = useCallback(() => {
-    if (hasFetched.current) return;
-    hasFetched.current = true;
+  const refreshData = useCallback(() => {
     setLoading(true);
     setError(null);
 
@@ -28,6 +26,12 @@ export const TrainStopMarker = ({ marker }: TrainStopMarkerProps) => {
       .catch((err) => setError(err.message ?? "Hiba történt"))
       .finally(() => setLoading(false));
   }, [marker.id]);
+
+  const handlePopupOpen = useCallback(() => {
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+    refreshData();
+  }, [refreshData]);
 
   return (
     <Marker
@@ -41,14 +45,23 @@ export const TrainStopMarker = ({ marker }: TrainStopMarkerProps) => {
         </div>
       </Tooltip>
       <Popup maxWidth={400}>
-        <div className="text-sm font-bold pb-2">{marker.id} vasútállomás</div>
-        {loading && <div className="text-sm text-gray-500">Betöltés…</div>}
+        <div className="flex items-center justify-between pb-2">
+          <div className="text-sm font-bold">{marker.id} vasútállomás</div>
+          <button
+            onClick={refreshData}
+            disabled={loading}
+            title="Frissítés"
+            className="p-1 bg-white text-gray-600 border border-gray-300 rounded hover:bg-gray-50 transition-colors disabled:opacity-50"
+          >
+            <span className={loading ? "animate-spin inline-block" : ""}>🔄</span>
+          </button>
+        </div>
+        {loading && entries.length === 0 && <div className="text-sm text-gray-500">Betöltés…</div>}
         {error && <div className="text-sm text-red-500">{error}</div>}
-        {!loading && !error && entries.length === 0 && !hasFetched.current && null}
         {!loading && !error && entries.length === 0 && hasFetched.current && (
           <div className="text-sm text-gray-400">Nincs adat</div>
         )}
-        {!loading && !error && entries.length > 0 && (
+        {!error && entries.length > 0 && (
           <MavTimetable entries={entries} />
         )}
       </Popup>

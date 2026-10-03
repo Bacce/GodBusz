@@ -21,9 +21,7 @@ export const AirMonitoringMarker = ({ marker, zoom }: AirMonitoringMarkerProps) 
     iconAnchor: [size / 2, size / 2],
     html: `<div class="stop-icon no-arrow stop-icon-filled ${isSmall ? "small" : ""}" style="--stop-color: #4988dbff;"></div>`,
   });
-  const handlePopupOpen = useCallback(() => {
-    if (hasFetched.current) return;
-    hasFetched.current = true;
+  const refreshData = useCallback(() => {
     setLoading(true);
     setError(null);
 
@@ -36,6 +34,12 @@ export const AirMonitoringMarker = ({ marker, zoom }: AirMonitoringMarkerProps) 
       .catch((err) => setError(err.message ?? "Hiba történt"))
       .finally(() => setLoading(false));
   }, [marker.id]);
+
+  const handlePopupOpen = useCallback(() => {
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+    refreshData();
+  }, [refreshData]);
   const getQuality = (key: keyof AirQualityMetric, value: number) => {
     switch (key) {
       case "pm10": return value < 50 ? "Jó" : "Rossz";
@@ -77,10 +81,20 @@ export const AirMonitoringMarker = ({ marker, zoom }: AirMonitoringMarkerProps) 
       </Tooltip>
       <Popup maxWidth={300}>
         <div className="flex flex-col gap-2">
-          <div className="text-sm font-bold">Levegőminőség - {marker.name}</div>
-          {loading && <div className="text-sm text-gray-500">Betöltés…</div>}
+          <div className="flex items-center justify-between pb-2">
+            <div className="text-sm font-bold">Levegőminőség - {marker.name}</div>
+            <button
+              onClick={refreshData}
+              disabled={loading}
+              title="Frissítés"
+              className="p-1 bg-white text-gray-600 border border-gray-300 rounded hover:bg-gray-50 transition-colors disabled:opacity-50"
+            >
+              <span className={loading ? "animate-spin inline-block" : ""}>🔄</span>
+            </button>
+          </div>
+          {loading && !metric && <div className="text-sm text-gray-500">Betöltés…</div>}
           {error && <div className="text-sm text-red-500">{error}</div>}
-          {!loading && !error && metric && (
+          {!error && metric && (
             <table className="w-full text-left border-collapse min-w-max">
               <thead className="text-gray-500 border-b border-gray-200 font-semibold">
                 <tr className="text-gray-500">
@@ -133,22 +147,24 @@ export const AirMonitoringMarker = ({ marker, zoom }: AirMonitoringMarkerProps) 
               </tbody>
             </table>
           )}
-          {!loading && !error && metric && (
+          {!loading && !error && !metric && hasFetched.current && (
+            <div className="text-sm text-gray-400">Nincs adat</div>
+          )}
+          {!error && metric && (
             <div className="text-[10px] text-gray-400 text-right mt-2 italic">
               Mérés: {new Date(metric.createdAt).toLocaleString("hu-HU")}
             </div>
           )}
-          {!loading && !error && !metric && hasFetched.current && (
-            <div className="text-sm text-gray-400">Nincs adat</div>
-          )}
-          <a
-            href={marker.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs bg-white text-[#009ee3] border border-[#009ee3] px-2 py-1 rounded text-center font-bold hover:bg-blue-50 transition-colors"
-          >
-            Részletes adatok megnyitása
-          </a>
+          <div className="flex justify-center">
+            <a
+              href={marker.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full text-xs bg-white text-[#009ee3] border border-[#009ee3] px-2 py-1 rounded text-center font-bold hover:bg-blue-50 transition-colors"
+            >
+              Részletes adatok megnyitása
+            </a>
+          </div>
         </div>
       </Popup>
     </Marker>
