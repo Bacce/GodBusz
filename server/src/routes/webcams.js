@@ -13,14 +13,13 @@ async function scrapeCameraFeedUrl(cameraUrl, feedType) {
     return cached.url;
   }
 
+  let feedUrl = null;
+
   try {
     const response = await fetch(cameraUrl);
     if (!response.ok) return cached ? cached.url : null;
     const html = await response.text();
     const $ = cheerio.load(html);
-
-    let feedUrl = null;
-
     if (feedType === "stream") {
       $('source, a, video').each((_, el) => {
         const src = $(el).attr("src") || $(el).attr("href");
