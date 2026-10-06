@@ -55,7 +55,7 @@ body,
     position: absolute;
     width: 0;
     height: 0;
-    border-left: 6px solid var(--stop-color);
+    border-left: 8px solid rgb(46, 46, 46);
     border-top: 6px solid transparent;
     border-bottom: 6px solid transparent;
     top: 50%;
