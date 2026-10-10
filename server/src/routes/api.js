@@ -13,6 +13,7 @@ import { cache } from "../middleware/cache.js";
 import airRoutes from "./air.js";
 import mavRoutes from "./mav.js";
 import webcamRoutes from "./webcams.js";
+import ferryRoutes from "./ferry.js";
 
 const router = express.Router();
 router.use("/air", airRoutes);
@@ -20,6 +21,7 @@ const routeCache = new Map();
 
 router.use("/mav", mavRoutes);
 router.use("/webcams", webcamRoutes);
+router.use("/ferry", ferryRoutes);
 
 router.use(
   "/route-proxy",

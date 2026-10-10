@@ -20,8 +20,26 @@ export const FerryMarker = ({ marker }: FerryMarkerProps) => {
         </div>
       </Tooltip>
       <Popup maxWidth={400}>
-        <div className="text-sm font-bold">{marker.name}</div>
-        <div className="text-xs text-gray-500">Kikötő / Kompkút</div>
+        <div className="flex flex-col gap-2">
+          <div className="text-sm font-bold">{marker.name}</div>
+          <div className="text-xs text-gray-500">Kikötő / Kompkút</div>
+          <div className="mt-2 border-t pt-2">
+            <div className="text-xs font-semibold mb-1">Menetrend:</div>
+            <div className="flex flex-col gap-1">
+              {marker.times.map((t, i) => (
+                <div key={i} className="flex justify-between items-center text-xs">
+                  <span className="font-mono">{t.hour.toString().padStart(2, "0")}:{t.minute.toString().padStart(2, "0")}</span>
+                  <span className="text-gray-400 italic">
+                    {t.recurrence === "every-day" && "Mindig"}
+                    {t.recurrence === "workday" && "Munkanapokon"}
+                    {t.recurrence === "holiday-weekend" && "Ünnep/Hétvége"}
+                    {t.recurrence === "school-day" && "Tanítási napokon"}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </Popup>
     </Marker>
   );

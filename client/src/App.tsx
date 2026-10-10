@@ -8,6 +8,7 @@ import { useStops } from "./hooks/useStops";
 import { useBuses } from "./hooks/useBuses";
 import { usePopups } from "./hooks/usePopups";
 import { useMapPersistence } from "./hooks/useMapPersistence";
+import { useFerries } from "./hooks/useFerries";
 import { StopPage } from "./pages/StopPage";
 import { CookieBanner } from "./components/ui/CookieBanner";
 import { PwaInstallBanner } from "./components/ui/PwaInstallBanner";
@@ -33,6 +34,7 @@ export const App = () => {
   }, [cookiesAccepted]);
 
   const { stops, loading: stopsLoading } = useStops(selectedDate);
+  const { ferries, loading: ferriesLoading } = useFerries();
   const buses = useBuses(
     polling,
     () => {
@@ -53,14 +55,6 @@ export const App = () => {
     { id: "Alsógöd", lat: 47.67823981970107, lng: 19.134696722030643 },
   ];
 
-  const ferryMarkers: FerryMarkerData[] = [
-    {
-      id: "ferry-1",
-      name: "Kikötő",
-      lat: 47.68012515937115,
-      lng: 19.125781059265137,
-    },
-  ];
 
   const handleAcceptCookies = () => {
     localStorage.setItem("cookies_accepted", "true");
@@ -120,7 +114,7 @@ export const App = () => {
                   onFocusHandled={() => setShouldFocusStop(false)}
                   selectedDate={selectedDate}
                   trainStopMarkers={trainStopMarkers}
-                  ferryMarkers={ferryMarkers}
+                  ferryMarkers={ferries}
                 />
 
                 <MapStatusOverlay loading={stopsLoading} empty={stops.length === 0} />

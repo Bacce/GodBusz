@@ -7,6 +7,7 @@ import {
   BACKEND_URL,
   API_AIR,
   API_WEBCAMS,
+  API_FERRY,
 } from "../lib/constants";
 import type { Stop, Bus, PopupData, MavStopEntry, AirQualityResponse, WebcamMarkerData } from "../lib/types";
 
@@ -61,4 +62,8 @@ export async function fetchAirQuality(id: string): Promise<AirQualityResponse> {
 
 export async function fetchWebcams(): Promise<WebcamMarkerData[]> {
   return get<WebcamMarkerData[]>(API_WEBCAMS);
+}
+
+export async function fetchFerries(): Promise<FerryMarkerData[]> {
+  return get<FerryMarkerData[]>(API_FERRY);
 }

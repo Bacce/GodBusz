@@ -48,12 +48,22 @@ export interface WebcamMarkerData {
   cameraUrl?: string;
   [key: string]: unknown;
 }
+export type FerryRecurrence = "workday" | "holiday-weekend" | "school-day" | "every-day";
+
+export interface FerryTime {
+  hour: number;
+  minute: number;
+  recurrence: FerryRecurrence;
+}
+
 export interface FerryMarkerData {
   id: string;
   name: string;
   lat: number;
   lng: number;
+  times: FerryTime[];
 }
+
 
 
 
