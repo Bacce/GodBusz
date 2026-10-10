@@ -1,6 +1,7 @@
 import { Marker, Popup, Tooltip } from "react-leaflet";
 import type { FerryMarkerData } from "../../lib/types";
 import { getStopIcon } from "../../lib/icons";
+import { FerryTimetable } from "../ui/FerryTimetable";
 
 interface FerryMarkerProps {
   marker: FerryMarkerData;
@@ -22,22 +23,28 @@ export const FerryMarker = ({ marker }: FerryMarkerProps) => {
       <Popup maxWidth={400}>
         <div className="flex flex-col gap-2">
           <div className="text-sm font-bold">{marker.name}</div>
-          <div className="text-xs text-gray-500">Kikötő / Kompkút</div>
-          <div className="mt-2 border-t pt-2">
-            <div className="text-xs font-semibold mb-1">Menetrend:</div>
-            <div className="flex flex-col gap-1">
-              {marker.times.map((t, i) => (
-                <div key={i} className="flex justify-between items-center text-xs">
-                  <span className="font-mono">{t.hour.toString().padStart(2, "0")}:{t.minute.toString().padStart(2, "0")}</span>
-                  <span className="text-gray-400 italic">
-                    {t.recurrence === "every-day" && "Mindig"}
-                    {t.recurrence === "workday" && "Munkanapokon"}
-                    {t.recurrence === "holiday-weekend" && "Ünnep/Hétvége"}
-                    {t.recurrence === "school-day" && "Tanítási napokon"}
-                  </span>
-                </div>
-              ))}
-            </div>
+          <div className="flex flex-col gap-1">
+            <div className="text-[11px]">Az itt megadott időpontok tájékoztató jellegűek.</div>
+            <a
+              href="https://szigetmonostor.hu/okos-terkep/godi-rev-2/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-blue-600 hover:underline font-medium"
+            >
+              Hivatalos menetrend
+            </a>
+            <a
+              href="https://www.facebook.com/rev.godi/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-blue-600 hover:underline font-medium"
+            >
+              Aktuális információk - Facebook
+            </a>
+          </div>
+
+          <div className="mt-2">
+            <FerryTimetable times={marker.times} />
           </div>
         </div>
       </Popup>
