@@ -31,7 +31,7 @@ const WebcamPopupContent = ({ marker, timestamp }: { marker: WebcamMarkerData; t
           href={marker.stationUrl || marker.cameraUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="block text-center px-2 py-1 mt-2 text-xs font-bold text-[#1e1e1e] bg-white border border-[#c6c6c6] rounded hover:border-[#1e1e1e] transition-colors"
+          className="block w-full text-center px-2 py-1 mt-2 text-xs font-bold text-[#009ee3] bg-white border border-[#009ee3] rounded hover:bg-blue-50 transition-colors"
         >
           További információ
         </a>
