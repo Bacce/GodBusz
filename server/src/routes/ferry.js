@@ -13,15 +13,15 @@ const FERRIES = [
     lat: 47.68242214781732,
     lng: 19.1208028793335,
     times: [
-      { hour: 5, minute: 0, recurrence: "workday" },
-      { hour: 5, minute: 25, recurrence: "holiday-weekend" },
-      { hour: 5, minute: 55, recurrence: "holiday-weekend" },
+      //{ hour: 5, minute: 0, recurrence: "workday" },
+      { hour: 5, minute: 25, recurrence: "workday" },
+      { hour: 5, minute: 55, recurrence: "workday" },
 
       { hour: 6, minute: 20, recurrence: "every-day" },
-      { hour: 6, minute: 45, recurrence: "every-day" },
+      { hour: 6, minute: 45, recurrence: "workday" },
 
       { hour: 7, minute: 20, recurrence: "every-day" },
-      { hour: 7, minute: 50, recurrence: "every-day" },
+      { hour: 7, minute: 50, recurrence: "workday" },
 
       { hour: 8, minute: 25, recurrence: "holiday-weekend" },
 
@@ -32,19 +32,21 @@ const FERRIES = [
       { hour: 13, minute: 25, recurrence: "every-day" },
 
       { hour: 14, minute: 25, recurrence: "every-day" },
-      { hour: 14, minute: 55, recurrence: "holiday-weekend" },
+      { hour: 14, minute: 55, recurrence: "school-day" },
 
       { hour: 15, minute: 25, recurrence: "every-day" },
 
       { hour: 16, minute: 0, recurrence: "school-day" },
-      { hour: 16, minute: 5, recurrence: "workday" },
-      { hour: 16, minute: 25, recurrence: "workday" },
+      { hour: 16, minute: 25, recurrence: "holiday-weekend" },
+      { hour: 16, minute: 30, recurrence: "workday" },
 
       { hour: 17, minute: 0, recurrence: "workday" },
-      { hour: 17, minute: 25, recurrence: "workday" },
+      { hour: 17, minute: 25, recurrence: "holiday-weekend" },
+      { hour: 17, minute: 30, recurrence: "workday" },
 
       { hour: 18, minute: 0, recurrence: "workday" },
-      { hour: 18, minute: 25, recurrence: "workday" },
+      { hour: 18, minute: 25, recurrence: "holiday-weekend" },
+      { hour: 18, minute: 30, recurrence: "workday" },
 
       { hour: 19, minute: 25, recurrence: "holiday-weekend" },
       { hour: 19, minute: 30, recurrence: "workday" },
