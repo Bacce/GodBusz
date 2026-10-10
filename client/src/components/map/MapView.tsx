@@ -91,6 +91,15 @@ export const MapView = ({
     localStorage.setItem("map_show_train_stops", showTrainStops.toString());
   }, [showTrainStops]);
 
+  const [showFerries, setShowFerries] = useState(() => {
+    const saved = localStorage.getItem("map_show_ferries");
+    return saved === null ? true : saved === "true";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("map_show_ferries", showFerries.toString());
+  }, [showFerries]);
+
   useEffect(() => {
     fetchWebcams().then(setWebcams).catch(console.error);
   }, []);
@@ -152,10 +161,24 @@ export const MapView = ({
           <span className="pl-0.5">Vasút megállók</span>
           <span className="ml-1.5 mr-0.5">🚆</span>
         </button>
+
+        <button
+          onClick={() => setShowFerries(!showFerries)}
+          title="Kompok megjelenítése"
+          className={`px-1.5 py-0.5 mt-1 flex items-center justify-between gap-1.5 rounded border font-bold text-[13px] cursor-pointer select-none pointer-events-auto opacity-70 transition-colors min-w-[110px] ${showFerries
+            ? "bg-[#4c0e5f] text-white border-[#c6c6c6] hover:border-[#1e1e1e]"
+            : "bg-white text-[#1e1e1e] border-[#c6c6c6] hover:border-[#1e1e1e]"
+            }`}
+        >
+          <span className="pl-0.5">Kompok</span>
+          <span className="ml-1.5 mr-0.5">⛴️</span>
+        </button>
+
+
         <button
           onClick={() => setShowAirQuality(!showAirQuality)}
           title="Levegőminőség mérők megjelenítése"
-          className={`px-1.5 py-0.5 mt-1 flex items-center justify-between gap-1.5 rounded border font-bold text-[13px] cursor-pointer select-none pointer-events-auto opacity-70 transition-colors min-w-[110px] ${showAirQuality
+          className={`mt-4 px-1.5 py-0.5 mt-1 flex items-center justify-between gap-1.5 rounded border font-bold text-[13px] cursor-pointer select-none pointer-events-auto opacity-70 transition-colors min-w-[110px] ${showAirQuality
             ? "bg-[#4c0e5f] text-white border-[#c6c6c6] hover:border-[#1e1e1e]"
             : "bg-white text-[#1e1e1e] border-[#c6c6c6] hover:border-[#1e1e1e]"
             }`}
@@ -237,7 +260,7 @@ export const MapView = ({
           <WebcamMarker key={idx} marker={marker} zoom={zoom} />
         ))}
         {/* Draw ferry markers */}
-        {ferryMarkers && ferryMarkers.map((marker) => (
+        {showFerries && ferryMarkers && ferryMarkers.map((marker) => (
           <FerryMarker key={marker.id} marker={marker} />
         ))}
         {/* Draw route line */}
