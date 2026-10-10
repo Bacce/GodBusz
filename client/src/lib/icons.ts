@@ -40,6 +40,7 @@ const ROUTE_COLORS: Record<string, string> = {
   G3: COLOR_G3,
   G4: COLOR_G4,
   TRAIN: "#000",
+  FERRY: "#00BFFF",
 };
 
 export const getStopIcon = (route: string, rotation?: number, zoom?: number) => {

@@ -6,7 +6,7 @@ import { StopMarker } from "./StopMarker";
 import { BusMarker } from "./BusMarker";
 import { TrainStopMarker } from "./TrainStopMarker";
 import { AirMonitoringMarker } from "./AirMonitoringMarker";
-import { WebcamMarker } from "./WebcamMarker";
+import { FerryMarker } from "./FerryMarker";
 import { AIR_MONITORING_STATIONS } from "../../lib/air-monitoring";
 import { fetchWebcams } from "../../api/client";
 import RoutingMachine from "./RoutingMachine";
@@ -19,7 +19,8 @@ import {
   BACKEND_URL,
 } from "../../lib/constants";
 import { MapController } from "./MapController";
-import type { Stop, Bus, TrainStopMarkerData, WebcamMarkerData } from "../../lib/types";
+import type { Stop, Bus, TrainStopMarkerData, WebcamMarkerData, FerryMarkerData } from "../../lib/types";
+import { WebcamMarker } from "./WebcamMarker";
 
 
 interface MapViewProps {
@@ -39,6 +40,7 @@ interface MapViewProps {
   onFocusHandled: () => void;
   selectedDate: string;
   trainStopMarkers?: TrainStopMarkerData[];
+  ferryMarkers?: FerryMarkerData[];
 }
 
 export const MapView = ({
@@ -58,6 +60,7 @@ export const MapView = ({
   onFocusHandled,
   selectedDate,
   trainStopMarkers = [],
+  ferryMarkers = []
 }: MapViewProps) => {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [shouldFlyToUser, setShouldFlyToUser] = useState(false);
@@ -233,7 +236,10 @@ export const MapView = ({
         {showWebcams && webcams.map((marker, idx) => (
           <WebcamMarker key={idx} marker={marker} zoom={zoom} />
         ))}
-
+        {/* Draw ferry markers */}
+        {ferryMarkers && ferryMarkers.map((marker) => (
+          <FerryMarker key={marker.id} marker={marker} />
+        ))}
         {/* Draw route line */}
         {stops.length > 0 && selectedRoute && (
           <RoutingMachine

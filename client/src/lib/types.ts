@@ -48,6 +48,13 @@ export interface WebcamMarkerData {
   cameraUrl?: string;
   [key: string]: unknown;
 }
+export interface FerryMarkerData {
+  id: string;
+  name: string;
+  lat: number;
+  lng: number;
+}
+
 
 
 export interface MavStopEntry {
