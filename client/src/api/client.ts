@@ -9,7 +9,7 @@ import {
   API_WEBCAMS,
   API_FERRY,
 } from "../lib/constants";
-import type { Stop, Bus, PopupData, MavStopEntry, AirQualityResponse, WebcamMarkerData } from "../lib/types";
+import type { Stop, Bus, PopupData, MavStopEntry, AirQualityResponse, WebcamMarkerData, FerryMarkerData } from "../lib/types";
 
 async function get<T>(
   url: string,

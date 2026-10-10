@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import type { PopupData, TrainStopMarkerData, FerryMarkerData } from "./lib/types";
+import type { PopupData, TrainStopMarkerData } from "./lib/types";
 import { MapView } from "./components/map/MapView";
 import { Header } from "./components/ui/Header";
 import { PopupModal } from "./components/ui/PopupModal";
@@ -34,7 +34,7 @@ export const App = () => {
   }, [cookiesAccepted]);
 
   const { stops, loading: stopsLoading } = useStops(selectedDate);
-  const { ferries, loading: ferriesLoading } = useFerries();
+  const { ferries } = useFerries();
   const buses = useBuses(
     polling,
     () => {
