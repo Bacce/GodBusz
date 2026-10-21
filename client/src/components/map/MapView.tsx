@@ -1,5 +1,5 @@
 import { MapContainer, TileLayer } from "react-leaflet";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import L from "leaflet";
 import { MapClickHandler } from "./MapClickHandler";
 import { StopMarker } from "./StopMarker";
@@ -64,6 +64,16 @@ export const MapView = ({
 }: MapViewProps) => {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [shouldFlyToUser, setShouldFlyToUser] = useState(false);
+  const watchId = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (watchId.current !== null) {
+        navigator.geolocation.clearWatch(watchId.current);
+      }
+    };
+  }, []);
+
   const [showAirQuality, setShowAirQuality] = useState(() => {
     const saved = localStorage.getItem("map_show_air_quality");
     return saved === null ? true : saved === "true";
@@ -104,21 +114,25 @@ export const MapView = ({
     fetchWebcams().then(setWebcams).catch(console.error);
   }, []);
   const handleLocateUser = () => {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const coords: [number, number] = [pos.coords.latitude, pos.coords.longitude];
+    setShouldFlyToUser(true);
+    if (watchId.current === null) {
+      watchId.current = navigator.geolocation.watchPosition(
+        (pos) => {
+          const coords: [number, number] = [pos.coords.latitude, pos.coords.longitude];
 
-        const bounds = L.latLngBounds(MAP_BOUNDS);
-        if (bounds.contains(L.latLng(coords[0], coords[1]))) {
-          setUserLocation(coords);
-          setShouldFlyToUser(true);
-        } else {
-          console.warn("User location is outside map bounds");
-        }
-      },
-      (err) => console.error(err)
-    );
+          const bounds = L.latLngBounds(MAP_BOUNDS);
+          if (bounds.contains(L.latLng(coords[0], coords[1]))) {
+            setUserLocation(coords);
+          } else {
+            console.warn("User location is outside map bounds");
+          }
+        },
+        (err) => console.error(err),
+        { enableHighAccuracy: true }
+      );
+    }
   };
+
 
   const visibleStops =
     selectedRoute !== null
@@ -131,14 +145,6 @@ export const MapView = ({
   return (
     <div className="relative h-full w-full">
       <div className="absolute top-1 right-2 z-[1000] flex flex-col items-end">
-        <button
-          onClick={handleLocateUser}
-          title="Saját helyzet"
-          className="px-1.5 py-0.5 mt-1 flex items-center justify-between gap-1.5 rounded border font-bold text-[13px] cursor-pointer select-none pointer-events-auto opacity-70 transition-colors bg-white text-[#1e1e1e] border-[#c6c6c6] hover:border-[#1e1e1e] min-w-[110px]"
-        >
-          <span className="pl-0.5">Helyzetem</span>
-          <span className="ml-1.5 mr-0.5">📍</span>
-        </button>
         <button
           onClick={onTogglePolling}
           title="Élő busz helyzet követés"
@@ -196,6 +202,15 @@ export const MapView = ({
         >
           <span className="pl-0.5">Webkamerák</span>
           <span className="ml-1.5 mr-0.5">📷</span>
+        </button>
+      </div>
+      <div className="absolute bottom-2 left-2 z-[1000]">
+        <button
+          onClick={handleLocateUser}
+          title="Saját helyzet"
+          className="p-3 flex items-center justify-center rounded-full border font-bold text-2xl cursor-pointer select-none pointer-events-auto opacity-70 transition-colors bg-white text-[#1e1e1e] border-[#c6c6c6] hover:border-[#1e1e1e] w-14 h-14"
+        >
+          <span className="ml-0.5">📍</span>
         </button>
       </div>
       <MapContainer
