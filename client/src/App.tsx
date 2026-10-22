@@ -11,6 +11,7 @@ import { useMapPersistence } from "./hooks/useMapPersistence";
 import { useFerries } from "./hooks/useFerries";
 import { StopPage } from "./pages/StopPage";
 import { CookieBanner } from "./components/ui/CookieBanner";
+import { PwaUpdateBanner } from "./components/ui/PwaUpdateBanner";
 import { PwaInstallBanner } from "./components/ui/PwaInstallBanner";
 import { MapStatusOverlay } from "./components/map/MapStatusOverlay";
 import { initGTM } from "./lib/analytics";
@@ -132,6 +133,7 @@ export const App = () => {
 
         <PwaInstallBanner />
 
+        <PwaUpdateBanner />
         {cookiesAccepted === null && <CookieBanner onAccept={handleAcceptCookies} onDecline={handleDeclineCookies} />}
       </div>
     </Router>
