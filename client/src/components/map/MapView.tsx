@@ -204,11 +204,11 @@ export const MapView = ({
           <span className="ml-1.5 mr-0.5">📷</span>
         </button>
       </div>
-      <div className="absolute bottom-2 left-2 z-[1000]">
+      <div className="absolute bottom-4 left-4 z-[1000]">
         <button
           onClick={handleLocateUser}
           title="Saját helyzet"
-          className="p-3 flex items-center justify-center rounded-full border font-bold text-2xl cursor-pointer select-none pointer-events-auto opacity-70 transition-colors bg-white text-[#1e1e1e] border-[#c6c6c6] hover:border-[#1e1e1e] w-14 h-14"
+          className="p-3 flex items-center justify-center rounded-full border font-bold text-2xl cursor-pointer select-none pointer-events-auto transition-colors bg-white text-[#1e1e1e] border-[#c6c6c6] hover:border-[#1e1e1e] w-14 h-14"
         >
           <span className="ml-0.5">📍</span>
         </button>
