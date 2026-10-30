@@ -12,7 +12,7 @@ export const MapClickHandler = ({
   onZoomEnd,
 }: MapClickHandlerProps) => {
   useMapEvents({
-    click: (e) => {
+    click: () => {
       onMapClick();
     },
     moveend: (e) => {

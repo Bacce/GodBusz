@@ -57,10 +57,12 @@ export const StopMarker = ({ stop, onClick, zoom, selectedDate, allStops }: Stop
 
     return L.divIcon({
       ...iconBase.options,
-      html: iconBase.options.html.replace(
-        'style="',
-        `style="margin-left: ${marginLeft}; `
-      ),
+      html: typeof iconBase.options.html === "string"
+        ? iconBase.options.html.replace(
+            'style="',
+            `style="margin-left: ${marginLeft}; `
+          )
+        : iconBase.options.html,
     });
   }, [iconBase, overlappingStops, stop.mid]);
   const siblingStops = useMemo(() => {
