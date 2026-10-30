@@ -63,6 +63,7 @@ export const MapView = ({
   ferryMarkers = []
 }: MapViewProps) => {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+  const [isLocating, setIsLocating] = useState(false);
   const [shouldFlyToUser, setShouldFlyToUser] = useState(false);
   const watchId = useRef<number | null>(null);
 
@@ -115,9 +116,13 @@ export const MapView = ({
   }, []);
   const handleLocateUser = () => {
     setShouldFlyToUser(true);
+    if (userLocation === null) {
+      setIsLocating(true);
+    }
     if (watchId.current === null) {
       watchId.current = navigator.geolocation.watchPosition(
         (pos) => {
+          setIsLocating(false);
           const coords: [number, number] = [pos.coords.latitude, pos.coords.longitude];
 
           const bounds = L.latLngBounds(MAP_BOUNDS);
@@ -127,7 +132,10 @@ export const MapView = ({
             console.warn("User location is outside map bounds");
           }
         },
-        (err) => console.error(err),
+        (err) => {
+          setIsLocating(false);
+          console.error(err);
+        },
         { enableHighAccuracy: true }
       );
     }
@@ -208,9 +216,14 @@ export const MapView = ({
         <button
           onClick={handleLocateUser}
           title="Saját helyzet"
-          className="p-3 flex items-center justify-center rounded-full border font-bold text-2xl cursor-pointer select-none pointer-events-auto transition-colors bg-white text-[#1e1e1e] border-[#c6c6c6] hover:border-[#1e1e1e] w-14 h-14"
+          disabled={isLocating}
+          className={`p-3 flex items-center justify-center rounded-full border font-bold text-2xl cursor-pointer select-none pointer-events-auto transition-colors bg-white text-[#1e1e1e] border-[#c6c6c6] hover:border-[#1e1e1e] w-14 h-14 ${isLocating ? "opacity-50 cursor-not-allowed" : ""}`}
         >
-          <span className="ml-0.5">📍</span>
+          {isLocating ? (
+            <div className="w-6 h-6 border-2 border-[#1e1e1e] border-t-transparent rounded-full animate-spin"></div>
+          ) : (
+            <span className="ml-0.5">📍</span>
+          )}
         </button>
       </div>
       <MapContainer
