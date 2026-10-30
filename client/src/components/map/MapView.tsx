@@ -272,10 +272,7 @@ export const MapView = ({
 
         {/* Draw stops */}
         {visibleStops.map((stop) => (
-          <StopMarker key={stop.mid} stop={stop} onClick={() => {
-            onRouteSelect(stop.route);
-            //console.log(stop.mid);
-          }} zoom={zoom} selectedDate={selectedDate} allStops={stops} />
+          <StopMarker key={stop.mid} stop={stop} onClick={onRouteSelect} zoom={zoom} selectedDate={selectedDate} allStops={stops} />
         ))}
 
         {/* Draw buses */}
