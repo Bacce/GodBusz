@@ -1,5 +1,6 @@
+import { findOverlappingLocations } from "../../lib/utils";
 import { MapContainer, TileLayer } from "react-leaflet";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import L from "leaflet";
 import { MapClickHandler } from "./MapClickHandler";
 import { StopMarker } from "./StopMarker";
@@ -147,8 +148,15 @@ export const MapView = ({
       ? stops.filter((s) => s.route === selectedRoute)
       : stops;
 
+  const overlappingStops = useMemo(() => {
+    return findOverlappingLocations(visibleStops);
+  }, [visibleStops]);
 
-
+  useEffect(() => {
+    if (overlappingStops.length > 0) {
+      //console.log("Detected overlapping stops:", overlappingStops);
+    }
+  }, [overlappingStops]);
 
   return (
     <div className="relative h-full w-full">
@@ -264,7 +272,10 @@ export const MapView = ({
 
         {/* Draw stops */}
         {visibleStops.map((stop) => (
-          <StopMarker key={stop.mid} stop={stop} onClick={onRouteSelect} zoom={zoom} selectedDate={selectedDate} allStops={stops} />
+          <StopMarker key={stop.mid} stop={stop} onClick={() => {
+            onRouteSelect(stop.route);
+            //console.log(stop.mid);
+          }} zoom={zoom} selectedDate={selectedDate} allStops={stops} />
         ))}
 
         {/* Draw buses */}

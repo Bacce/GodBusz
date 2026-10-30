@@ -13,7 +13,6 @@ export const MapClickHandler = ({
 }: MapClickHandlerProps) => {
   useMapEvents({
     click: (e) => {
-      console.log(`Lat: ${e.latlng.lat}, Lng: ${e.latlng.lng}`);
       onMapClick();
     },
     moveend: (e) => {

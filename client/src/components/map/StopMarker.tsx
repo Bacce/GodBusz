@@ -1,3 +1,4 @@
+import L from "leaflet";
 import { useRef, useEffect, useMemo } from "react";
 import { Marker, Popup, Tooltip } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
@@ -33,12 +34,46 @@ export const StopMarker = ({ stop, onClick, zoom, selectedDate, allStops }: Stop
 
   const { favorites, toggleFavorite } = useFavorites();
 
-  const icon = getStopIcon(stop.route, stop.dir ?? undefined, zoom);
+  const overlappingStops = useMemo(() => {
+    return allStops.filter((s) =>
+      s.mid !== stop.mid &&
+      Math.abs(s.lat - stop.lat) < 1e-12 &&
+      Math.abs(s.lon - stop.lon) < 1e-12
+    );
+  }, [stop.mid, stop.lat, stop.lon, allStops]);
 
+  const iconBase = getStopIcon(stop.route, stop.dir ?? undefined, zoom);
+
+  const icon = useMemo(() => {
+    const overlapGroup = [stop, ...overlappingStops].sort((a, b) => a.mid.localeCompare(b.mid));
+    const index = overlapGroup.findIndex((s) => s.mid === stop.mid);
+
+    if (index === -1 || overlappingStops.length === 0) {
+      return iconBase;
+    }
+
+    const offsetValue = (Math.floor(index / 2) + 1) * 5;
+    const marginLeft = index % 2 === 0 ? `-${offsetValue}px` : `${offsetValue}px`;
+
+    return L.divIcon({
+      ...iconBase.options,
+      html: iconBase.options.html.replace(
+        'style="',
+        `style="margin-left: ${marginLeft}; `
+      ),
+    });
+  }, [iconBase, overlappingStops, stop.mid]);
   const siblingStops = useMemo(() => {
     const normName = normalize(stop.name);
     return allStops.filter((s) => normalize(s.name) === normName);
   }, [stop.name, allStops]);
+
+
+  useEffect(() => {
+    if (overlappingStops.length > 0) {
+      //console.log(`Stop ${stop.mid} (${stop.name}) overlaps with:`, overlappingStops.map(s => s.name).join(", "));
+    }
+  }, [overlappingStops, stop.mid, stop.name]);
 
   return (
     <Marker
