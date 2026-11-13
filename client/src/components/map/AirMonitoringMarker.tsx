@@ -47,12 +47,13 @@ export const AirMonitoringMarker = ({ marker, zoom }: AirMonitoringMarkerProps) 
       case "pm01": return value < 30 ? "Jó" : "Rossz";
       case "rco2": return value < 1000 ? "Jó" : "Rossz";
       case "tvocIndex":
-        if (value >= 32501) return "Tökéletes";
-        if (value >= 30001) return "Átlagos";
+        if (value <= 150) return "Jó";
+        if (value <= 250) return "Átlagos";
+        if (value <= 350) return "Átlag felett";
         return "Rossz";
       case "noxIndex":
-        if (value <= 19199) return "Tökéletes";
-        if (value <= 20600) return "Átlagos";
+        if (value <= 1) return "Jó";
+        if (value <= 2) return "Közepes";
         return "Rossz";
       default: return "—";
     }
@@ -62,8 +63,10 @@ export const AirMonitoringMarker = ({ marker, zoom }: AirMonitoringMarkerProps) 
     switch (quality) {
       case "Tökéletes":
       case "Jó": return "text-green-600";
-      case "Átlagos": return "text-yellow-600";
+      case "Átlagos":
+      case "Közepes": return "text-yellow-600";
       case "Rossz": return "text-red-600";
+      case "Átlag felett": return "text-orange-600";
       default: return "text-gray-400";
     }
   };
@@ -151,9 +154,16 @@ export const AirMonitoringMarker = ({ marker, zoom }: AirMonitoringMarkerProps) 
             <div className="text-sm text-gray-400">Nincs adat</div>
           )}
           {!error && metric && (
-            <div className="text-[10px] text-gray-400 text-right mt-2 italic">
-              Mérés: {new Date(metric.createdAt).toLocaleString("hu-HU")}
-            </div>
+            <>
+              {getQuality("noxIndex", metric.noxIndex) === "Rossz" && (
+                <div className="text-[10px] text-gray-500 mt-2 italic leading-tight">
+                  *Az emelkedett NOx értéket jellemzően a téli időszak miatt használatban lévő fűtési berendezések, vagy a megnövekedett közúti forgalmi terhelés okozza.
+                </div>
+              )}
+              <div className="text-[10px] text-gray-400 text-right mt-2 italic">
+                Mérés: {new Date(metric.createdAt).toLocaleString("hu-HU")}
+              </div>
+            </>
           )}
           <div className="flex justify-center">
             <a
