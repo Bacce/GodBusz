@@ -96,7 +96,7 @@ export const AirMonitoringMarker = ({ marker, zoom }: AirMonitoringMarkerProps) 
             </button>
           </div>
           {loading && !metric && <div className="text-sm text-gray-500">Betöltés…</div>}
-          {error && <div className="text-sm text-red-500">{error}</div>}
+          {error && <div className="text-sm text-red-500" title={error}>Hiba történt, az adatok nem elérhetőek.</div>}
           {!error && metric && (
             <table className="w-full text-left border-collapse min-w-max">
               <thead className="text-gray-500 border-b border-gray-200 font-semibold">
@@ -170,7 +170,7 @@ export const AirMonitoringMarker = ({ marker, zoom }: AirMonitoringMarkerProps) 
               href={marker.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full text-xs bg-white text-[#009ee3] border border-[#009ee3] px-2 py-1 rounded text-center font-bold hover:bg-blue-50 transition-colors"
+              className={`w-full text-xs bg-white text-[#009ee3] border border-[#009ee3] px-2 py-1 rounded text-center font-bold hover:bg-blue-50 transition-colors ${error ? "opacity-50 pointer-events-none" : ""}`}
             >
               Részletes adatok megnyitása
             </a>
